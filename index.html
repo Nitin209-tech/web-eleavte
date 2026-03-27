@@ -1060,7 +1060,7 @@ function dcLogin(){
     saveUser({id:'demo',username:'nitin_209',discriminator:'0',global_name:'Nitin',avatar:null});
     toast('💡','Demo mode — add Discord Client ID');return;
   }
-  const r=encodeURIComponent(location.href.split('?')[0]);
+  const r = encodeURIComponent('https://www.elevateiq.shop');
   location.href=`https://discord.com/oauth2/authorize?client_id=${CFG.DISCORD_CLIENT_ID}&redirect_uri=${r}&response_type=token&scope=identify`;
 }
 function handleCb(){
