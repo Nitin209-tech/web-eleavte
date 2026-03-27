@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ElevateIQ — Premium Rewards Portal</title>
+<meta name="description" content="Redeem exclusive gaming rewards. Discord Nitro, Minecraft, Roblox, Xbox — fast, secure, 48hr activation."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://alcdn.msauth.net/browser/2.38.2/js/msal-browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#06070d;
+  --bg2:#0b0d16;
+  --bg3:#10121e;
+  --bg4:#151829;
+  --card:rgba(255,255,255,0.03);
+  --card-h:rgba(255,255,255,0.055);
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --text:#f0f0f8;
+  --text2:rgba(240,240,248,0.55);
+  --text3:rgba(240,240,248,0.3);
+  --accent:#5c6bc0;
+  --accent2:#7986cb;
+  --accent-glow:rgba(92,107,192,0.22);
+  --green:#34d399;
+  --green-g:rgba(52,211,153,0.14);
+  --red:#f87171;
+  --gold:#fbbf24;
+  --gold-g:rgba(251,191,36,0.13);
+  --mc:#4ade80;
+  --mc-g:rgba(74,222,128,0.12);
+  --mc-border:rgba(74,222,128,0.22);
+  --rb:#f87171;
+  --rb-g:rgba(248,113,113,0.12);
+  --rb-border:rgba(248,113,113,0.22);
+  --xbox:#34d399;
+  --xbox-g:rgba(52,211,153,0.12);
+  --xbox-border:rgba(52,211,153,0.22);
+  --nitro:#5865f2;
+  --nitro-g:rgba(88,101,242,0.12);
+  --nitro-border:rgba(88,101,242,0.25);
+  --nitro-glow:rgba(88,101,242,0.3);
+  --discord:#5865f2;
+  --discord-g:rgba(88,101,242,0.15);
+  --nav-h:64px;
+  --ease:cubic-bezier(0.25,0.46,0.45,0.94);
+  --ease-out:cubic-bezier(0.0,0.0,0.2,1);
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px}
+
+/* ══ ANIMATED BACKGROUND ══ */
+.bg-scene{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.bg-mesh{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 30%,transparent 100%);
+  opacity:0.4;
+}
+.bg-orb{
+  position:absolute;border-radius:50%;filter:blur(140px);pointer-events:none;
+  animation:float 20s ease-in-out infinite;
+}
+.orb1{width:800px;height:800px;top:-300px;left:-200px;background:radial-gradient(circle,rgba(88,101,242,0.15),transparent 70%)}
+.orb2{width:700px;height:700px;bottom:-250px;right:-150px;background:radial-gradient(circle,rgba(139,92,246,0.12),transparent 70%);animation-delay:-10s}
+.orb3{width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(88,101,242,0.08),transparent 70%);animation-delay:-5s}
+
+.particles{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+}
+.particle{
+  position:absolute;width:3px;height:3px;background:rgba(88,101,242,0.4);
+  border-radius:50%;animation:particle-float 15s infinite ease-in-out;
+}
+.particle:nth-child(1){left:10%;top:20%;animation-delay:0s;animation-duration:12s}
+.particle:nth-child(2){left:80%;top:60%;animation-delay:-4s;animation-duration:18s}
+.particle:nth-child(3){left:50%;top:80%;animation-delay:-8s;animation-duration:15s}
+.particle:nth-child(4){left:20%;top:50%;animation-delay:-2s;animation-duration:20s}
+.particle:nth-child(5){left:70%;top:30%;animation-delay:-6s;animation-duration:14s}
+.particle:nth-child(6){left:40%;top:10%;animation-delay:-10s;animation-duration:16s}
+
+@keyframes particle-float{
+  0%,100%{transform:translateY(0) translateX(0);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translateY(-100vh) translateX(50px);opacity:0}
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-30px)}
+}
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes scaleIn{
+  from{opacity:0;transform:scale(0.9)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes glow-pulse{
+  0%,100%{box-shadow:0 0 30px var(--nitro-glow)}
+  50%{box-shadow:0 0 60px var(--nitro-glow),0 0 90px var(--nitro-glow)}
+}
+@keyframes check{
+  to{stroke-dashoffset:0}
+}
+
+/* ══ PAGE SYSTEM ══ */
+.page{
+  display:none;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.page.active{
+  display:block;
+  animation:fadeIn 0.6s var(--ease-out) forwards;
+}
+.page.active{opacity:1;transform:translateY(0)}
+
+/* ══ NAVIGATION ══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:var(--nav-h);background:rgba(6,7,13,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:1400px;margin:0 auto;height:100%;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;cursor:pointer;
+}
+.brand-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--nitro),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;color:#fff;
+  box-shadow:0 4px 15px var(--nitro-glow);
+}
+.brand-name{
+  font-size:20px;font-weight:800;letter-spacing:-0.5px;
+  background:linear-gradient(135deg,#fff,var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.nav-tabs{
+  display:flex;gap:8px;align-items:center;
+}
+.ntab{
+  padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;
+  color:var(--text2);background:transparent;border:none;cursor:pointer;
+  transition:all 0.3s var(--ease);
+}
+.ntab:hover,.ntab.active{
+  color:var(--text);background:var(--card);
+}
+.nav-right{
+  display:flex;gap:12px;align-items:center;
+}
+.dc-nav-btn{
+  padding:10px 22px;border-radius:10px;font-size:14px;font-weight:700;
+  background:linear-gradient(135deg,#5865f2,#7289da);
+  color:#fff;border:none;cursor:pointer;
+  box-shadow:0 4px 15px rgba(88,101,242,0.3);
+  transition:all 0.3s var(--spring);
+  display:flex;align-items:center;gap:8px;
+}
+.dc-nav-btn:hover{
+  transform:translateY(-2px);box-shadow:0 6px 25px rgba(88,101,242,0.4);
+}
+.dc-nav-btn svg{flex-shrink:0}
+
+/* User Info */
+.u-pill{
+  display:none;align-items:center;gap:12px;
+  padding:8px 16px;border-radius:12px;
+  background:var(--card);border:1px solid var(--border);
+}
+.u-pill.show{display:flex}
+.u-av{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;color:#fff;
+}
+.u-name{font-size:14px;font-weight:600;color:var(--text)}
+.u-sub{font-size:12px;color:var(--text2)}
+.u-badge{
+  padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;
+  background:var(--green-g);color:var(--green);
+}
+.btn-sw{
+  padding:6px 12px;border-radius:6px;font-size:12px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--text2);cursor:pointer;
+  transition:all 0.2s var(--ease);
+}
+.btn-sw:hover{background:var(--card-h);color:var(--text)}
+
+/* Mobile Nav */
+.hbg{
+  display:none;flex-direction:column;gap:4px;
+  background:transparent;border:none;cursor:pointer;
+  padding:8px;
+}
+.hbg span{
+  width:22px;height:2px;background:var(--text);
+  border-radius:2px;transition:all 0.3s var(--ease);
+}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translateY(6px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translateY(-6px)}
+.mob-nav{
+  position:fixed;top:var(--nav-h);left:0;right:0;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:20px 32px;display:none;flex-direction:column;gap:8px;
+  z-index:999;
+}
+.mob-nav.show{display:flex}
+.mob-nav .ntab{width:100%;text-align:left;padding:12px 16px}
+
+/* ══ WRAP ══ */
+.wrap{
+  max-width:1200px;margin:0 auto;padding:0 32px;
+  position:relative;z-index:2;
+}
+.wrap-sm{
+  max-width:720px;margin:0 auto;padding:0 32px;
+  position:relative;z-index:2;
+}
+
+/* ══ HERO ══ */
+.hero-section{
+  min-height:calc(100vh - var(--nav-h) - 100px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 0 80px;
+}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 20px;border-radius:100px;
+  background:var(--nitro-g);border:1px solid var(--nitro-border);
+  font-size:13px;font-weight:600;color:var(--nitro);
+  margin-bottom:24px;
+}
+.hero-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--nitro);
+  animation:glow-pulse 2s ease-in-out infinite;
+}
+.hero-title{
+  font-size:clamp(42px,8vw,76px);
+  font-weight:800;line-height:1.1;letter-spacing:-2px;
+  background:linear-gradient(135deg,#fff 0%,#a78bfa 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:20px;
+}
+.hero-sub{
+  font-size:clamp(16px,3vw,20px);
+  color:var(--text2);line-height:1.7;max-width:650px;margin:0 auto 40px;
+}
+.hero-ctas{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+}
+
+/* ══ BUTTONS ══ */
+.btn{
+  padding:16px 40px;border-radius:12px;font-size:16px;font-weight:700;
+  border:none;cursor:pointer;
+  transition:all 0.3s var(--spring);
+  display:inline-flex;align-items:center;gap:10px;
+  position:relative;overflow:hidden;
+}
+.btn-dc{
+  background:linear-gradient(135deg,#5865f2,#8b5cf6);
+  color:#fff;box-shadow:0 8px 30px var(--nitro-glow);
+}
+.btn-dc::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+  transform:translateX(-100%);transition:transform 0.6s;
+}
+.btn-dc:hover::before{transform:translateX(100%)}
+.btn-dc:hover{transform:translateY(-3px);box-shadow:0 12px 40px var(--nitro-glow)}
+.btn-ghost{
+  background:var(--card);border:1px solid var(--border2);color:var(--text);
+}
+.btn-ghost:hover{background:var(--card-h);border-color:var(--nitro-border)}
+.btn-ms{
+  background:linear-gradient(135deg,#f25022,#ffb900);
+  color:#fff;box-shadow:0 6px 25px rgba(242,80,34,0.3);
+}
+.btn-ms:hover{transform:translateY(-2px);box-shadow:0 8px 35px rgba(242,80,34,0.4)}
+.btn-mc{
+  background:linear-gradient(135deg,var(--mc),#34d399);
+  color:#000;box-shadow:0 6px 25px var(--mc-g);
+}
+.btn-mc:hover{transform:translateY(-2px);box-shadow:0 8px 35px var(--mc-g)}
+.btn-rb{
+  background:linear-gradient(135deg,var(--rb),#ef4444);
+  color:#fff;box-shadow:0 6px 25px var(--rb-g);
+}
+.btn-rb:hover{transform:translateY(-2px);box-shadow:0 8px 35px var(--rb-g)}
+.btn-xbox{
+  background:linear-gradient(135deg,var(--xbox),#10b981);
+  color:#fff;box-shadow:0 6px 25px var(--xbox-g);
+}
+.btn-xbox:hover{transform:translateY(-2px);box-shadow:0 8px 35px var(--xbox-g)}
+.btn-nitro{
+  background:linear-gradient(135deg,var(--nitro),#a78bfa);
+  color:#fff;box-shadow:0 6px 25px var(--nitro-glow);
+}
+.btn-nitro:hover{transform:translateY(-2px);box-shadow:0 8px 35px var(--nitro-glow)}
+.btn-full{width:100%}
+.btn-spin{
+  width:18px;height:18px;border:3px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin 0.8s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ STATS BAR ══ */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+  gap:24px;padding:40px 32px;margin:60px 0;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;
+}
+.stat{text-align:center}
+.stat-n{
+  font-size:32px;font-weight:800;
+  background:linear-gradient(135deg,var(--nitro),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:6px;
+}
+.stat-l{font-size:13px;color:var(--text2);font-weight:600}
+
+/* ══ SECTIONS ══ */
+.section-label-sm{
+  font-size:13px;font-weight:700;color:var(--nitro);
+  text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:12px;text-align:center;
+}
+.section-h2{
+  font-size:clamp(28px,5vw,42px);font-weight:800;
+  text-align:center;letter-spacing:-1px;
+  margin-bottom:48px;
+}
+.features-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;margin-bottom:80px;
+}
+.feat-card{
+  padding:32px;border-radius:16px;
+  background:var(--card);border:1px solid var(--border);
+  transition:all 0.3s var(--ease);position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--nitro),transparent);
+}
+.feat-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--border2);
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+}
+.feat-ico{font-size:40px;display:block;margin-bottom:16px}
+.feat-title{
+  font-size:20px;font-weight:700;
+  margin-bottom:10px;color:var(--text);
+}
+.feat-desc{font-size:14px;color:var(--text2);line-height:1.6}
+
+/* ══ GAME TILES ══ */
+.game-tiles{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:24px;margin-bottom:80px;
+}
+.gtile{
+  padding:36px;border-radius:18px;
+  background:var(--card);border:1px solid var(--border);
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:all 0.4s var(--spring);
+}
+.gtile-accent{
+  position:absolute;top:0;left:0;right:0;height:4px;
+  transition:all 0.3s var(--ease);
+}
+.gtile-mc .gtile-accent{background:linear-gradient(90deg,var(--mc),transparent)}
+.gtile-rb .gtile-accent{background:linear-gradient(90deg,var(--rb),transparent)}
+.gtile-xbox .gtile-accent{background:linear-gradient(90deg,var(--xbox),transparent)}
+.gtile:hover{
+  transform:translateY(-6px);
+  border-color:var(--border2);
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+}
+.gtile-mc:hover{box-shadow:0 12px 40px var(--mc-g)}
+.gtile-rb:hover{box-shadow:0 12px 40px var(--rb-g)}
+.gtile-xbox:hover{box-shadow:0 12px 40px var(--xbox-g)}
+.gtile-icon{font-size:48px;display:block;margin-bottom:16px}
+.gtile-badge{
+  display:inline-block;padding:6px 14px;border-radius:100px;
+  font-size:12px;font-weight:600;margin-bottom:16px;
+}
+.badge-mc{background:var(--mc-g);color:var(--mc)}
+.badge-rb{background:var(--rb-g);color:var(--rb)}
+.badge-xbox{background:var(--xbox-g);color:var(--xbox)}
+.gtile-title{
+  font-size:24px;font-weight:700;
+  margin-bottom:10px;letter-spacing:-0.5px;
+}
+.gtile-desc{
+  font-size:14px;color:var(--text2);line-height:1.7;
+  margin-bottom:20px;
+}
+.gtile-arrow{
+  font-size:24px;color:var(--text3);
+  transition:all 0.3s var(--spring);
+}
+.gtile:hover .gtile-arrow{
+  color:var(--text);transform:translateX(6px);
+}
+
+/* ══ TRUST STRIP ══ */
+.trust-strip{
+  display:flex;flex-wrap:wrap;gap:20px;justify-content:center;
+  padding:40px 0;margin-bottom:60px;
+}
+.trust-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;color:var(--text2);
+}
+.trust-icon{color:var(--green);font-size:16px}
+
+/* ══ CTA BANNER ══ */
+.cta-banner{
+  padding:60px 40px;border-radius:20px;
+  background:var(--card);border:1px solid var(--border2);
+  text-align:center;margin-bottom:80px;
+  position:relative;overflow:hidden;
+}
+.cta-banner::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:200px;
+  background:radial-gradient(circle at 50% 0%,var(--nitro-glow),transparent 70%);
+  pointer-events:none;
+}
+.cta-banner h2{
+  font-size:32px;font-weight:800;
+  margin-bottom:16px;position:relative;
+}
+.cta-banner p{
+  font-size:16px;color:var(--text2);line-height:1.7;
+  max-width:600px;margin:0 auto 32px;position:relative;
+}
+.cta-btns{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;
+}
+
+/* ══ CARDS ══ */
+.card{
+  padding:36px;border-radius:16px;
+  background:var(--card);border:1px solid var(--border);
+  margin-bottom:24px;position:relative;
+}
+.card-top-line{
+  position:absolute;top:0;left:0;right:0;height:3px;
+}
+.card h3{
+  font-size:22px;font-weight:700;
+  margin-bottom:12px;letter-spacing:-0.5px;
+}
+.card p{
+  font-size:15px;color:var(--text2);line-height:1.7;
+  margin-bottom:20px;
+}
+
+/* ══ SUCCESS CARD ══ */
+.scard{
+  padding:40px;border-radius:16px;text-align:center;
+  background:var(--card);border:1px solid var(--border);
+  display:none;margin-top:24px;
+}
+.scard.show{display:block;animation:scaleIn 0.5s var(--spring)}
+.s-ico{
+  width:80px;height:80px;margin:0 auto 20px;
+  border-radius:20px;display:flex;align-items:center;justify-content:center;
+}
+.s-title{
+  font-size:26px;font-weight:800;margin-bottom:10px;
+}
+.s-desc{font-size:15px;color:var(--text2);margin-bottom:28px}
+.s-code-box{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:12px;padding:20px;margin-bottom:24px;
+}
+.s-code-label{
+  font-size:12px;font-weight:600;color:var(--text2);
+  margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase;
+}
+.s-code{
+  font-family:'Monaco','Courier New',monospace;
+  font-size:20px;font-weight:700;letter-spacing:2px;
+}
+.s-timeline{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:12px;padding:24px;margin-bottom:24px;text-align:left;
+}
+.s-tl-item{
+  display:flex;gap:16px;padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.s-tl-item:last-child{border-bottom:none}
+.s-tl-dot{
+  width:32px;height:32px;border-radius:50%;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.s-tl-content h4{
+  font-size:15px;font-weight:600;margin-bottom:4px;
+}
+.s-tl-content p{
+  font-size:13px;color:var(--text2);margin:0;
+}
+.s-tl-dot.done{background:var(--green-g);color:var(--green)}
+.s-tl-dot.pending{background:var(--card);color:var(--text3);border:1px solid var(--border)}
+
+/* ══ NOTICES ══ */
+.notice{
+  padding:16px 20px;border-radius:12px;
+  margin-bottom:20px;border:1px solid;
+}
+.n-info{
+  background:rgba(92,107,192,0.08);
+  border-color:rgba(92,107,192,0.2);
+}
+.n-warn{
+  background:var(--gold-g);
+  border-color:rgba(251,191,36,0.3);
+}
+.n-title{
+  font-size:14px;font-weight:700;
+  margin-bottom:6px;
+}
+.notice p{
+  font-size:14px;color:var(--text2);line-height:1.6;margin:0;
+}
+
+/* ══ FORM ELEMENTS ══ */
+.field{margin-bottom:20px}
+.field label{
+  display:block;font-size:13px;font-weight:600;
+  color:var(--text2);margin-bottom:8px;
+  letter-spacing:0.3px;text-transform:uppercase;
+}
+.inp{
+  width:100%;padding:14px 16px;border-radius:10px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text);font-size:15px;font-family:inherit;
+  transition:all 0.3s var(--ease);
+}
+.inp:focus{
+  outline:none;border-color:var(--nitro-border);
+  background:var(--card-h);
+  box-shadow:0 0 0 3px var(--nitro-g);
+}
+.inp.code{
+  font-family:'Monaco','Courier New',monospace;
+  font-size:16px;letter-spacing:3px;text-align:center;
+  text-transform:uppercase;
+}
+.inp::placeholder{color:var(--text3)}
+.irow{position:relative}
+.iaction{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;border-radius:8px;
+  background:var(--card-h);border:1px solid var(--border);
+  color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:all 0.2s var(--ease);
+}
+.iaction:hover{background:var(--card);color:var(--text)}
+.fmsg{
+  margin-top:8px;font-size:13px;color:var(--text3);
+}
+.fmsg.error{color:var(--red)}
+.fmsg.success{color:var(--green)}
+
+select.inp{cursor:pointer}
+
+/* ══ PAGE SPECIFIC ══ */
+.page-eyebrow{
+  font-size:14px;font-weight:700;color:var(--nitro);
+  text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:12px;
+}
+.page-title{
+  font-size:clamp(36px,7vw,56px);
+  font-weight:800;line-height:1.1;letter-spacing:-2px;
+  margin-bottom:16px;
+}
+.page-desc{
+  font-size:17px;color:var(--text2);line-height:1.7;
+  margin-bottom:36px;
+}
+
+/* ══ NITRO SECTION ══ */
+.nitro-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;margin-bottom:40px;
+}
+.nitro-card{
+  padding:32px;border-radius:16px;
+  background:var(--card);border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:all 0.4s var(--spring);cursor:pointer;
+}
+.nitro-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--nitro),transparent);
+}
+.nitro-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--nitro-border);
+  box-shadow:0 12px 40px var(--nitro-glow);
+}
+.nitro-card-badge{
+  display:inline-block;padding:6px 14px;border-radius:100px;
+  font-size:12px;font-weight:600;
+  background:var(--nitro-g);color:var(--nitro);
+  margin-bottom:16px;
+}
+.nitro-card-title{
+  font-size:24px;font-weight:700;
+  margin-bottom:10px;letter-spacing:-0.5px;
+}
+.nitro-card-price{
+  font-size:32px;font-weight:800;
+  background:linear-gradient(135deg,var(--nitro),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:20px;
+}
+.nitro-card-features{
+  list-style:none;margin-bottom:24px;
+}
+.nitro-card-features li{
+  padding:8px 0;font-size:14px;color:var(--text2);
+  display:flex;align-items:center;gap:8px;
+}
+.nitro-card-features li::before{
+  content:'✓';color:var(--green);font-weight:700;
+}
+
+/* ══ MODAL ══ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;animation:fadeIn 0.3s var(--ease-out);
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:var(--bg2);
+  border-radius:20px;
+  border:1px solid var(--border2);
+  max-width:520px;width:100%;
+  box-shadow:0 20px 80px rgba(0,0,0,0.6);
+  animation:scaleIn 0.4s var(--spring);
+  position:relative;overflow:hidden;
+  max-height:90vh;overflow-y:auto;
+}
+.modal::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:200px;
+  background:radial-gradient(circle at 50% 0%,var(--nitro-glow),transparent 70%);
+  pointer-events:none;
+}
+.modal-close{
+  position:absolute;top:20px;right:20px;z-index:10;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text2);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s var(--ease);
+}
+.modal-close:hover{background:var(--card-h);color:var(--text);transform:rotate(90deg)}
+.modal-header{
+  padding:40px 40px 30px;text-align:center;position:relative;
+}
+.modal-icon{
+  width:80px;height:80px;margin:0 auto 20px;
+  background:var(--nitro-g);border:2px solid var(--nitro-border);
+  border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-size:40px;animation:glow-pulse 3s ease-in-out infinite;
+}
+.modal-title{
+  font-size:28px;font-weight:800;letter-spacing:-1px;
+  color:var(--text);margin-bottom:10px;
+}
+.modal-subtitle{
+  font-size:15px;color:var(--text2);line-height:1.6;
+}
+.modal-body{
+  padding:0 40px 40px;
+}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:30px;right:30px;z-index:3000;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:12px;padding:16px 20px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.6);
+  display:flex;align-items:center;gap:12px;
+  animation:slideUp 0.4s var(--spring);
+  max-width:350px;opacity:0;pointer-events:none;
+}
+.toast.show{opacity:1;pointer-events:auto}
+.toast-icon{font-size:20px}
+.toast-message{font-size:14px;color:var(--text)}
+.toast.success{border-color:var(--green)}
+.toast.success .toast-icon{color:var(--green)}
+.toast.error{border-color:var(--red)}
+.toast.error .toast-icon{color:var(--red)}
+
+/* ══ REVEAL ANIMATION ══ */
+.reveal{
+  opacity:0;
+  transform:translateY(36px);
+  transition:opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.reveal.d1{transition-delay:0.1s}
+.reveal.d2{transition-delay:0.2s}
+.reveal.d3{transition-delay:0.3s}
+.reveal.d4{transition-delay:0.4s}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  .nav-tabs{display:none}
+  .hbg{display:flex}
+  .nav-inner{padding:0 20px}
+  .wrap,.wrap-sm{padding:0 20px}
+  .hero-section{padding:100px 0 60px}
+  .hero-ctas,.cta-btns{flex-direction:column;width:100%}
+  .btn{width:100%}
+  .stats-bar{grid-template-columns:repeat(2,1fr);gap:16px}
+  .features-row,.game-tiles,.nitro-grid{grid-template-columns:1fr}
+  .modal{max-width:100%;margin:0 16px;border-radius:16px}
+  .modal-header{padding:30px 24px 20px}
+  .modal-body{padding:0 24px 30px}
+  .toast{bottom:20px;right:20px;left:20px;max-width:none}
+  .card{padding:24px}
+  .cta-banner{padding:40px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="bg-scene">
+  <div class="bg-mesh"></div>
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="bg-orb orb3"></div>
+</div>
+
+<!-- Floating Particles -->
+<div class="particles">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <div class="brand" onclick="go('home')">
+      <div class="brand-mark">EIQ</div>
+      <span class="brand-name">ElevateIQ</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="ntab active" onclick="go('home')">Home</button>
+      <button class="ntab" onclick="go('nitro')">Nitro</button>
+      <button class="ntab" onclick="go('mc')">Minecraft</button>
+      <button class="ntab" onclick="go('rb')">Roblox</button>
+      <button class="ntab" onclick="go('xbox')">Xbox</button>
+      <button class="ntab" onclick="go('track')">Track</button>
+    </div>
+    <div class="nav-right">
+      <div id="nav-auth">
+        <button class="dc-nav-btn" onclick="dcLogin()">
+          <svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
+          Login with Discord
+        </button>
+      </div>
+      <button class="hbg" id="hbgBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <button class="ntab" onclick="go('home');closeMob()">🏠 Home</button>
+  <button class="ntab" onclick="go('nitro');closeMob()">💎 Nitro</button>
+  <button class="ntab" onclick="go('mc');closeMob()">⛏ Minecraft</button>
+  <button class="ntab" onclick="go('rb');closeMob()">🎮 Roblox</button>
+  <button class="ntab" onclick="go('xbox');closeMob()">🎯 Xbox</button>
+  <button class="ntab" onclick="go('track');closeMob()">📦 Track Order</button>
+</div>
+
+<!-- ═══════════════════════════════════
+     HOME PAGE
+═══════════════════════════════════ -->
+<div class="page active" id="page-home">
+<div class="wrap">
+
+  <section class="hero-section">
+    <div class="hero-chip reveal">
+      <div class="hero-dot"></div>
+      ElevateIQ Rewards Portal — 2026
+    </div>
+    <h1 class="hero-title reveal d1">Your premium rewards,<br/>instantly activated.</h1>
+    <p class="hero-sub reveal d2">
+      Login with Discord, choose your game, enter your code — activated within 48 hours. 
+      Simple, secure, reliable. Now featuring Discord Nitro!
+    </p>
+    <div class="hero-ctas reveal d3">
+      <button class="btn btn-dc" onclick="dcLogin()">
+        <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
+        Get Started with Discord
+      </button>
+      <button class="btn btn-ghost" onclick="go('track')">Track Order</button>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-bar reveal d2">
+    <div class="stat"><div class="stat-n">15K+</div><div class="stat-l">Redeemed</div></div>
+    <div class="stat"><div class="stat-n">48h</div><div class="stat-l">Activation</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">Games</div></div>
+    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Secure</div></div>
+    <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">Support</div></div>
+  </div>
+
+  <!-- Features -->
+  <div class="section-label-sm reveal">Why ElevateIQ</div>
+  <div class="section-h2 reveal d1">Built for speed & trust</div>
+  <div class="features-row">
+    <div class="feat-card reveal d1">
+      <span class="feat-ico">⚡</span>
+      <div class="feat-title">48-Hour Activation</div>
+      <div class="feat-desc">Every reward is queued and processed within 48 hours of code submission, guaranteed.</div>
+    </div>
+    <div class="feat-card reveal d2">
+      <span class="feat-ico">🔒</span>
+      <div class="feat-title">Discord & Microsoft OAuth</div>
+      <div class="feat-desc">Industry-standard OAuth 2.0 — your credentials go directly to Discord/Microsoft, never to us.</div>
+    </div>
+    <div class="feat-card reveal d3">
+      <span class="feat-ico">📦</span>
+      <div class="feat-title">Live Order Tracking</div>
+      <div class="feat-desc">Real-time progress, step-by-step timeline, and downloadable PDF invoice for every order.</div>
+    </div>
+  </div>
+
+  <!-- Game tiles -->
+  <div class="section-label-sm reveal">Select a reward</div>
+  <div class="section-h2 reveal d1">Choose your game</div>
+  <div class="game-tiles">
+    <div class="gtile gtile-mc reveal d1" onclick="go('nitro')" style="border-color:var(--nitro-border)">
+      <div class="gtile-accent" style="background:linear-gradient(90deg,var(--nitro),transparent)"></div>
+      <span class="gtile-icon">💎</span>
+      <span class="gtile-badge" style="background:var(--nitro-g);color:var(--nitro)">Discord Nitro</span>
+      <div class="gtile-title">Discord Nitro</div>
+      <div class="gtile-desc">Basic, Classic & Full plans available. Premium perks, boosted uploads, custom profiles — activated within 48 hours.</div>
+      <span class="gtile-arrow">→</span>
+    </div>
+    <div class="gtile gtile-mc reveal d1" onclick="go('mc')">
+      <div class="gtile-accent"></div>
+      <span class="gtile-icon">⛏</span>
+      <span class="gtile-badge badge-mc">Minecraft</span>
+      <div class="gtile-title">Minecraft</div>
+      <div class="gtile-desc">ElevateIQ Server — exclusive code redemption. Server rewards activated within 48 hours.</div>
+      <span class="gtile-arrow">→</span>
+    </div>
+    <div class="gtile gtile-rb reveal d2" onclick="go('rb')">
+      <div class="gtile-accent"></div>
+      <span class="gtile-icon">🎮</span>
+      <span class="gtile-badge badge-rb">Roblox</span>
+      <div class="gtile-title">Roblox</div>
+      <div class="gtile-desc">400 or 850 Robux — $50 or $100 plans. Credits added to your account within 48 hours.</div>
+      <span class="gtile-arrow">→</span>
+    </div>
+    <div class="gtile gtile-xbox reveal d3" onclick="go('xbox')">
+      <div class="gtile-accent"></div>
+      <span class="gtile-icon">🎯</span>
+      <span class="gtile-badge badge-xbox">Xbox</span>
+      <div class="gtile-title">Xbox</div>
+      <div class="gtile-desc">Game Pass Ultimate — sign in with Microsoft to view your full Xbox profile and redeem.</div>
+      <span class="gtile-arrow">→</span>
+    </div>
+  </div>
+
+  <!-- Trust strip -->
+  <div class="trust-strip reveal d2">
+    <div class="trust-item"><span class="trust-icon">✓</span> Verified codes only</div>
+    <div class="trust-item"><span class="trust-icon">🔐</span> Discord & Microsoft OAuth secured</div>
+    <div class="trust-item"><span class="trust-icon">⏱</span> 48-hour activation</div>
+    <div class="trust-item"><span class="trust-icon">📧</span> Email confirmation</div>
+    <div class="trust-item"><span class="trust-icon">💬</span> 24/7 support</div>
+  </div>
+
+  <!-- CTA banner -->
+  <div class="cta-banner reveal d2">
+    <h2>Ready to claim your reward?</h2>
+    <p>Login with Discord to get started. Your account syncs across all games — one login, all rewards tracked in one place.</p>
+    <div class="cta-btns">
+      <button class="btn btn-dc" onclick="dcLogin()">
+        <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
+        Login with Discord
+      </button>
+      <button class="btn btn-ghost" onclick="go('nitro')">Browse Nitro Plans</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     DISCORD NITRO PAGE
+═══════════════════════════════════ -->
+<div class="page" id="page-nitro">
+<div class="wrap-sm">
+  <div style="padding-top:70px;margin-bottom:36px" class="reveal">
+    <div class="page-eyebrow">💎 Discord Nitro</div>
+    <h2 class="page-title" style="color:var(--nitro)">Premium Discord<br/>Membership</h2>
+    <p class="page-desc">Choose your plan, verify with Discord, enter your code — activated within 48 hours.</p>
+  </div>
+
+  <!-- Nitro Plans -->
+  <div class="nitro-grid reveal d1">
+    <div class="nitro-card" onclick="selectNitroPlan('basic')">
+      <div class="nitro-card-badge">NITRO BASIC</div>
+      <div class="nitro-card-title">Basic</div>
+      <div class="nitro-card-price">$2.99/mo</div>
+      <ul class="nitro-card-features">
+        <li>Custom Emoji anywhere</li>
+        <li>50MB upload limit</li>
+        <li>Special Nitro badge</li>
+        <li>Custom stickers everywhere</li>
+      </ul>
+      <button class="btn btn-nitro btn-full">Select Basic</button>
+    </div>
+
+    <div class="nitro-card" onclick="selectNitroPlan('classic')">
+      <div class="nitro-card-badge">NITRO CLASSIC</div>
+      <div class="nitro-card-title">Classic</div>
+      <div class="nitro-card-price">$9.99/mo</div>
+      <ul class="nitro-card-features">
+        <li>Everything in Basic</li>
+        <li>HD video streaming</li>
+        <li>2 Server Boosts</li>
+        <li>Larger file uploads (100MB)</li>
+        <li>Custom discriminator</li>
+      </ul>
+      <button class="btn btn-nitro btn-full">Select Classic</button>
+    </div>
+
+    <div class="nitro-card" onclick="selectNitroPlan('full')">
+      <div class="nitro-card-badge">NITRO FULL</div>
+      <div class="nitro-card-title">Full</div>
+      <div class="nitro-card-price">$14.99/mo</div>
+      <ul class="nitro-card-features">
+        <li>Everything in Classic</li>
+        <li>200+ premium games</li>
+        <li>500MB upload limit</li>
+        <li>Animated avatar</li>
+        <li>Server profile customization</li>
+        <li>HD video & screen share</li>
+      </ul>
+      <button class="btn btn-nitro btn-full">Select Full</button>
+    </div>
+  </div>
+
+  <!-- Discord Auth Step -->
+  <div class="card reveal d1" id="nitro-s1">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--nitro),transparent)"></div>
+    <h3>Step 1 — Authorize Discord Bot</h3>
+    <p>Authorize our Discord bot to verify your account and enable auto-join to our secure server.</p>
+    <div class="notice n-info" style="margin-bottom:22px">
+      <div class="n-title">Why Discord Bot?</div>
+      <p>We use <strong>Discord OAuth 2.0</strong> to verify your identity and automatically add you to our secure server. Your credentials stay with Discord, never shared with us. Bot will track authorizations in our MongoDB database.</p>
+    </div>
+    <button class="btn btn-dc btn-full" onclick="dcBotAuth()">
+      <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
+      Authorize Discord Bot
+    </button>
+  </div>
+
+  <div class="card reveal d2" id="nitro-s2" style="display:none">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--nitro),transparent)"></div>
+    <div class="u-pill">
+      <div class="u-av" id="nitro-av" style="background:linear-gradient(135deg,#5865f2,#7289da)">?</div>
+      <div style="flex:1;min-width:0"><div class="u-name" id="nitro-uname">—</div><div class="u-sub" id="nitro-uemail">—</div></div>
+      <div class="u-badge">Verified</div>
+      <button class="btn-sw" onclick="dcOut('nitro')">Switch</button>
+    </div>
+    <h3>Step 2 — Select Plan & Enter Code</h3>
+    <p>Choose your Nitro plan and paste your redemption code below.</p>
+    <div class="field">
+      <label>Nitro Plan</label>
+      <select class="inp" id="nitro-plan">
+        <option value="">— Select Plan —</option>
+        <option value="basic">Nitro Basic ($2.99/mo)</option>
+        <option value="classic">Nitro Classic ($9.99/mo)</option>
+        <option value="full">Nitro Full ($14.99/mo)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Redemption Code</label>
+      <div class="irow">
+        <input class="inp code" id="nitro-code" type="text" maxlength="19" placeholder="XXXX-XXXX-XXXX" oninput="fmtCode(this)" autocomplete="off" spellcheck="false"/>
+        <button class="iaction" onclick="pasteC('nitro-code')" title="Paste">⌘</button>
+      </div>
+      <div class="fmsg" id="nitro-msg">Format: XXXX-XXXX-XXXX</div>
+    </div>
+    <button class="btn btn-nitro btn-full" id="nitro-btn" onclick="redeem('nitro')">
+      <span id="nitro-bt">Redeem Discord Nitro</span>
+      <div class="btn-spin" id="nitro-sp" style="display:none;border-color:rgba(255,255,255,0.3);border-top-color:#fff"></div>
+    </button>
+  </div>
+
+  <div class="scard" id="nitro-ok">
+    <div class="s-ico" style="background:var(--nitro-g);border:2px solid var(--nitro-border)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--nitro)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:check 0.5s 0.2s var(--ease-out) forwards"/>
+      </svg>
+    </div>
+    <div class="s-title" style="color:var(--nitro)">Nitro Redeemed!</div>
+    <div class="s-desc">Your Discord Nitro code has been submitted successfully.</div>
+    
+    <div class="s-code-box">
+      <div class="s-code-label">Order ID</div>
+      <div class="s-code" id="nitro-oid" style="color:var(--nitro)">—</div>
+    </div>
+
+    <div class="s-timeline">
+      <div class="s-tl-item">
+        <div class="s-tl-dot done">✓</div>
+        <div class="s-tl-content">
+          <h4>Code Submitted</h4>
+          <p>Your Nitro code has been received and validated</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">⏳</div>
+        <div class="s-tl-content">
+          <h4>Processing Queue</h4>
+          <p>Awaiting activation (within 48 hours)</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">📧</div>
+        <div class="s-tl-content">
+          <h4>Activation Complete</h4>
+          <p>You'll receive email confirmation when ready</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost btn-full" onclick="downloadPDF('nitro')">📄 Download Invoice (PDF)</button>
+    <button class="btn btn-dc btn-full" style="margin-top:12px" onclick="go('track')">Track Order Status</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MINECRAFT PAGE
+═══════════════════════════════════ -->
+<div class="page" id="page-mc">
+<div class="wrap-sm">
+  <div style="padding-top:70px;margin-bottom:36px" class="reveal">
+    <div class="page-eyebrow">⛏ Minecraft</div>
+    <h2 class="page-title" style="color:var(--mc)">Code<br/>Redemption</h2>
+    <p class="page-desc">Verify with Microsoft, enter your code — ElevateIQ server rewards activate within 48 hours.</p>
+  </div>
+
+  <div class="card reveal d1" id="mc-s1">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--mc),transparent)"></div>
+    <h3>Step 1 — Verify with Microsoft</h3>
+    <p>Your Minecraft account is managed by Microsoft. Sign in to verify your identity — we never see your password.</p>
+    <div class="notice n-info" style="margin-bottom:22px">
+      <div class="n-title">Why Microsoft?</div>
+      <p>We use <strong>Microsoft OAuth 2.0</strong> — a secure industry-standard login. Your credentials go directly to Microsoft, never to ElevateIQ.</p>
+    </div>
+    <button class="btn btn-ms btn-full" onclick="msLogin('mc')">
+      <svg width="16" height="16" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+      Continue with Microsoft
+    </button>
+  </div>
+
+  <div class="card reveal d2" id="mc-s2" style="display:none">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--mc),transparent)"></div>
+    <div class="u-pill">
+      <div class="u-av" id="mc-av" style="background:linear-gradient(135deg,#0d7832,var(--mc))">?</div>
+      <div style="flex:1;min-width:0"><div class="u-name" id="mc-uname">—</div><div class="u-sub" id="mc-uemail">—</div></div>
+      <div class="u-badge">Verified</div>
+      <button class="btn-sw" onclick="msOut('mc')">Switch</button>
+    </div>
+    <h3>Step 2 — Enter your code</h3>
+    <p>Paste or type your ElevateIQ redemption code below.</p>
+    <div class="field">
+      <label>Redemption Code</label>
+      <div class="irow">
+        <input class="inp code" id="mc-code" type="text" maxlength="19" placeholder="XXXX-XXXX-XXXX" oninput="fmtCode(this)" autocomplete="off" spellcheck="false"/>
+        <button class="iaction" onclick="pasteC('mc-code')" title="Paste">⌘</button>
+      </div>
+      <div class="fmsg" id="mc-msg">Format: XXXX-XXXX-XXXX</div>
+    </div>
+    <button class="btn btn-mc btn-full" id="mc-btn" onclick="redeem('mc')">
+      <span id="mc-bt">Redeem Minecraft Reward</span>
+      <div class="btn-spin" id="mc-sp" style="display:none;border-color:rgba(0,0,0,0.18);border-top-color:#000"></div>
+    </button>
+  </div>
+
+  <div class="scard" id="mc-ok">
+    <div class="s-ico" style="background:var(--mc-g);border:2px solid var(--mc-border)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--mc)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:check 0.5s 0.2s var(--ease-out) forwards"/>
+      </svg>
+    </div>
+    <div class="s-title" style="color:var(--mc)">Code Redeemed</div>
+    <div class="s-desc">Your Minecraft code has been submitted successfully.</div>
+    
+    <div class="s-code-box">
+      <div class="s-code-label">Order ID</div>
+      <div class="s-code" id="mc-oid" style="color:var(--mc)">—</div>
+    </div>
+
+    <div class="s-timeline">
+      <div class="s-tl-item">
+        <div class="s-tl-dot done">✓</div>
+        <div class="s-tl-content">
+          <h4>Code Submitted</h4>
+          <p>Your Minecraft code has been received and validated</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">⏳</div>
+        <div class="s-tl-content">
+          <h4>Processing Queue</h4>
+          <p>Awaiting server activation (within 48 hours)</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">📧</div>
+        <div class="s-tl-content">
+          <h4>Server Activated</h4>
+          <p>You'll receive email confirmation when ready</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost btn-full" onclick="downloadPDF('mc')">📄 Download Invoice (PDF)</button>
+    <button class="btn btn-mc btn-full" style="margin-top:12px" onclick="go('track')">Track Order Status</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ROBLOX PAGE
+═══════════════════════════════════ -->
+<div class="page" id="page-rb">
+<div class="wrap-sm">
+  <div style="padding-top:70px;margin-bottom:36px" class="reveal">
+    <div class="page-eyebrow">🎮 Roblox</div>
+    <h2 class="page-title" style="color:var(--rb)">Robux<br/>Redemption</h2>
+    <p class="page-desc">Verify with Microsoft, select your plan, enter your code — Robux added within 48 hours.</p>
+  </div>
+
+  <div class="card reveal d1" id="rb-s1">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--rb),transparent)"></div>
+    <h3>Step 1 — Verify with Microsoft</h3>
+    <p>Sign in with Microsoft to verify your Roblox account. Your credentials go directly to Microsoft, never to us.</p>
+    <div class="notice n-info" style="margin-bottom:22px">
+      <div class="n-title">Roblox + Microsoft</div>
+      <p>We use <strong>Microsoft OAuth 2.0</strong> for secure authentication. Roblox accounts can be linked to Microsoft for enhanced security.</p>
+    </div>
+    <button class="btn btn-ms btn-full" onclick="msLogin('rb')">
+      <svg width="16" height="16" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+      Continue with Microsoft
+    </button>
+  </div>
+
+  <div class="card reveal d2" id="rb-s2" style="display:none">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--rb),transparent)"></div>
+    <div class="u-pill">
+      <div class="u-av" id="rb-av" style="background:linear-gradient(135deg,#dc2626,var(--rb))">?</div>
+      <div style="flex:1;min-width:0"><div class="u-name" id="rb-uname">—</div><div class="u-sub" id="rb-uemail">—</div></div>
+      <div class="u-badge">Verified</div>
+      <button class="btn-sw" onclick="msOut('rb')">Switch</button>
+    </div>
+    <h3>Step 2 — Select Plan & Enter Code</h3>
+    <p>Choose your Robux plan and paste your redemption code below.</p>
+    <div class="field">
+      <label>Robux Plan</label>
+      <select class="inp" id="rb-plan">
+        <option value="">— Select Plan —</option>
+        <option value="400">400 Robux ($50 plan)</option>
+        <option value="850">850 Robux ($100 plan)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Redemption Code</label>
+      <div class="irow">
+        <input class="inp code" id="rb-code" type="text" maxlength="19" placeholder="XXXX-XXXX-XXXX" oninput="fmtCode(this)" autocomplete="off" spellcheck="false"/>
+        <button class="iaction" onclick="pasteC('rb-code')" title="Paste">⌘</button>
+      </div>
+      <div class="fmsg" id="rb-msg">Format: XXXX-XXXX-XXXX</div>
+    </div>
+    <button class="btn btn-rb btn-full" id="rb-btn" onclick="redeem('rb')">
+      <span id="rb-bt">Redeem Roblox Reward</span>
+      <div class="btn-spin" id="rb-sp" style="display:none;border-color:rgba(255,255,255,0.3);border-top-color:#fff"></div>
+    </button>
+  </div>
+
+  <div class="scard" id="rb-ok">
+    <div class="s-ico" style="background:var(--rb-g);border:2px solid var(--rb-border)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--rb)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:check 0.5s 0.2s var(--ease-out) forwards"/>
+      </svg>
+    </div>
+    <div class="s-title" style="color:var(--rb)">Robux Redeemed!</div>
+    <div class="s-desc">Your Roblox code has been submitted successfully.</div>
+    
+    <div class="s-code-box">
+      <div class="s-code-label">Order ID</div>
+      <div class="s-code" id="rb-oid" style="color:var(--rb)">—</div>
+    </div>
+
+    <div class="s-timeline">
+      <div class="s-tl-item">
+        <div class="s-tl-dot done">✓</div>
+        <div class="s-tl-content">
+          <h4>Code Submitted</h4>
+          <p>Your Robux code has been received and validated</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">⏳</div>
+        <div class="s-tl-content">
+          <h4>Processing Queue</h4>
+          <p>Awaiting Robux credit (within 48 hours)</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">📧</div>
+        <div class="s-tl-content">
+          <h4>Robux Added</h4>
+          <p>You'll receive email confirmation when complete</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost btn-full" onclick="downloadPDF('rb')">📄 Download Invoice (PDF)</button>
+    <button class="btn btn-rb btn-full" style="margin-top:12px" onclick="go('track')">Track Order Status</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     XBOX PAGE
+═══════════════════════════════════ -->
+<div class="page" id="page-xbox">
+<div class="wrap-sm">
+  <div style="padding-top:70px;margin-bottom:36px" class="reveal">
+    <div class="page-eyebrow">🎯 Xbox</div>
+    <h2 class="page-title" style="color:var(--xbox)">Game Pass<br/>Redemption</h2>
+    <p class="page-desc">Verify with Microsoft, enter your code — Game Pass Ultimate activated within 48 hours.</p>
+  </div>
+
+  <div class="card reveal d1" id="xbox-s1">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--xbox),transparent)"></div>
+    <h3>Step 1 — Verify with Microsoft</h3>
+    <p>Your Xbox account is managed by Microsoft. Sign in to verify and view your full Xbox profile.</p>
+    <div class="notice n-info" style="margin-bottom:22px">
+      <div class="n-title">Xbox + Microsoft</div>
+      <p>We use <strong>Microsoft OAuth 2.0</strong> to securely access your Xbox profile. Your credentials stay with Microsoft, never shared with us.</p>
+    </div>
+    <button class="btn btn-ms btn-full" onclick="msLogin('xbox')">
+      <svg width="16" height="16" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+      Continue with Microsoft
+    </button>
+  </div>
+
+  <div class="card reveal d2" id="xbox-s2" style="display:none">
+    <div class="card-top-line" style="background:linear-gradient(90deg,var(--xbox),transparent)"></div>
+    <div class="u-pill">
+      <div class="u-av" id="xbox-av" style="background:linear-gradient(135deg,#059669,var(--xbox))">?</div>
+      <div style="flex:1;min-width:0"><div class="u-name" id="xbox-uname">—</div><div class="u-sub" id="xbox-uemail">—</div></div>
+      <div class="u-badge">Verified</div>
+      <button class="btn-sw" onclick="msOut('xbox')">Switch</button>
+    </div>
+    <h3>Step 2 — Enter your code</h3>
+    <p>Paste or type your Game Pass Ultimate redemption code below.</p>
+    <div class="field">
+      <label>Redemption Code</label>
+      <div class="irow">
+        <input class="inp code" id="xbox-code" type="text" maxlength="19" placeholder="XXXX-XXXX-XXXX" oninput="fmtCode(this)" autocomplete="off" spellcheck="false"/>
+        <button class="iaction" onclick="pasteC('xbox-code')" title="Paste">⌘</button>
+      </div>
+      <div class="fmsg" id="xbox-msg">Format: XXXX-XXXX-XXXX</div>
+    </div>
+    <button class="btn btn-xbox btn-full" id="xbox-btn" onclick="redeem('xbox')">
+      <span id="xbox-bt">Redeem Xbox Game Pass</span>
+      <div class="btn-spin" id="xbox-sp" style="display:none;border-color:rgba(255,255,255,0.3);border-top-color:#fff"></div>
+    </button>
+  </div>
+
+  <div class="scard" id="xbox-ok">
+    <div class="s-ico" style="background:var(--xbox-g);border:2px solid var(--xbox-border)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--xbox)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:check 0.5s 0.2s var(--ease-out) forwards"/>
+      </svg>
+    </div>
+    <div class="s-title" style="color:var(--xbox)">Game Pass Redeemed!</div>
+    <div class="s-desc">Your Xbox Game Pass code has been submitted successfully.</div>
+    
+    <div class="s-code-box">
+      <div class="s-code-label">Order ID</div>
+      <div class="s-code" id="xbox-oid" style="color:var(--xbox)">—</div>
+    </div>
+
+    <div class="s-timeline">
+      <div class="s-tl-item">
+        <div class="s-tl-dot done">✓</div>
+        <div class="s-tl-content">
+          <h4>Code Submitted</h4>
+          <p>Your Game Pass code has been received and validated</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">⏳</div>
+        <div class="s-tl-content">
+          <h4>Processing Queue</h4>
+          <p>Awaiting activation (within 48 hours)</p>
+        </div>
+      </div>
+      <div class="s-tl-item">
+        <div class="s-tl-dot pending">📧</div>
+        <div class="s-tl-content">
+          <h4>Game Pass Active</h4>
+          <p>You'll receive email confirmation when ready</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost btn-full" onclick="downloadPDF('xbox')">📄 Download Invoice (PDF)</button>
+    <button class="btn btn-xbox btn-full" style="margin-top:12px" onclick="go('track')">Track Order Status</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     TRACK ORDER PAGE
+═══════════════════════════════════ -->
+<div class="page" id="page-track">
+<div class="wrap-sm">
+  <div style="padding-top:70px;margin-bottom:36px" class="reveal">
+    <div class="page-eyebrow">📦 Track Order</div>
+    <h2 class="page-title">Order Status</h2>
+    <p class="page-desc">Enter your Order ID to track your redemption progress.</p>
+  </div>
+
+  <div class="card reveal d1">
+    <h3>Track Your Order</h3>
+    <p>Paste your Order ID from your confirmation email.</p>
+    <div class="field">
+      <label>Order ID</label>
+      <input class="inp" id="track-oid" type="text" placeholder="e.g., MC-ABC123" autocomplete="off"/>
+    </div>
+    <button class="btn btn-dc btn-full" onclick="trackOrder()">
+      Track Order
+    </button>
+  </div>
+
+  <div class="scard" id="track-result" style="display:none">
+    <div class="s-ico" style="background:var(--nitro-g);border:2px solid var(--nitro-border)">
+      📦
+    </div>
+    <div class="s-title">Order Found</div>
+    <div class="s-desc" id="track-desc">—</div>
+    
+    <div class="s-code-box">
+      <div class="s-code-label">Order ID</div>
+      <div class="s-code" id="track-oid-display" style="color:var(--nitro)">—</div>
+    </div>
+
+    <div class="s-timeline" id="track-timeline">
+      <!-- Timeline will be dynamically populated -->
+    </div>
+
+    <button class="btn btn-ghost btn-full" onclick="go('home')">Return Home</button>
+  </div>
+
+</div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span class="toast-message" id="toast-msg">Success!</span>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ════════════════════════════════════════════════════════════════════
+
+// Discord OAuth Configuration
+const DISCORD_CONFIG = {
+  clientId: 'YOUR_DISCORD_CLIENT_ID', // Replace with your Discord app client ID
+  redirectUri: window.location.origin + '/oauth/discord',
+  botInvite: 'YOUR_BOT_INVITE_URL', // Replace with your bot invite URL with permissions
+  scopes: ['identify', 'email', 'guilds.join'], // Required scopes
+  serverGuildId: 'YOUR_SERVER_GUILD_ID' // Your secure Discord server ID
+};
+
+// MongoDB Configuration
+const MONGODB_CONFIG = {
+  apiUrl: 'YOUR_BACKEND_API_URL', // Replace with your backend API
+  endpoints: {
+    saveAuth: '/api/discord/auth',
+    trackUser: '/api/discord/track',
+    getStats: '/api/discord/stats',
+    saveOrder: '/api/orders/create'
+  }
+};
+
+// Microsoft OAuth Configuration
+const MS_CONFIG = {
+  clientId: 'YOUR_MICROSOFT_APP_ID',
+  authority: 'https://login.microsoftonline.com/consumers',
+  redirectUri: window.location.origin
+};
+
+let msalInstance = null;
+let currentUser = null;
+let currentGame = null;
+
+// ════════════════════════════════════════════════════════════════════
+// PAGE NAVIGATION
+// ════════════════════════════════════════════════════════════════════
+
+function go(page) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+  
+  // Show selected page
+  const target = document.getElementById(`page-${page}`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0, 0);
+    
+    // Update nav tabs
+    document.querySelectorAll('.ntab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    document.querySelector(`[onclick="go('${page}')"]`)?.classList.add('active');
+    
+    // Trigger reveal animations
+    setTimeout(() => {
+      target.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    }, 50);
+  }
+}
+
+// Mobile nav toggle
+document.getElementById('hbgBtn')?.addEventListener('click', () => {
+  const btn = document.getElementById('hbgBtn');
+  const nav = document.getElementById('mobNav');
+  btn.classList.toggle('open');
+  nav.classList.toggle('show');
+});
+
+function closeMob() {
+  document.getElementById('hbgBtn')?.classList.remove('open');
+  document.getElementById('mobNav')?.classList.remove('show');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// DISCORD OAUTH & BOT AUTHORIZATION
+// ════════════════════════════════════════════════════════════════════
+
+function dcLogin() {
+  showToast('Redirecting to Discord...', 'success');
+  
+  // Build Discord OAuth URL
+  const params = new URLSearchParams({
+    client_id: DISCORD_CONFIG.clientId,
+    redirect_uri: DISCORD_CONFIG.redirectUri,
+    response_type: 'code',
+    scope: DISCORD_CONFIG.scopes.join(' ')
+  });
+  
+  window.location.href = `https://discord.com/api/oauth2/authorize?${params}`;
+}
+
+function dcBotAuth() {
+  showToast('Authorizing Discord bot...', 'success');
+  
+  // Build bot authorization URL
+  const params = new URLSearchParams({
+    client_id: DISCORD_CONFIG.clientId,
+    permissions: '8', // Administrator permissions (adjust as needed)
+    scope: 'bot applications.commands',
+    guild_id: DISCORD_CONFIG.serverGuildId,
+    disable_guild_select: 'true'
+  });
+  
+  window.location.href = `https://discord.com/api/oauth2/authorize?${params}`;
+}
+
+// Handle Discord OAuth callback
+async function handleDiscordCallback() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  
+  if (code) {
+    try {
+      // Exchange code for access token (requires backend)
+      const response = await fetch(MONGODB_CONFIG.apiUrl + MONGODB_CONFIG.endpoints.saveAuth, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, redirectUri: DISCORD_CONFIG.redirectUri })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Store user info
+        currentUser = {
+          type: 'discord',
+          id: data.user.id,
+          username: data.user.username,
+          discriminator: data.user.discriminator,
+          email: data.user.email,
+          avatar: data.user.avatar
+        };
+        
+        // Auto-join user to safe server (requires bot with guilds.join scope)
+        await autoJoinSafeServer(data.access_token, data.user.id);
+        
+        // Update UI
+        updateNavAuth();
+        showToast(`Welcome, ${data.user.username}!`, 'success');
+        
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    } catch (err) {
+      console.error('Discord auth error:', err);
+      showToast('Discord authorization failed', 'error');
+    }
+  }
+}
+
+async function autoJoinSafeServer(accessToken, userId) {
+  try {
+    // This requires your backend to call Discord API
+    await fetch(MONGODB_CONFIG.apiUrl + '/api/discord/join-server', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accessToken,
+        userId,
+        guildId: DISCORD_CONFIG.serverGuildId
+      })
+    });
+    
+    showToast('Added to safe server!', 'success');
+  } catch (err) {
+    console.error('Auto-join error:', err);
+  }
+}
+
+function dcOut(game) {
+  currentUser = null;
+  updateNavAuth();
+  hideStep(game, 2);
+  showStep(game, 1);
+  showToast('Logged out', 'success');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// MICROSOFT OAUTH
+// ════════════════════════════════════════════════════════════════════
+
+function initMSAL() {
+  if (typeof msal === 'undefined') {
+    console.warn('MSAL not loaded');
+    return;
+  }
+  
+  msalInstance = new msal.PublicClientApplication({
+    auth: {
+      clientId: MS_CONFIG.clientId,
+      authority: MS_CONFIG.authority,
+      redirectUri: MS_CONFIG.redirectUri
+    },
+    cache: {
+      cacheLocation: 'localStorage'
+    }
+  });
+}
+
+async function msLogin(game) {
+  if (!msalInstance) initMSAL();
+  
+  try {
+    const response = await msalInstance.loginPopup({
+      scopes: ['User.Read', 'XboxLive.signin']
+    });
+    
+    currentUser = {
+      type: 'microsoft',
+      name: response.account.name,
+      email: response.account.username,
+      id: response.account.localAccountId
+    };
+    currentGame = game;
+    
+    // Update UI
+    const av = document.getElementById(`${game}-av`);
+    const uname = document.getElementById(`${game}-uname`);
+    const uemail = document.getElementById(`${game}-uemail`);
+    
+    if (av) av.textContent = currentUser.name.charAt(0).toUpperCase();
+    if (uname) uname.textContent = currentUser.name;
+    if (uemail) uemail.textContent = currentUser.email;
+    
+    // Show step 2
+    hideStep(game, 1);
+    showStep(game, 2);
+    
+    showToast(`Verified as ${currentUser.name}`, 'success');
+  } catch (err) {
+    console.error('MS login error:', err);
+    showToast('Microsoft login failed', 'error');
+  }
+}
+
+function msOut(game) {
+  if (msalInstance) {
+    const account = msalInstance.getAllAccounts()[0];
+    if (account) {
+      msalInstance.logoutPopup({ account });
+    }
+  }
+  currentUser = null;
+  currentGame = null;
+  hideStep(game, 2);
+  showStep(game, 1);
+  showToast('Logged out', 'success');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// REDEMPTION LOGIC
+// ════════════════════════════════════════════════════════════════════
+
+async function redeem(game) {
+  const codeInput = document.getElementById(`${game}-code`);
+  const code = codeInput?.value?.trim();
+  
+  // Validate code
+  if (!code || code.length < 10) {
+    showToast('Please enter a valid code', 'error');
+    return;
+  }
+  
+  // Special handling for Nitro plan selection
+  if (game === 'nitro') {
+    const plan = document.getElementById('nitro-plan')?.value;
+    if (!plan) {
+      showToast('Please select a Nitro plan', 'error');
+      return;
+    }
+  }
+  
+  // Special handling for Roblox plan selection
+  if (game === 'rb') {
+    const plan = document.getElementById('rb-plan')?.value;
+    if (!plan) {
+      showToast('Please select a Robux plan', 'error');
+      return;
+    }
+  }
+  
+  // Show loading
+  const btn = document.getElementById(`${game}-btn`);
+  const btnText = document.getElementById(`${game}-bt`);
+  const spinner = document.getElementById(`${game}-sp`);
+  
+  if (btn) btn.disabled = true;
+  if (btnText) btnText.style.display = 'none';
+  if (spinner) spinner.style.display = 'inline-block';
+  
+  // Simulate API call (replace with real backend call)
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  try {
+    // Generate order ID
+    const orderId = `${game.toUpperCase()}-${generateId(6)}`;
+    
+    // Save to MongoDB (requires backend)
+    await fetch(MONGODB_CONFIG.apiUrl + MONGODB_CONFIG.endpoints.saveOrder, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId,
+        game,
+        code,
+        user: currentUser,
+        plan: game === 'nitro' ? document.getElementById('nitro-plan')?.value : 
+              game === 'rb' ? document.getElementById('rb-plan')?.value : null,
+        timestamp: Date.now(),
+        status: 'pending'
+      })
+    });
+    
+    // Update UI with order ID
+    const oidEl = document.getElementById(`${game}-oid`);
+    if (oidEl) oidEl.textContent = orderId;
+    
+    // Hide form, show success
+    hideStep(game, 2);
+    document.getElementById(`${game}-ok`)?.classList.add('show');
+    
+    showToast('Code redeemed successfully!', 'success');
+  } catch (err) {
+    console.error('Redemption error:', err);
+    showToast('Redemption failed. Try again.', 'error');
+    
+    // Reset button
+    if (btn) btn.disabled = false;
+    if (btnText) btnText.style.display = 'inline';
+    if (spinner) spinner.style.display = 'none';
+  }
+}
+
+function selectNitroPlan(plan) {
+  const select = document.getElementById('nitro-plan');
+  if (select) {
+    select.value = plan;
+  }
+  // Scroll to form
+  document.getElementById('nitro-s1')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// PDF GENERATION
+// ════════════════════════════════════════════════════════════════════
+
+function downloadPDF(game) {
+  if (typeof jspdf === 'undefined') {
+    showToast('PDF library not loaded', 'error');
+    return;
+  }
+  
+  const { jsPDF } = jspdf;
+  const doc = new jsPDF();
+  
+  const orderId = document.getElementById(`${game}-oid`)?.textContent || 'Unknown';
+  const gameNames = {
+    nitro: 'Discord Nitro',
+    mc: 'Minecraft',
+    rb: 'Roblox',
+    xbox: 'Xbox Game Pass'
+  };
+  
+  // Header
+  doc.setFontSize(22);
+  doc.text('ElevateIQ', 20, 20);
+  doc.setFontSize(10);
+  doc.text('Redemption Invoice', 20, 28);
+  
+  // Order details
+  doc.setFontSize(14);
+  doc.text('Order Details', 20, 45);
+  doc.setFontSize(10);
+  doc.text(`Game: ${gameNames[game] || game}`, 20, 55);
+  doc.text(`Order ID: ${orderId}`, 20, 62);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 69);
+  doc.text(`Status: Processing (within 48 hours)`, 20, 76);
+  
+  // User details
+  if (currentUser) {
+    doc.text(`Account: ${currentUser.name || currentUser.username}`, 20, 83);
+    doc.text(`Email: ${currentUser.email}`, 20, 90);
+  }
+  
+  // Footer
+  doc.setFontSize(8);
+  doc.text('Thank you for using ElevateIQ!', 20, 280);
+  doc.text('Questions? Contact support@elevateiq.com', 20, 285);
+  
+  // Download
+  doc.save(`ElevateIQ_${orderId}.pdf`);
+  showToast('PDF downloaded!', 'success');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// TRACK ORDER
+// ════════════════════════════════════════════════════════════════════
+
+async function trackOrder() {
+  const oid = document.getElementById('track-oid')?.value?.trim();
+  
+  if (!oid) {
+    showToast('Please enter an Order ID', 'error');
+    return;
+  }
+  
+  // Simulate API call (replace with real backend call)
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Mock data - replace with real API call
+  const mockOrder = {
+    orderId: oid,
+    game: 'Minecraft',
+    status: 'processing',
+    timestamp: Date.now() - 3600000 // 1 hour ago
+  };
+  
+  // Update UI
+  document.getElementById('track-oid-display').textContent = mockOrder.orderId;
+  document.getElementById('track-desc').textContent = `Your ${mockOrder.game} order is being processed.`;
+  
+  // Build timeline
+  const timeline = document.getElementById('track-timeline');
+  timeline.innerHTML = `
+    <div class="s-tl-item">
+      <div class="s-tl-dot done">✓</div>
+      <div class="s-tl-content">
+        <h4>Order Received</h4>
+        <p>${new Date(mockOrder.timestamp).toLocaleString()}</p>
+      </div>
+    </div>
+    <div class="s-tl-item">
+      <div class="s-tl-dot pending">⏳</div>
+      <div class="s-tl-content">
+        <h4>Processing</h4>
+        <p>Estimated completion: within 48 hours</p>
+      </div>
+    </div>
+    <div class="s-tl-item">
+      <div class="s-tl-dot pending">📧</div>
+      <div class="s-tl-content">
+        <h4>Completed</h4>
+        <p>You'll receive email confirmation</p>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('track-result')?.classList.add('show');
+  showToast('Order found!', 'success');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ════════════════════════════════════════════════════════════════════
+
+function showStep(game, step) {
+  const el = document.getElementById(`${game}-s${step}`);
+  if (el) el.style.display = 'block';
+}
+
+function hideStep(game, step) {
+  const el = document.getElementById(`${game}-s${step}`);
+  if (el) el.style.display = 'none';
+}
+
+function fmtCode(input) {
+  let val = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+  if (val.length > 4) val = val.slice(0, 4) + '-' + val.slice(4);
+  if (val.length > 9) val = val.slice(0, 9) + '-' + val.slice(9);
+  if (val.length > 14) val = val.slice(0, 14);
+  input.value = val;
+}
+
+async function pasteC(id) {
+  try {
+    const text = await navigator.clipboard.readText();
+    const input = document.getElementById(id);
+    if (input) {
+      input.value = text;
+      fmtCode(input);
+    }
+  } catch (err) {
+    showToast('Paste permission denied', 'error');
+  }
+}
+
+function generateId(len) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < len; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  const message = document.getElementById('toast-msg');
+  
+  if (!toast || !icon || !message) return;
+  
+  toast.className = `toast ${type}`;
+  icon.textContent = type === 'success' ? '✓' : '✕';
+  message.textContent = msg;
+  
+  toast.classList.add('show');
+  
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
+}
+
+function updateNavAuth() {
+  const navAuth = document.getElementById('nav-auth');
+  
+  if (currentUser && navAuth) {
+    navAuth.innerHTML = `
+      <div class="u-pill show">
+        <div class="u-av" style="background:linear-gradient(135deg,var(--nitro),var(--accent2))">
+          ${(currentUser.username || currentUser.name).charAt(0).toUpperCase()}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="u-name">${currentUser.username || currentUser.name}</div>
+          <div class="u-sub">${currentUser.email}</div>
+        </div>
+        <button class="btn-sw" onclick="dcOut('global')">Logout</button>
+      </div>
+    `;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// INITIALIZATION
+// ════════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize MSAL
+  initMSAL();
+  
+  // Check for Discord OAuth callback
+  handleDiscordCallback();
+  
+  // Trigger reveal animations
+  setTimeout(() => {
+    document.querySelectorAll('.page.active .reveal').forEach(el => {
+      el.classList.add('in');
+    });
+  }, 100);
+  
+  // Initialize intersection observer for scroll reveals
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+</script>
+
+</body>
+</html>
