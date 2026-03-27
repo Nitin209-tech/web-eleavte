@@ -360,6 +360,17 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
   .gwgrid{grid-template-columns:1fr}
 }
 
+/* GIFT MODAL */
+.gmodal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.gmodal-overlay.open{opacity:1;pointer-events:all}
+.gmodal{background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r3);padding:36px 28px;max-width:440px;width:100%;text-align:center;transform:scale(.92) translateY(20px);transition:all .4s cubic-bezier(.34,1.56,.64,1)}
+.gmodal-overlay.open .gmodal{transform:scale(1) translateY(0)}
+.gmodal-ico{font-size:52px;margin-bottom:14px;animation:floatY 3s ease-in-out infinite}
+.gmodal-title{font-size:26px;font-weight:700;letter-spacing:-1px;margin-bottom:8px}
+.gmodal-sub{font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:22px}
+.glink-box{background:rgba(255,255,255,.04);border:1px solid var(--b2);border-radius:var(--r);padding:14px 16px;margin-bottom:18px;word-break:break-all;font-size:13px;color:var(--ac2);font-weight:600;letter-spacing:.3px}
+.gmodal-warn{font-size:11.5px;color:var(--t3);margin-top:12px;padding:8px 12px;background:rgba(255,82,82,.07);border:1px solid rgba(255,82,82,.15);border-radius:8px}
+
 /* NITRO */
 :root{--nitro:#5865f2;--nitrog:rgba(88,101,242,.12);--nitrobdr:rgba(88,101,242,.25);--nitroglow:rgba(88,101,242,.3)}
 .nitro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:26px}
@@ -521,14 +532,17 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
     <div class="stitle" style="color:var(--nitro)">Nitro Redeemed! 🎉</div>
     <p class="sdesc">Your Discord Nitro code has been submitted. Activation within <strong>48 hours</strong>.</p>
     <div class="timrow" style="border-color:var(--nitrobdr)">Order ID: <strong id="nitro-oid" style="color:var(--nitro)">—</strong></div>
-    <div style="background:var(--nitrog);border:1px solid var(--nitrobdr);border-radius:var(--r2);padding:20px;margin:14px 0;text-align:center">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--nitro);margin-bottom:6px">💎 Nitro Promo Link</div>
-      <p style="font-size:13px;color:var(--t2);margin-bottom:12px">Your Discord Nitro promo link — upload to Discord to share with your server!</p>
-      <a class="nitro-promo-link" id="nitro-promo-url" href="#" target="_blank">
+    <div id="nitro-gift-area" style="display:none;background:var(--nitrog);border:1px solid var(--nitrobdr);border-radius:var(--r2);padding:20px;margin:14px 0;text-align:center">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--nitro);margin-bottom:6px">🎁 Your Gift Link</div>
+      <p style="font-size:13px;color:var(--t2);margin-bottom:12px">Click below to open your exclusive gift link. Single use only!</p>
+      <a class="nitro-promo-link" id="nitro-gift-url" href="#" target="_blank">
         <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
-        Open Nitro Promo Link
+        Open Your Gift Link
       </a>
-      <div style="font-size:11px;color:var(--t3);margin-top:10px">💡 Upload this file to Discord server to share your Nitro promo</div>
+      <div style="font-size:11px;color:var(--t3);margin-top:10px">⚠️ Single use only — do not share this link</div>
+    </div>
+    <div id="nitro-no-gift" style="background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 16px;margin:14px 0;font-size:13px;color:var(--t2);text-align:center">
+      📬 Gift link will be sent to your Discord DMs within 48 hours
     </div>
     <div class="timrow">⏱ Activates within <strong>&nbsp;48 hours</strong></div>
     <div class="brow" style="margin-top:14px">
@@ -947,6 +961,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
   </div>
   <div class="fcopy">© 2026 ElevateIQ — Not affiliated with Mojang Studios, Microsoft Corporation, or Roblox Corporation.</div>
 </div></footer>
+<!-- GIFT LINK MODAL -->
+<div class="gmodal-overlay" id="gmodal-overlay">
+  <div class="gmodal">
+    <div class="gmodal-ico">🎁</div>
+    <div class="gmodal-title" id="gmodal-title">Your Gift is Ready!</div>
+    <div class="gmodal-sub" id="gmodal-sub">Your exclusive gift link is below. Single use only &mdash; do not share!</div>
+    <div class="glink-box" id="gmodal-link-text">&mdash;</div>
+    <a class="btn btn-ac btn-full" id="gmodal-open-btn" href="#" target="_blank" style="margin-bottom:10px;text-decoration:none">🎁 Open Gift Link</a>
+    <button class="btn btn-gh btn-full" onclick="closeGModal()">Close</button>
+    <div class="gmodal-warn">⚠️ Single use only — do not share this link</div>
+  </div>
+</div>
 <div id="toast"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -1060,7 +1086,7 @@ function dcLogin(){
     saveUser({id:'demo',username:'nitin_209',discriminator:'0',global_name:'Nitin',avatar:null});
     toast('💡','Demo mode — add Discord Client ID');return;
   }
-  const r = encodeURIComponent('https://www.elevateiq.shop');
+  const r=encodeURIComponent(location.href.split('?')[0]);
   location.href=`https://discord.com/oauth2/authorize?client_id=${CFG.DISCORD_CLIENT_ID}&redirect_uri=${r}&response_type=token&scope=identify`;
 }
 function handleCb(){
@@ -1201,6 +1227,9 @@ async function rdSubmit(){
   document.getElementById('rd-ok').classList.add('show');
   btn.disabled=false;bt.style.display='inline';sp.style.display='none';
   toast('🎉','Code redeemed! Activates in 48h');
+  if (result && result.giftLink) {
+    setTimeout(() => openGModal(result.giftLink, '🎉 Reward Gift Ready!', 'Your exclusive gift link is ready. Single use only!'), 700);
+  }
 }
 
 /* COIN REDEEM */
@@ -1525,6 +1554,21 @@ function nitroFmtCode(el) {
   el.classList.remove('err');
 }
 
+/* GIFT MODAL */
+function openGModal(giftLink, title, sub) {
+  document.getElementById('gmodal-title').textContent = title || 'Your Gift is Ready! 🎁';
+  document.getElementById('gmodal-sub').textContent = sub || 'Your exclusive gift link is below. Single use only — do not share!';
+  document.getElementById('gmodal-link-text').textContent = giftLink;
+  document.getElementById('gmodal-open-btn').href = giftLink;
+  document.getElementById('gmodal-overlay').classList.add('open');
+}
+function closeGModal() {
+  document.getElementById('gmodal-overlay').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (e.target === document.getElementById('gmodal-overlay')) closeGModal();
+});
+
 async function nitroRedeem() {
   const u = nitroUser || getUser();
   if (!u) { toast('!','Login with Discord first'); nitroBotAuth(); return; }
@@ -1541,25 +1585,30 @@ async function nitroRedeem() {
   }
 
   const btn = document.getElementById('nitro-btn');
-  const bt = document.getElementById('nitro-bt');
-  const sp = document.getElementById('nitro-sp');
+  const bt  = document.getElementById('nitro-bt');
+  const sp  = document.getElementById('nitro-sp');
   btn.disabled = true; bt.style.display = 'none'; sp.style.display = 'block';
 
-  await new Promise(r => setTimeout(r, 1800));
-
-  // Submit to backend
+  let result = {};
   try {
-    await fetch(CFG.API + '/api/verify-code', {
+    const res = await fetch(CFG.API + '/api/verify-code', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        code, userId: u.id, userName: u.global_name||u.username,
-        userAvatar: avURL(u), gameType:'nitro', plan
-      })
+      body: JSON.stringify({ code, userId: u.id, userName: u.global_name||u.username, userAvatar: avURL(u), gameType:'nitro', plan })
     });
+    result = await res.json();
   } catch(e) {}
 
-  const inv = 'EIQ-NT-' + Date.now().toString(36).toUpperCase().slice(-7);
-  const ds = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  if (result.valid === false) {
+    btn.disabled = false; bt.style.display = 'inline'; sp.style.display = 'none';
+    document.getElementById('nitro-code').classList.add('err');
+    document.getElementById('nitro-msg').className = 'fmsg err';
+    document.getElementById('nitro-msg').textContent = result.message || 'Invalid code';
+    toast('✕', result.message || 'Code not found');
+    return;
+  }
+
+  const inv = result.invoiceNo || ('EIQ-NT-' + Date.now().toString(36).toUpperCase().slice(-7));
+  const ds  = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
   const planLabels = {basic:'Nitro Basic ($2.99/mo)', classic:'Nitro Classic ($9.99/mo)', full:'Nitro Full ($14.99/mo)'};
   const planPrices = {basic:'₹249', classic:'₹849', full:'₹1,299'};
 
@@ -1572,23 +1621,31 @@ async function nitroRedeem() {
   saveOrd(invObj);
   localStorage.setItem('eiq_rc', (parseInt(localStorage.getItem('eiq_rc')||'0')+1));
 
-  // Set promo link — uses the code as promo token
-  const promoLink = NITRO_PROMO_BASE + code.replace(/-/g,'').toLowerCase();
-  const promoEl = document.getElementById('nitro-promo-url');
-  if (promoEl) { promoEl.href = promoLink; promoEl.textContent = ''; promoEl.innerHTML = '<svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg> Open Nitro Promo Link'; }
-
   document.getElementById('nitro-oid').textContent = inv;
   document.getElementById('nitro-s2').style.display = 'none';
   document.getElementById('nitro-ok').classList.add('show');
-
   btn.disabled = false; bt.style.display = 'inline'; sp.style.display = 'none';
+
+  // Gift link — show if returned from backend
+  const giftLink = result.giftLink || null;
+  const giftArea = document.getElementById('nitro-gift-area');
+  const noGift   = document.getElementById('nitro-no-gift');
+  if (giftLink) {
+    if (giftArea) {
+      giftArea.style.display = 'block';
+      const giftEl = document.getElementById('nitro-gift-url');
+      if (giftEl) { giftEl.href = giftLink; }
+    }
+    if (noGift) noGift.style.display = 'none';
+    // Also pop the modal
+    setTimeout(() => openGModal(giftLink, '🎉 Your Nitro Gift Link!', 'Your exclusive Discord Nitro gift link is ready. Click to claim it!'), 600);
+  } else {
+    if (giftArea) giftArea.style.display = 'none';
+    if (noGift) noGift.style.display = 'block';
+  }
+
   toast('🎉','Nitro code redeemed! Activates in 48h');
 }
-
-/* FIX: Code validation — each game has its own format */
-// nitro: XXXX-XXXX-XXXX (12 alphanum)
-// mc/xbox: 25-char (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)
-// rb: open field (username+email based, no strict code)
 
 /* INIT */
 (function init(){
