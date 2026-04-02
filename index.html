@@ -268,6 +268,56 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:30px 24
 @media(max-width:900px){.ntabs{display:none}.hbg{display:flex}}
 @media(max-width:768px){.sgrid{grid-template-columns:repeat(3,1fr)}.rtiles{grid-template-columns:1fr 1fr}.plans{grid-template-columns:1fr 1fr}.brow{grid-template-columns:1fr}.cshow{padding:24px 18px;gap:20px}}
 @media(max-width:520px){.rtiles{grid-template-columns:1fr}.plans{grid-template-columns:1fr}.sgrid{grid-template-columns:1fr 1fr}.gwgrid{grid-template-columns:1fr}}
+/* === EXTRA PAGES === */
+.xpage-hero{padding:72px 0 40px;border-bottom:1px solid var(--b);margin-bottom:40px}
+.xpage-hero h1{font-size:clamp(32px,5vw,58px);font-weight:700;letter-spacing:-2.5px;margin-bottom:10px;background:linear-gradient(160deg,#fff 30%,rgba(139,133,255,.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.xpage-hero p{font-size:15px;color:var(--t2);max-width:520px;line-height:1.8}
+.xchip{display:inline-flex;align-items:center;gap:7px;background:rgba(108,99,255,.09);border:1px solid rgba(108,99,255,.18);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--ac2);margin-bottom:18px}
+.prose{font-size:14.5px;color:var(--t2);line-height:1.9}
+.prose h2{font-size:19px;font-weight:700;color:var(--t);margin:32px 0 10px;letter-spacing:-.5px}
+.prose h3{font-size:15px;font-weight:700;color:var(--t);margin:22px 0 8px}
+.prose p{margin-bottom:14px}
+.prose ul{padding-left:20px;margin-bottom:14px}
+.prose ul li{margin-bottom:7px;color:var(--t2)}
+.prose strong{color:var(--t);font-weight:600}
+.prose a{color:var(--ac2);text-decoration:none}
+.prose a:hover{text-decoration:underline}
+.how-steps{display:flex;flex-direction:column;gap:0;margin:36px 0}
+.hstep{display:flex;gap:20px;position:relative;padding-bottom:36px}
+.hstep:last-child{padding-bottom:0}
+.hstep:last-child .hline{display:none}
+.hnum{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0;position:relative;z-index:1;box-shadow:0 0 0 6px rgba(108,99,255,.12)}
+.hline{position:absolute;left:22px;top:46px;bottom:0;width:2px;background:linear-gradient(to bottom,rgba(108,99,255,.3),transparent)}
+.hbody{flex:1;padding-top:8px}
+.hbody h3{font-size:17px;font-weight:700;margin-bottom:6px;color:var(--t)}
+.hbody p{font-size:14px;color:var(--t2);line-height:1.75}
+.hbody .htag{display:inline-flex;align-items:center;gap:5px;background:var(--acg);border:1px solid rgba(108,99,255,.2);border-radius:100px;padding:3px 11px;font-size:11px;font-weight:600;color:var(--ac2);margin-top:8px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0}
+.ccard{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:24px;transition:all .2s;cursor:pointer;text-decoration:none;display:block}
+.ccard:hover{border-color:var(--ac2);transform:translateY(-3px)}
+.ccard-ico{font-size:28px;margin-bottom:12px}
+.ccard-t{font-size:15px;font-weight:700;color:var(--t);margin-bottom:5px}
+.ccard-s{font-size:13px;color:var(--t2);line-height:1.6}
+.ccard-link{font-size:13px;color:var(--ac2);font-weight:600;margin-top:10px;display:block}
+.cfaq{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);overflow:hidden;margin-bottom:10px}
+.cfaq-q{padding:16px 20px;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+.cfaq-q:hover{background:var(--cardh)}
+.cfaq-a{padding:0 20px;max-height:0;overflow:hidden;transition:all .3s;font-size:13.5px;color:var(--t2);line-height:1.75}
+.cfaq-a.open{padding:0 20px 16px;max-height:300px}
+.cfaq-arr{transition:transform .3s;color:var(--t3)}
+.cfaq-arr.open{transform:rotate(180deg)}
+.about-team{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:28px 0}
+.tmcard{background:var(--card);border:1px solid var(--b);border-radius:var(--r2);padding:22px;text-align:center;transition:all .2s}
+.tmcard:hover{border-color:var(--b2);transform:translateY(-3px)}
+.tmav{width:60px;height:60px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff}
+.tmnm{font-size:15px;font-weight:700;margin-bottom:3px}
+.tmrl{font-size:12px;color:var(--ac2);font-weight:600;margin-bottom:7px}
+.tmds{font-size:12px;color:var(--t3);line-height:1.6}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:28px 0}
+.sbox{background:linear-gradient(135deg,rgba(108,99,255,.08),rgba(108,99,255,.02));border:1px solid rgba(108,99,255,.15);border-radius:var(--r2);padding:20px;text-align:center}
+.sbox-n{font-size:30px;font-weight:800;letter-spacing:-1.5px;color:var(--ac2);margin-bottom:4px}
+.sbox-l{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--t3)}
+@media(max-width:600px){.contact-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -283,6 +333,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:30px 24
       <button class="ntab" data-page="giveaway" onclick="go('giveaway')">Giveaways</button>
       <button class="ntab" data-page="profile" onclick="go('profile')">Profile</button>
       <button class="ntab" data-page="track" onclick="go('track')">Track Order</button>
+      <button class="ntab" data-page="howitworks" onclick="go('howitworks')">How It Works</button>
+      <button class="ntab" data-page="about" onclick="go('about')">About</button>
+      <button class="ntab" data-page="contact" onclick="go('contact')">Contact</button>
     </div>
     <div class="nr">
       <div class="cpill" id="cpill" onclick="go('earn')">🪙 <span id="nav-coins">0</span></div>
@@ -299,6 +352,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:30px 24
   <button class="ntab" onclick="go('giveaway');closeMob()">🎉 Giveaways</button>
   <button class="ntab" onclick="go('profile');closeMob()">👤 Profile</button>
   <button class="ntab" onclick="go('track');closeMob()">📦 Track Order</button>
+  <button class="ntab" onclick="go('howitworks');closeMob()">❓ How It Works</button>
+  <button class="ntab" onclick="go('about');closeMob()">ℹ️ About Us</button>
+  <button class="ntab" onclick="go('contact');closeMob()">📩 Contact</button>
 </div>
 
 <!-- HOME PAGE -->
@@ -589,6 +645,318 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:30px 24
 </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════
+     HOW IT WORKS PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-howitworks">
+<div class="wmd">
+  <div class="xpage-hero">
+    <div class="xchip">📖 Guide</div>
+    <h1>How It Works</h1>
+    <p>Getting your gaming reward on ElevateIQ is simple — just 4 easy steps to claim your favourite reward.</p>
+  </div>
+
+  <div class="how-steps">
+    <div class="hstep">
+      <div class="hline"></div>
+      <div class="hnum">1</div>
+      <div class="hbody">
+        <h3>🎮 Join Our Discord Server</h3>
+        <p>Start by joining the official ElevateIQ Discord server. This is your hub for earning IQCoins through invites, messages, daily rewards, and much more — all tracked automatically by our bot.</p>
+        <span class="htag">Completely free — takes under 30 seconds</span>
+      </div>
+    </div>
+    <div class="hstep">
+      <div class="hline"></div>
+      <div class="hnum">2</div>
+      <div class="hbody">
+        <h3>🪙 Earn IQCoins</h3>
+        <p>There are multiple ways to stack up your IQCoins balance:</p>
+        <ul style="padding-left:18px;margin-top:8px;color:var(--t2);font-size:14px;line-height:2">
+          <li><strong style="color:var(--go)">📅 Daily Claim</strong> — Claim 1,000 free coins every 24 hours</li>
+          <li><strong style="color:var(--go)">📺 Watch Ad</strong> — Watch a short ad and earn 50,000 coins</li>
+          <li><strong style="color:var(--go)">💬 50 Messages</strong> — Chat in Discord and earn 5,000 coins</li>
+          <li><strong style="color:var(--go)">👥 5 Invites</strong> — Invite friends and earn 10,000 coins</li>
+        </ul>
+        <span class="htag">The more you earn, the bigger your reward</span>
+      </div>
+    </div>
+    <div class="hstep">
+      <div class="hline"></div>
+      <div class="hnum">3</div>
+      <div class="hbody">
+        <h3>🎫 Redeem With Code or Coins</h3>
+        <p>Two ways to get your reward:</p>
+        <ul style="padding-left:18px;margin-top:8px;color:var(--t2);font-size:14px;line-height:2">
+          <li><strong style="color:var(--ac2)">Redeem a Code</strong> — Already have an ElevateIQ code? Redeem it directly (Minecraft ₹899, Roblox ₹1,499+, Xbox ₹1,999)</li>
+          <li><strong style="color:var(--ac2)">Coin Rewards</strong> — Have enough IQCoins? Exchange them for a reward at no extra cost</li>
+        </ul>
+        <span class="htag">Both options are fully secure and verified</span>
+      </div>
+    </div>
+    <div class="hstep">
+      <div class="hnum">4</div>
+      <div class="hbody">
+        <h3>✅ Activated Within 72 Hours</h3>
+        <p>After redemption, your reward is activated to your account within <strong style="color:var(--t)">72 hours</strong>. Track your order status in real-time on the Track Order page. You can also download your invoice as a PDF for your records.</p>
+        <span class="htag">Average activation time: 12–24 hours</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px">
+    <div class="cline" style="background:linear-gradient(90deg,var(--go),transparent)"></div>
+    <h3>🙋 Frequently Asked Questions</h3>
+    <p style="margin-bottom:20px">Quick answers to common questions:</p>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">Do IQCoins expire? <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">No! Your IQCoins never expire. Earn them at your own pace and redeem whenever you're ready.</div>
+    </div>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">My reward hasn't arrived within 72 hours — what do I do? <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">If your reward hasn't been activated after 72 hours, email us at support@elevateiq.net with your invoice number. We'll resolve it on priority.</div>
+    </div>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">Is this site safe and legitimate? <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">Yes! We use Discord OAuth and Microsoft OAuth for verification — your passwords are never seen or stored by us. Every transaction is logged and invoiced for full transparency.</div>
+    </div>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">How many IQCoins do I need for each reward? <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">Minecraft requires 899,000 coins, Roblox $50 starts at 799,000 coins, Xbox Game Pass needs 699,000 coins, and Discord Nitro starts from 599,000 coins.</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:32px 0">
+    <button class="btn btn-ac" onclick="go('earn')" style="margin-right:10px">Start Earning →</button>
+    <button class="btn btn-gh" onclick="go('redeem')">I Have a Code</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT US PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+<div class="wmd">
+  <div class="xpage-hero">
+    <div class="xchip">🏢 Company</div>
+    <h1>About ElevateIQ</h1>
+    <p>We are a passionate gaming community that believes every gamer deserves premium rewards — without breaking the bank.</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="sbox"><div class="sbox-n">12K+</div><div class="sbox-l">Active Members</div></div>
+    <div class="sbox"><div class="sbox-n">5,000+</div><div class="sbox-l">Rewards Delivered</div></div>
+    <div class="sbox"><div class="sbox-n">72h</div><div class="sbox-l">Max Activation</div></div>
+    <div class="sbox"><div class="sbox-n">2024</div><div class="sbox-l">Since</div></div>
+  </div>
+
+  <div class="card">
+    <div class="cline" style="background:linear-gradient(90deg,var(--ac2),transparent)"></div>
+    <h3>🎯 Our Mission</h3>
+    <div class="prose">
+      <p>ElevateIQ's mission is simple — deliver <strong>real value</strong> to gamers. We believe that premium gaming experiences shouldn't be limited to those who can afford them.</p>
+      <p>That's why we built a system where you earn IQCoins through your <strong>activity and engagement</strong> and convert them into real gaming rewards — Minecraft, Roblox, Xbox Game Pass, Discord Nitro, and more coming soon.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="cline" style="background:linear-gradient(90deg,var(--gr),transparent)"></div>
+    <h3>💡 Why ElevateIQ?</h3>
+    <div class="prose">
+      <ul>
+        <li><strong>Transparent System</strong> — Every transaction comes with a downloadable invoice. No hidden fees, ever.</li>
+        <li><strong>Community First</strong> — Over 12,000 active members on our Discord server helping each other level up.</li>
+        <li><strong>Fast Delivery</strong> — 72-hour guaranteed activation, with most rewards delivered in 12–24 hours.</li>
+        <li><strong>Secure & Safe</strong> — Verified via Discord OAuth and Microsoft OAuth. Your data stays protected.</li>
+        <li><strong>Free to Join</strong> — No membership fees, no subscriptions. Just earn and redeem.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-size:18px;font-weight:700;margin:32px 0 16px">👥 Our Team</h3>
+  <div class="about-team">
+    <div class="tmcard">
+      <div class="tmav" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">N</div>
+      <div class="tmnm">Nitin</div>
+      <div class="tmrl">Founder & CEO</div>
+      <div class="tmds">Drives the vision and direction of ElevateIQ. Passionate about gaming and building communities.</div>
+    </div>
+    <div class="tmcard">
+      <div class="tmav" style="background:linear-gradient(135deg,var(--gr),#00b050)">S</div>
+      <div class="tmnm">Support Team</div>
+      <div class="tmrl">Customer Support</div>
+      <div class="tmds">Available 24/7 to help with any issue — orders, accounts, or anything else you need.</div>
+    </div>
+    <div class="tmcard">
+      <div class="tmav" style="background:linear-gradient(135deg,var(--go),#e6a817)">D</div>
+      <div class="tmnm">Dev Team</div>
+      <div class="tmrl">Tech & Bots</div>
+      <div class="tmds">Keeps the website, Discord bots, and backend running smoothly around the clock.</div>
+    </div>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg,rgba(108,99,255,.08),rgba(108,99,255,.02));border-color:rgba(108,99,255,.2);text-align:center;padding:36px">
+    <div style="font-size:32px;margin-bottom:14px">🚀</div>
+    <h3 style="font-size:20px;margin-bottom:10px">Join Our Community</h3>
+    <p style="color:var(--t2);font-size:14px;margin-bottom:20px;line-height:1.75">12,000+ gamers are already earning rewards. When are you joining?</p>
+    <button class="btn btn-dc" onclick="dcLogin()">Join with Discord — Free</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+<div class="wmd">
+  <div class="xpage-hero">
+    <div class="xchip">📩 Support</div>
+    <h1>Contact Us</h1>
+    <p>Have a question, issue, or feedback? We're here and happy to help — reach out through any channel below.</p>
+  </div>
+
+  <div class="contact-grid">
+    <a class="ccard" href="mailto:support@elevateiq.net">
+      <div class="ccard-ico">📧</div>
+      <div class="ccard-t">Email Support</div>
+      <div class="ccard-s">For orders, payments, or account issues — email us and we'll get back to you within 24 hours.</div>
+      <span class="ccard-link">support@elevateiq.net →</span>
+    </a>
+    <a class="ccard" href="https://discord.com/channels/1411327756968661125" target="_blank">
+      <div class="ccard-ico">💬</div>
+      <div class="ccard-t">Discord Server</div>
+      <div class="ccard-s">The fastest way to get help. Open a support ticket in our #support channel and our team will respond quickly.</div>
+      <span class="ccard-link">Join our Discord →</span>
+    </a>
+    <a class="ccard" href="mailto:business@elevateiq.net">
+      <div class="ccard-ico">🤝</div>
+      <div class="ccard-t">Business & Collabs</div>
+      <div class="ccard-s">Interested in a partnership, sponsorship, or collaboration with ElevateIQ? Reach out to our business email.</div>
+      <span class="ccard-link">business@elevateiq.net →</span>
+    </a>
+    <div class="ccard" onclick="go('track')">
+      <div class="ccard-ico">📦</div>
+      <div class="ccard-t">Track Your Order</div>
+      <div class="ccard-s">Want to check your redemption status? Enter your invoice number on the Track Order page for real-time updates.</div>
+      <span class="ccard-link">Track Order →</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="cline" style="background:linear-gradient(90deg,var(--go),transparent)"></div>
+    <h3>⏱ Response Times</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px">
+      <div style="background:var(--grg);border:1px solid rgba(0,230,118,.15);border-radius:var(--r);padding:14px;text-align:center">
+        <div style="font-size:20px;font-weight:800;color:var(--gr)">~1h</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.7px">Discord</div>
+      </div>
+      <div style="background:var(--gog);border:1px solid rgba(244,196,48,.15);border-radius:var(--r);padding:14px;text-align:center">
+        <div style="font-size:20px;font-weight:800;color:var(--go)">~24h</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.7px">Email</div>
+      </div>
+      <div style="background:var(--acg);border:1px solid rgba(108,99,255,.2);border-radius:var(--r);padding:14px;text-align:center">
+        <div style="font-size:20px;font-weight:800;color:var(--ac2)">72h</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.7px">Reward</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="cline" style="background:linear-gradient(90deg,var(--ac2),transparent)"></div>
+    <h3>🙋 Quick Help</h3>
+    <p style="margin-bottom:18px">Check these common questions before reaching out — your answer might already be here:</p>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">My reward hasn't arrived yet <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">If it's been over 72 hours since your redemption, email us at support@elevateiq.net with your invoice number and we'll resolve it on priority.</div>
+    </div>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">I entered the wrong account details <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">Contact us immediately on Discord #support or via email with your invoice number. If the reward hasn't been activated yet, we may be able to correct it.</div>
+    </div>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">My code is showing as invalid <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">Make sure to enter your code carefully — hyphens are added automatically. If the issue persists, contact support with that code and we'll investigate.</div>
+    </div>
+    <div class="cfaq" onclick="toggleFaq(this)">
+      <div class="cfaq-q">How do I get a refund? <span class="cfaq-arr">▼</span></div>
+      <div class="cfaq-a">If your reward wasn't delivered within 72 hours and we're unable to fix it, you'll receive a full refund in the form of IQCoins or payment. Raise a case via email.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PRIVACY POLICY PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-privacy">
+<div class="wmd">
+  <div class="xpage-hero">
+    <div class="xchip">🔒 Legal</div>
+    <h1>Privacy Policy</h1>
+    <p>Last updated: January 2026 — Your privacy is our top priority. Here's exactly what we collect and why.</p>
+  </div>
+
+  <div class="card">
+    <div class="prose">
+      <h2>1. Information We Collect</h2>
+      <p>When you use ElevateIQ, we may collect the following information:</p>
+      <ul>
+        <li><strong>Discord Account Info</strong> — When you log in with Discord, we receive your Discord username, User ID, and avatar. We never see or store your Discord password.</li>
+        <li><strong>IQCoins Activity</strong> — Your coin balance, earning history, and redemption history.</li>
+        <li><strong>Order Details</strong> — When you redeem a reward: game type, selected plan, and invoice information.</li>
+        <li><strong>Usage Data</strong> — Basic analytics data such as pages visited and time spent on the site, to help us improve the experience.</li>
+      </ul>
+
+      <h2>2. How We Use Your Data</h2>
+      <p>Your data is used solely for the following purposes:</p>
+      <ul>
+        <li>Processing and delivering your reward orders</li>
+        <li>Tracking and updating your IQCoins balance</li>
+        <li>Providing customer support</li>
+        <li>Improving the website and fixing bugs</li>
+        <li>Fraud prevention and security</li>
+      </ul>
+
+      <h2>3. Data Sharing</h2>
+      <p>We <strong>never sell your personal data</strong> to any third party. Data is only shared in the following cases:</p>
+      <ul>
+        <li><strong>Discord API</strong> — For login verification (with your explicit permission)</li>
+        <li><strong>Microsoft OAuth</strong> — For account verification (with your explicit permission)</li>
+        <li><strong>MongoDB Atlas</strong> — Secure, encrypted database storage</li>
+        <li><strong>Legal requirements</strong> — If required by applicable law or legal process</li>
+      </ul>
+
+      <h2>4. Data Security</h2>
+      <p>Your data is stored securely in <strong>MongoDB Atlas</strong> using industry-standard encryption. We never store your gaming passwords — only OAuth tokens issued by Discord and Microsoft are used for verification.</p>
+
+      <h2>5. Cookies & Local Storage</h2>
+      <p>We use <strong>browser localStorage</strong> to store your session and coin balance locally on your device. This data never leaves your browser unless you explicitly interact with our platform. You can clear it at any time through your browser settings.</p>
+
+      <h2>6. Your Rights</h2>
+      <ul>
+        <li>Right to access your personal data</li>
+        <li>Right to request deletion of your data</li>
+        <li>Right to close your account and remove all associated data</li>
+      </ul>
+      <p>To exercise any of these rights, contact us at <a href="mailto:support@elevateiq.net">support@elevateiq.net</a>.</p>
+
+      <h2>7. Google AdSense</h2>
+      <p>This website uses <strong>Google AdSense</strong> to serve advertisements. Google may use cookies and similar tracking technologies to personalize ads based on your browsing activity. You can manage or opt out of personalized ads via <a href="https://www.google.com/settings/ads" target="_blank">Google Ad Settings</a>.</p>
+
+      <h2>8. Children's Privacy</h2>
+      <p>ElevateIQ is not intended for users under the age of 13. If you are under 13, please do not use this website. If we become aware that a child under 13 has provided personal data, we will delete it promptly.</p>
+
+      <h2>9. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy at any time. Significant changes will be announced on our Discord server and on this website. Continued use of the platform after changes constitutes your acceptance of the updated policy.</p>
+
+      <h2>10. Contact Us</h2>
+      <p>For any privacy-related questions or concerns, please contact: <a href="mailto:support@elevateiq.net">support@elevateiq.net</a></p>
+    </div>
+  </div>
+</div>
+</div>
+
 <footer>
   <!-- AdSense Ad — Before Footer (High Visibility) -->
   <div class="adsense-block" style="margin-bottom:28px">
@@ -607,7 +975,10 @@ footer{position:relative;z-index:1;border-top:1px solid var(--b);padding:30px 24
     <span class="flink" onclick="go('redeem')">Redeem</span>
     <span class="flink" onclick="go('coins')">Coins</span>
     <span class="flink" onclick="go('track')">Track</span>
-    <a class="flink" href="/cdn-cgi/l/email-protection#671412171708151327020b02110613020e1649090213">Support</a>
+    <span class="flink" onclick="go('howitworks')">How It Works</span>
+    <span class="flink" onclick="go('about')">About Us</span>
+    <span class="flink" onclick="go('contact')">Contact</span>
+    <span class="flink" onclick="go('privacy')">Privacy Policy</span>
   </div>
   <div class="fcopy">© 2026 ElevateIQ — Not affiliated with Mojang Studios, Microsoft Corporation, or Roblox Corporation.</div>
 </div></footer>
@@ -729,6 +1100,8 @@ function dlPDF(data){if(data==='rd')data=RD.inv;else if(data==='coin')data=CI.in
 // ============================
 // INIT — guaranteed page show
 // ====================
+function toggleFaq(el){var a=el.querySelector('.cfaq-a');var arr=el.querySelector('.cfaq-arr');a.classList.toggle('open');arr.classList.toggle('open');}
+
 window.onload=function(){handleCb();var u=getUser();if(u)renderNav(u);updateUI();go('home');};
 </script>
 </body>
