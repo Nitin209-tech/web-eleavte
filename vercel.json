@@ -1,0 +1,18 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/earn", "destination": "/earn.html" },
+    { "source": "/redeem", "destination": "/redeem.html" },
+    { "source": "/coins", "destination": "/coins.html" },
+    { "source": "/giveaway", "destination": "/giveaway.html" },
+    { "source": "/profile", "destination": "/profile.html" },
+    { "source": "/track", "destination": "/track.html" },
+    { "source": "/howitworks", "destination": "/howitworks.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" }
+  ]
+}

@@ -201,7 +201,8 @@
 
 const RD = { game:null, plan:null, user:null, rbUn:null, rbEm:null, inv:null };
 window.RD = RD;
-const MSAL_CLIENT_ID = 'your-azure-client-id';
+// ✅ FIXED: CFG.AZURE_CLIENT use karo (shared.js se aata hai)
+// authority: 'common' matlab personal + work dono accounts support honge
 let msalApp = null;
 
 function getMsal() {
@@ -210,7 +211,18 @@ function getMsal() {
     const t = setInterval(() => {
       if (window.msal) {
         clearInterval(t);
-        msalApp = new msal.PublicClientApplication({ auth: { clientId: MSAL_CLIENT_ID, redirectUri: CFG.REDIR } });
+        msalApp = new msal.PublicClientApplication({
+          auth: {
+            clientId: CFG.AZURE_CLIENT,
+            // ✅ KEY FIX: 'common' se personal Microsoft accounts bhi kaam karenge
+            authority: 'https://login.microsoftonline.com/common',
+            redirectUri: CFG.REDIR
+          },
+          cache: {
+            cacheLocation: 'localStorage',  // session ke baad bhi token rahe
+            storeAuthStateInCookie: false
+          }
+        });
         res(msalApp);
       }
     }, 200);
