@@ -1,6 +1,6 @@
 // ── SHARED CONFIG ──
 const CFG = {
-  API: 'bot-production-168c.up.railway.app',
+  API: 'https://bot-production-2eb8.up.railway.app',
   GUILD: '1411327756968661125',
   CLIENT: '1352652069359587430',
 
