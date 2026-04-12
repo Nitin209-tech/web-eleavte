@@ -2,7 +2,7 @@
 const CFG = {
   API: 'https://bot-production-2eb8.up.railway.app',
   GUILD: '1411327756968661125',
-  CLIENT: '1352652069359587430',
+  CLIENT: '1485034551108702268',
 
   // ✅ FIXED: Clean URL — Discord Developer Portal mein bhi yahi daalni hai
   REDIR: 'https://www.elevateiq.shop/',
