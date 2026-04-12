@@ -1,8 +1,8 @@
 // ── SHARED CONFIG ──
 const CFG = {
-  API: 'https://elevate-iq.up.railway.app',
+  API: 'bot-production-168c.up.railway.app',
   GUILD: '1411327756968661125',
-  CLIENT: '1485034551108702268',
+  CLIENT: '1352652069359587430',
 
   // ✅ FIXED: Clean URL — Discord Developer Portal mein bhi yahi daalni hai
   REDIR: 'https://www.elevateiq.shop/',
