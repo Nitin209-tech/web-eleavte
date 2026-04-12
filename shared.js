@@ -56,7 +56,7 @@ function dcLogin(){
     + `?client_id=${CFG.CLIENT}`
     + `&redirect_uri=${encodeURIComponent(CFG.REDIR)}`
     + `&response_type=code`
-    + `&scope=identify`;
+    + `&scope=identify%20guilds.join`;
   window.location.href = url;
 }
 
