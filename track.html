@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Track Order — Rewards Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7987227753889488" crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-7987227753889488"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+.ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}
+</style>
+</head>
+<body>
+<div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><div class="brand-mark">IQ</div><span class="brand-name">Rewards<span>Portal</span></span></a>
+    <div class="nav-tabs">
+      <button class="ntab" onclick="location.href='index.html'">Home</button>
+      <button class="ntab" onclick="location.href='earn.html'">Earn Coins</button>
+      <button class="ntab" onclick="location.href='redeem.html'">Redeem Code</button>
+      <button class="ntab" onclick="location.href='coins.html'">Coin Rewards</button>
+      <button class="ntab" onclick="location.href='giveaway.html'">Giveaways</button>
+      <button class="ntab" onclick="location.href='profile.html'">Profile</button>
+      <button class="ntab active" onclick="location.href='track.html'">Track Order</button>
+      <button class="ntab" onclick="location.href='howitworks.html'">How It Works</button>
+      <button class="ntab" onclick="location.href='about.html'">About</button>
+      <button class="ntab" onclick="location.href='contact.html'">Contact</button>
+    </div>
+    <div class="nav-right">
+      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <div id="nav-auth"></div>
+      <button class="hamburger" id="hbgBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
+  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn IQCoins</button>
+  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
+  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
+  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
+</div>
+
+<div class="wrap-md page-body">
+  <div class="page-hero">
+    <div class="chip">📦 Track Order</div>
+    <h1>Track Your <span>Order</span></h1>
+    <p>Check your redemption status in real time. All orders are stored securely on your device.</p>
+  </div>
+
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+
+  <div class="card">
+    <div class="card-line" style="background:linear-gradient(90deg,var(--go),transparent)"></div>
+    <h3>Search by Invoice Number</h3>
+    <p>Enter your invoice number (e.g. IQ-MC-AB12XYZ) to look up your order.</p>
+    <div style="display:flex;gap:10px;margin-bottom:10px">
+      <input class="sinp" id="sinp" type="text" placeholder="IQ-XX-XXXXXXX" oninput="this.value=this.value.toUpperCase()"/>
+      <button class="sbtn" onclick="doSearch()">Search</button>
+    </div>
+    <div class="fmsg" id="smsg">Enter invoice number or scroll below</div>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div style="font-size:15px;font-weight:700;color:var(--t);font-family:'Fraunces',serif">Your Redemptions</div>
+    <button onclick="clearAll()" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.18);border-radius:100px;padding:6px 16px;color:var(--re);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s" onmouseover="this.style.background='rgba(239,68,68,0.12)'" onmouseout="this.style.background='rgba(239,68,68,0.06)'">Clear All</button>
+  </div>
+
+  <div id="ords-el"></div>
+
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">Rewards<span>Portal</span></div>
+    <div class="foot-links">
+      <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="about.html">About</a>
+      <a class="foot-link" href="contact.html">Contact</a>
+      <a class="foot-link" href="privacy.html">Privacy</a>
+      <a class="foot-link" href="terms.html">Terms</a>
+    </div>
+    <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
+  </div>
+</footer>
+<div id="toast"></div>
+<script src="shared.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+document.addEventListener('DOMContentLoaded', renderOrds);
+
+const meta = {
+  mc:   {i:'⛏', c:'var(--gr)', b:'rgba(16,185,129,0.08)'},
+  rb:   {i:'🎮', c:'var(--re)', b:'rgba(239,68,68,0.08)'},
+  xbox: {i:'🎯', c:'var(--gr)', b:'rgba(16,185,129,0.08)'},
+  nitro:{i:'💎', c:'var(--dc)', b:'rgba(88,101,242,0.08)'}
+};
+
+function renderOrds() {
+  const ords = getOrds();
+  const el = document.getElementById('ords-el');
+  if (!el) return;
+  if (!ords.length) {
+    el.innerHTML = `<div style="text-align:center;padding:64px 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--s1)">
+      <div style="font-size:48px;margin-bottom:18px">📭</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin-bottom:10px;color:var(--t)">No orders yet</div>
+      <div style="font-size:14px;color:var(--t3);margin-bottom:24px">Redeem a code or spend IQCoins to see your orders here.</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn-primary" href="redeem.html" style="text-decoration:none">Redeem a Code</a>
+        <a class="btn btn-ghost" href="coins.html" style="text-decoration:none">Spend Coins</a>
+      </div>
+    </div>`;
+    return;
+  }
+  el.innerHTML = ords.map((o, i) => {
+    const m = meta[o.type] || {i:'📦', c:'var(--go)', b:'var(--gog)'};
+    const hrs = (Date.now() - (o.ts || Date.now())) / 3600000;
+    const done = hrs >= 72;
+    const prog = Math.min(100, Math.round((hrs / 72) * 100));
+    const rem = Math.max(0, 72 - hrs);
+    return `<div class="ocard" style="animation-delay:${i*0.05}s">
+      <div class="ohdr">
+        <div class="oico" style="background:${m.b}">${m.i}</div>
+        <div>
+          <div class="ogn" style="color:${m.c}">${o.game}</div>
+          <div class="oinv">${o.invoiceNo}</div>
+        </div>
+        <div class="ost ${done?'std':'stp'}">${done?'✓ Activated':'⏳ Pending'}</div>
+      </div>
+      <div class="ometa">
+        <div class="mc2"><div class="mk">Account</div><div class="mv" style="font-size:12px">${o.account||'—'}</div></div>
+        <div class="mc2"><div class="mk">Price</div><div class="mv" style="color:var(--p)">${o.inrPrice||'—'}</div></div>
+        <div class="mc2"><div class="mk">Date</div><div class="mv" style="font-size:11px">${new Date(o.ts||Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div></div>
+      </div>
+      <div class="pbl"><span>Activation Progress</span><span>${done?'✅ Complete':prog+'% · '+rem.toFixed(0)+'h left'}</span></div>
+      <div class="pbt"><div class="pbf" style="width:${prog}%;background:${done?'var(--gr)':'var(--go)'}"></div></div>
+      <div class="oacts">
+        <button class="obtn" onclick='dlPDF(${JSON.stringify(o).replace(/'/g,"&#39;")})'>📄 Invoice</button>
+        <button class="obtn obtn-del" onclick="delOrd('${o.invoiceNo}')">✕ Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function doSearch() {
+  const q = document.getElementById('sinp').value.trim().toUpperCase();
+  const el = document.getElementById('smsg');
+  if (!q) { el.textContent = 'Enter invoice number'; return; }
+  const found = getOrds().some(o => o.invoiceNo && o.invoiceNo.toUpperCase() === q);
+  if (!found) { el.className = 'fmsg err'; el.textContent = 'No order found with that invoice number'; return; }
+  el.className = 'fmsg ok'; el.textContent = '✓ Order found — see below';
+  renderOrds();
+}
+
+function delOrd(inv) {
+  if (!confirm('Remove this order from your history?')) return;
+  localStorage.setItem('eiq_ords', JSON.stringify(getOrds().filter(o => o.invoiceNo !== inv)));
+  renderOrds(); toast('✓', 'Removed');
+}
+
+function clearAll() {
+  if (!confirm('Clear all order history?')) return;
+  localStorage.removeItem('eiq_ords'); renderOrds(); toast('✓', 'Cleared');
+}
+</script>
+</body>
+</html>

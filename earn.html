@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Earn IQCoins — Rewards Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7987227753889488" crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-7987227753889488"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+.balance-hero{background:linear-gradient(135deg,var(--p4),var(--bg2));border:1px solid var(--border2);border-radius:var(--r3);padding:36px 40px;display:flex;align-items:center;gap:24px;margin-bottom:36px;position:relative;overflow:hidden}
+.balance-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(124,92,252,0.18),transparent 70%);pointer-events:none}
+.balance-coin{font-size:48px;animation:floatY 3s ease-in-out infinite;flex-shrink:0}
+.balance-n{font-family:'Fraunces',serif;font-size:48px;font-weight:600;letter-spacing:-2px;color:var(--p);line-height:1}
+.balance-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--t3);margin-top:6px}
+.ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}
+.adp-wrap{margin-top:14px;display:none}
+.adp-bar{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.adp-fill{height:100%;width:0;background:linear-gradient(90deg,var(--p),var(--p2));border-radius:99px;transition:width 0.5s linear}
+.adp-cd{font-size:12px;color:var(--t3);text-align:center}
+</style>
+</head>
+<body>
+<div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><div class="brand-mark">IQ</div><span class="brand-name">Rewards<span>Portal</span></span></a>
+    <div class="nav-tabs">
+      <button class="ntab" data-page="home" onclick="location.href='index.html'">Home</button>
+      <button class="ntab active" data-page="earn" onclick="location.href='earn.html'">Earn Coins</button>
+      <button class="ntab" data-page="redeem" onclick="location.href='redeem.html'">Redeem Code</button>
+      <button class="ntab" data-page="coins" onclick="location.href='coins.html'">Coin Rewards</button>
+      <button class="ntab" data-page="giveaway" onclick="location.href='giveaway.html'">Giveaways</button>
+      <button class="ntab" data-page="profile" onclick="location.href='profile.html'">Profile</button>
+      <button class="ntab" data-page="track" onclick="location.href='track.html'">Track Order</button>
+      <button class="ntab" data-page="howitworks" onclick="location.href='howitworks.html'">How It Works</button>
+      <button class="ntab" data-page="about" onclick="location.href='about.html'">About</button>
+      <button class="ntab" data-page="contact" onclick="location.href='contact.html'">Contact</button>
+    </div>
+    <div class="nav-right">
+      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <div id="nav-auth"></div>
+      <button class="hamburger" id="hbgBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
+  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn IQCoins</button>
+  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
+  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
+  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
+</div>
+
+<div class="wrap-md page-body">
+  <div class="page-hero">
+    <div class="chip">💰 Earn IQCoins</div>
+    <h1>Earn <span>IQCoins</span></h1>
+    <p>Stack up coins through free activities and redeem for premium gaming rewards.</p>
+  </div>
+
+  <!-- BALANCE -->
+  <div class="balance-hero">
+    <div class="balance-coin">🪙</div>
+    <div>
+      <div class="balance-n" id="earn-bal">0</div>
+      <div class="balance-l">Available IQCoins</div>
+    </div>
+  </div>
+
+  <!-- AD -->
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+
+  <!-- EARN CARDS -->
+  <div class="earn-grid">
+    <!-- Daily Claim -->
+    <div class="earn-card">
+      <div class="earn-ico">📅</div>
+      <div class="earn-t">Daily Claim</div>
+      <div class="earn-d">Come back every 24 hours to claim your free IQCoins. Never miss a day!</div>
+      <div class="earn-reward">🪙 +1,000 IQCoins</div>
+      <button class="btn btn-primary btn-full" id="daily-btn" onclick="dailyClaim()">Claim Daily Reward</button>
+    </div>
+
+    <!-- Watch Ad -->
+    <div class="earn-card">
+      <div class="earn-ico">📺</div>
+      <div class="earn-t">Watch an Ad</div>
+      <div class="earn-d">Watch a short 30-second ad to earn a massive IQCoin bonus. 30-minute cooldown applies.</div>
+      <div class="earn-reward">🪙 +50,000 IQCoins</div>
+      <button class="btn btn-primary btn-full" id="watch-btn" onclick="watchAd()"><span id="watch-txt">Watch Ad</span><div class="bspin" id="watch-sp" style="display:none"></div></button>
+      <div class="adp-wrap" id="adp-wrap">
+        <div class="adp-bar"><div class="adp-fill" id="adp"></div></div>
+        <div class="adp-cd" id="adcd"></div>
+      </div>
+    </div>
+
+    <!-- Discord Messages -->
+    <div class="earn-card">
+      <div class="earn-ico">💬</div>
+      <div class="earn-t">Discord Messages</div>
+      <div class="earn-d">Every 50 messages you send in our Discord server earns you IQCoins automatically via our bot.</div>
+      <div class="earn-reward">🪙 +5,000 per 50 msgs</div>
+      <a class="btn btn-discord-full btn-full" href="https://discord.com/channels/1411327756968661125" target="_blank" rel="noopener">Open Discord →</a>
+    </div>
+
+    <!-- Invites -->
+    <div class="earn-card">
+      <div class="earn-ico">👥</div>
+      <div class="earn-t">Invite Friends</div>
+      <div class="earn-d">Every 5 members you invite to our Discord server earns you IQCoins via the invite tracker bot.</div>
+      <div class="earn-reward">🪙 +10,000 per 5 invites</div>
+      <a class="btn btn-discord-full btn-full" href="https://discord.com/channels/1411327756968661125" target="_blank" rel="noopener">Get Invite Link →</a>
+    </div>
+
+    <!-- Giveaways -->
+    <div class="earn-card">
+      <div class="earn-ico">🎉</div>
+      <div class="earn-t">Join Giveaways</div>
+      <div class="earn-d">Participate in regular giveaways on Discord. Winners receive large IQCoin bonuses and free rewards.</div>
+      <div class="earn-reward">🪙 Variable Prizes</div>
+      <button class="btn btn-outline btn-full" onclick="location.href='giveaway.html'">View Giveaways →</button>
+    </div>
+
+    <!-- Referral hint -->
+    <div class="earn-card">
+      <div class="earn-ico">🏆</div>
+      <div class="earn-t">Climb the Leaderboard</div>
+      <div class="earn-d">Top earners get exclusive bonus rewards and special Discord roles. Check your rank on the Profile page.</div>
+      <div class="earn-reward">🪙 Exclusive Bonuses</div>
+      <button class="btn btn-outline btn-full" onclick="location.href='profile.html'">View Profile →</button>
+    </div>
+  </div>
+
+  <!-- AD -->
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+
+  <!-- HOW MUCH DO I NEED -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-line" style="background:linear-gradient(90deg,var(--p),transparent)"></div>
+    <h3>💡 How Many Coins Do I Need?</h3>
+    <p>Here's a quick reference for coin requirements per reward:</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
+        <div style="font-size:18px;margin-bottom:8px">⛏</div>
+        <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Minecraft</div>
+        <div style="font-size:13px;color:var(--t2)">899,000 IQCoins ≈ ₹899</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
+        <div style="font-size:18px;margin-bottom:8px">🎮</div>
+        <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Roblox $50</div>
+        <div style="font-size:13px;color:var(--t2)">799,000 IQCoins ≈ ₹1,499</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
+        <div style="font-size:18px;margin-bottom:8px">🎯</div>
+        <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Xbox Game Pass</div>
+        <div style="font-size:13px;color:var(--t2)">699,000 IQCoins ≈ ₹1,999</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
+        <div style="font-size:18px;margin-bottom:8px">💎</div>
+        <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Discord Nitro Basic</div>
+        <div style="font-size:13px;color:var(--t2)">599,000 IQCoins ≈ ₹1,199</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">Rewards<span>Portal</span></div>
+    <div class="foot-links">
+      <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="about.html">About</a>
+      <a class="foot-link" href="contact.html">Contact</a>
+      <a class="foot-link" href="privacy.html">Privacy</a>
+      <a class="foot-link" href="terms.html">Terms</a>
+    </div>
+    <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
+  </div>
+</footer>
+<div id="toast"></div>
+<script src="shared.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const eb = document.getElementById('earn-bal');
+  if (eb) eb.textContent = getCoins().toLocaleString();
+  checkDailyBtn();
+});
+
+function checkDailyBtn() {
+  const last = parseInt(localStorage.getItem('eiq_dl') || '0');
+  const now = Date.now();
+  const btn = document.getElementById('daily-btn');
+  if (!btn) return;
+  if (now - last < 86400000) {
+    const h = Math.ceil((86400000 - (now - last)) / 3600000);
+    btn.textContent = `⏱ Come back in ${h}h`;
+    btn.disabled = true;
+  }
+}
+
+function dailyClaim() {
+  const last = parseInt(localStorage.getItem('eiq_dl') || '0');
+  const now = Date.now();
+  if (now - last < 86400000) {
+    toast('⏱', `Come back in ${Math.ceil((86400000 - (now - last)) / 3600000)}h!`);
+    return;
+  }
+  localStorage.setItem('eiq_dl', String(now));
+  addCoins(1000, 'Daily claim');
+  const eb = document.getElementById('earn-bal'); if (eb) eb.textContent = getCoins().toLocaleString();
+  const btn = document.getElementById('daily-btn');
+  if (btn) { btn.textContent = '✓ Claimed! Come back tomorrow'; btn.disabled = true; }
+}
+
+function watchAd() {
+  const last = parseInt(localStorage.getItem('eiq_al') || '0');
+  const now = Date.now();
+  const cool = 30 * 60 * 1000;
+  if (now - last < cool) { toast('⏱', `Cooldown: ${Math.ceil((cool - (now - last)) / 60000)}min`); return; }
+  const btn = document.getElementById('watch-btn');
+  const txt = document.getElementById('watch-txt');
+  const sp = document.getElementById('watch-sp');
+  const wrap = document.getElementById('adp-wrap');
+  const prog = document.getElementById('adp');
+  const cd = document.getElementById('adcd');
+  btn.disabled = true; txt.style.display = 'none'; sp.style.display = 'block';
+  wrap.style.display = 'block';
+  let s = 30;
+  cd.textContent = `Ad playing... ${s}s`;
+  const iv = setInterval(() => {
+    s--;
+    prog.style.width = ((30 - s) / 30 * 100) + '%';
+    cd.textContent = `Ad playing... ${s}s`;
+    if (s <= 0) {
+      clearInterval(iv);
+      sp.style.display = 'none'; txt.style.display = 'inline';
+      btn.disabled = false; wrap.style.display = 'none'; cd.textContent = '';
+      localStorage.setItem('eiq_al', String(Date.now()));
+      addCoins(50000, 'Watched ad');
+      const eb = document.getElementById('earn-bal'); if (eb) eb.textContent = getCoins().toLocaleString();
+    }
+  }, 1000);
+}
+</script>
+</body>
+</html>

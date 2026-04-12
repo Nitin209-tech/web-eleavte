@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Giveaways — Rewards Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7987227753889488" crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-7987227753889488"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+.ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}
+.gw-skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:400% 100%;animation:shimmer 1.4s ease-in-out infinite;border-radius:var(--r3);height:180px}
+</style>
+</head>
+<body>
+<div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><div class="brand-mark">IQ</div><span class="brand-name">Rewards<span>Portal</span></span></a>
+    <div class="nav-tabs">
+      <button class="ntab" onclick="location.href='index.html'">Home</button>
+      <button class="ntab" onclick="location.href='earn.html'">Earn Coins</button>
+      <button class="ntab" onclick="location.href='redeem.html'">Redeem Code</button>
+      <button class="ntab" onclick="location.href='coins.html'">Coin Rewards</button>
+      <button class="ntab active" onclick="location.href='giveaway.html'">Giveaways</button>
+      <button class="ntab" onclick="location.href='profile.html'">Profile</button>
+      <button class="ntab" onclick="location.href='track.html'">Track Order</button>
+      <button class="ntab" onclick="location.href='howitworks.html'">How It Works</button>
+      <button class="ntab" onclick="location.href='about.html'">About</button>
+      <button class="ntab" onclick="location.href='contact.html'">Contact</button>
+    </div>
+    <div class="nav-right">
+      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <div id="nav-auth"></div>
+      <button class="hamburger" id="hbgBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
+  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn IQCoins</button>
+  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
+  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
+  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
+</div>
+
+<div class="wrap-md page-body">
+  <div class="page-hero">
+    <div class="chip">🎉 Giveaways</div>
+    <h1>Live <span>Giveaways</span></h1>
+    <p>Join giveaways on our Discord server for a chance to win free rewards and bonus IQCoins.</p>
+  </div>
+
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+
+  <div id="gw-load" class="gw-grid" style="display:none">
+    <div class="gw-skeleton"></div>
+    <div class="gw-skeleton"></div>
+    <div class="gw-skeleton"></div>
+    <div class="gw-skeleton"></div>
+  </div>
+
+  <div id="gw-list" class="gw-grid" style="display:none"></div>
+
+  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+
+  <div class="card" style="margin-top:8px">
+    <div class="card-line" style="background:linear-gradient(90deg,var(--p),transparent)"></div>
+    <h3>🎙️ How to Enter</h3>
+    <p>All giveaways are hosted live on our Discord server. Here's how to participate:</p>
+    <div class="how-steps" style="margin:24px 0 0">
+      <div class="hstep"><div class="hline"></div><div class="hnum">1</div><div class="hbody"><h3>Join our Discord</h3><p>Make sure you're a member of our official Discord server to be eligible for all giveaways.</p></div></div>
+      <div class="hstep"><div class="hline"></div><div class="hnum">2</div><div class="hbody"><h3>React with 🎉</h3><p>When a giveaway goes live, react with the 🎉 emoji on the giveaway message to enter.</p></div></div>
+      <div class="hstep"><div class="hnum">3</div><div class="hbody"><h3>Wait for the draw</h3><p>Our bot randomly selects winners when the timer ends. Winners are announced in the server!</p></div></div>
+    </div>
+    <div style="margin-top:28px">
+      <a class="btn btn-discord-full" href="https://discord.com/channels/1411327756968661125" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex">Join Discord Server →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">Rewards<span>Portal</span></div>
+    <div class="foot-links">
+      <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="about.html">About</a>
+      <a class="foot-link" href="contact.html">Contact</a>
+      <a class="foot-link" href="privacy.html">Privacy</a>
+      <a class="foot-link" href="terms.html">Terms</a>
+    </div>
+    <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
+  </div>
+</footer>
+<div id="toast"></div>
+<script src="shared.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+document.addEventListener('DOMContentLoaded', loadGiveaways);
+
+function loadGiveaways() {
+  document.getElementById('gw-load').style.display = 'grid';
+  document.getElementById('gw-list').style.display = 'none';
+  setTimeout(() => {
+    document.getElementById('gw-load').style.display = 'none';
+    const list = document.getElementById('gw-list');
+    list.style.display = 'grid';
+    const demo = [
+      {prize:'Roblox $50 Plan',host:'Rewards Bot',entries:47,winners:1,live:true,timeLeft:'2h 34m'},
+      {prize:'Xbox Game Pass',host:'Rewards Bot',entries:128,winners:1,live:true,timeLeft:'5h 12m'},
+      {prize:'50,000 IQCoins',host:'Rewards Bot',entries:89,winners:3,live:false,winner:'lucky_user'},
+      {prize:'Minecraft Reward',host:'Rewards Bot',entries:203,winners:1,live:false,winner:'gamer_pro'}
+    ];
+    list.innerHTML = demo.map((g, i) => `
+      <div class="gw-card" style="animation:fadeUp 0.4s ease ${i*0.08}s both">
+        ${g.live
+          ? `<div class="gw-live-badge"><div class="gw-dot"></div>LIVE</div>`
+          : `<div class="gw-ended-badge">ENDED</div>`}
+        <div class="gw-prize">${g.prize}</div>
+        <div class="gw-host">Hosted by ${g.host}</div>
+        <div class="gw-info"><strong>${g.entries}</strong> entries &nbsp;·&nbsp; <strong>${g.winners}</strong> winner${g.winners>1?'s':''}</div>
+        ${g.live ? `
+          <div style="font-size:13px;color:#b45309;font-weight:700;margin-bottom:16px">⏱ Ends in ${g.timeLeft}</div>
+          <a class="btn btn-discord-full btn-full" href="https://discord.com/channels/1411327756968661125" target="_blank" rel="noopener" style="text-decoration:none">Join in Discord →</a>
+        ` : `<div class="gw-win">🏆 ${g.winner}</div>`}
+      </div>`).join('');
+  }, 900);
+}
+</script>
+</body>
+</html>
