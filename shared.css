@@ -419,3 +419,78 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32
   .card{padding:20px}
   .earn-grid{grid-template-columns:1fr}
 }
+
+/* ════ MOBILE STABILITY FIX ════ */
+/* Stop all background animations on mobile — main cause of "hilna" */
+@media(max-width:768px){
+  /* Kill orb drift animation — biggest culprit */
+  .bg-orb{
+    animation:none !important;
+    transform:none !important;
+  }
+  /* Stop brand logo glow pulse */
+  .brand-mark{
+    animation:none !important;
+  }
+  /* Disable all card hover lift effects on touch */
+  .card:hover,
+  .rtile:hover,
+  .gw-card:hover,
+  .tm-card:hover,
+  .c-card:hover,
+  .earn-card:hover,
+  .stat-box:hover,
+  .stat:hover{
+    transform:none !important;
+    box-shadow:var(--s1) !important;
+  }
+  /* Disable button hover lift on touch */
+  .btn:hover:not(:disabled),
+  .btn-primary:hover:not(:disabled),
+  .btn-outline:hover:not(:disabled),
+  .btn-gold:hover:not(:disabled),
+  .btn-discord:hover,
+  .btn-discord-full:hover:not(:disabled),
+  .btn-ghost:hover:not(:disabled),
+  .sbtn:hover{
+    transform:none !important;
+  }
+  /* Nav — prevent layout shift */
+  nav{
+    position:sticky;
+    top:0;
+    transform:none !important;
+    will-change:auto;
+  }
+  /* Prevent page-in animation from causing layout jump */
+  .page-body{
+    animation:none !important;
+    opacity:1 !important;
+    transform:none !important;
+  }
+  /* Stable toast */
+  #toast{
+    bottom:16px;
+    max-width:calc(100vw - 32px);
+  }
+  /* Smaller orbs so they don't bleed off screen */
+  .bg-orb.o1{width:280px;height:280px;top:-60px;left:-80px}
+  .bg-orb.o2{width:220px;height:220px;bottom:-50px;right:-50px}
+  .bg-orb.o3{display:none}
+}
+
+/* Touch devices — disable glitchy hover transitions */
+@media(hover:none){
+  *{
+    -webkit-tap-highlight-color:transparent;
+  }
+  .card,.rtile,.gw-card,.tm-card,.c-card,.earn-card,.stat-box,.stat{
+    transition:background 0.2s, border-color 0.2s !important;
+  }
+  .card:hover,.rtile:hover,.gw-card:hover,.tm-card:hover,
+  .c-card:hover,.earn-card:hover,.stat-box:hover,.stat:hover{
+    transform:none !important;
+    box-shadow:var(--s1) !important;
+    border-color:var(--border) !important;
+  }
+}
