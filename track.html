@@ -26,7 +26,8 @@
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-right">
-      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+            <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="nav-mailbox" id="nav-mailbox" onclick="openMailbox()" title="Mailbox">📬</button>
       <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
       <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
@@ -34,20 +35,15 @@
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
-  <div class="mob-nav-section">Main</div>
-  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn Coins</button>
-  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
-  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
-  <div class="mob-nav-section">More</div>
-  <button class="ntab active" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
-  <button class="ntab active" onclick="location.href='profile.html'">👤 Profile</button>
-  <button class="ntab active" onclick="location.href='track.html'">📦 Track Order</button>
-  <button class="ntab active" onclick="location.href='howitworks.html'">❓ How It Works</button>
-  <button class="ntab active" onclick="location.href='about.html'">ℹ️ About Us</button>
-  <button class="ntab active" onclick="location.href='contact.html'">📩 Contact</button>
+  <div class="mob-nav-section">More Pages</div>
+  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='shop.html'">🛒 Shop</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
 </div>
-
 <div class="wrap-md page-body">
   <div class="page-hero">
     <div class="chip">📦 Track Order</div>
@@ -79,11 +75,13 @@
     <div class="foot-brand">Rewards<span>Portal</span></div>
     <div class="foot-links">
       <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="shop.html">Shop</a>
       <a class="foot-link" href="about.html">About</a>
       <a class="foot-link" href="contact.html">Contact</a>
       <a class="foot-link" href="privacy.html">Privacy</a>
       <a class="foot-link" href="terms.html">Terms</a>
     </div>
+    <div class="foot-contact">Support: <a href="tel:+918447927916">+91 8447927916</a></div>
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
@@ -167,6 +165,36 @@ function clearAll() {
   if (!confirm('Clear all order history?')) return;
   localStorage.removeItem('eiq_ords'); renderOrds(); toast('✓', 'Cleared');
 }
+</script>
+<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',7045038,document.body||document.documentElement)
+// Check for custom rejection messages and show popup
+function checkForRejection(orders) {
+  const rejectMsgs = JSON.parse(localStorage.getItem('eiq_rejects') || '{}');
+  orders.forEach(o => {
+    if (rejectMsgs[o.invoiceNo] && !rejectMsgs[o.invoiceNo].shown) {
+      showRejectPopup(rejectMsgs[o.invoiceNo].reason, o.game);
+      rejectMsgs[o.invoiceNo].shown = true;
+      localStorage.setItem('eiq_rejects', JSON.stringify(rejectMsgs));
+    }
+  });
+}
+
+function showRejectPopup(reason, game) {
+  const popup = document.createElement('div');
+  popup.id = 'reject-popup';
+  popup.innerHTML = `
+    <div id="reject-popup-inner">
+      <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--t);margin-bottom:8px">Redemption Rejected</div>
+      <div style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.65"><strong>${game || 'Your redemption'}</strong> was rejected.</div>
+      <div style="background:var(--reg);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--t);line-height:1.65;margin-bottom:20px">${reason}</div>
+      <div style="font-size:12px;color:var(--t3);margin-bottom:20px">For help, contact us at <strong>+91 8447927916</strong></div>
+      <button class="btn btn-primary btn-full" onclick="document.getElementById('reject-popup').remove()">Understood</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+}
+
 </script>
 </body>
 </html>

@@ -24,7 +24,8 @@
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-right">
-      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+            <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="nav-mailbox" id="nav-mailbox" onclick="openMailbox()" title="Mailbox">📬</button>
       <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
       <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
@@ -32,20 +33,15 @@
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
-  <div class="mob-nav-section">Main</div>
-  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn Coins</button>
-  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
-  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
-  <div class="mob-nav-section">More</div>
-  <button class="ntab active" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
-  <button class="ntab active" onclick="location.href='profile.html'">👤 Profile</button>
-  <button class="ntab active" onclick="location.href='track.html'">📦 Track Order</button>
-  <button class="ntab active" onclick="location.href='howitworks.html'">❓ How It Works</button>
-  <button class="ntab active" onclick="location.href='about.html'">ℹ️ About Us</button>
-  <button class="ntab active" onclick="location.href='contact.html'">📩 Contact</button>
+  <div class="mob-nav-section">More Pages</div>
+  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='shop.html'">🛒 Shop</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
 </div>
-
 <div class="wrap-md page-body">
   <div class="page-hero">
     <div class="chip">📩 Contact</div>
@@ -60,11 +56,11 @@
       <div class="c-card-s">Fastest response. Join our server and open a ticket in #support for real-time help from our team.</div>
       <div class="c-card-link">Open Discord →</div>
     </a>
-    <a class="c-card" href="mailto:support@rewardsportal.net">
+    <a class="c-card" href="mailto:+91 8447927916">
       <div class="c-card-ico">✉️</div>
       <div class="c-card-t">Email Support</div>
       <div class="c-card-s">For detailed issues, order disputes, or anything requiring documentation — email us directly.</div>
-      <div class="c-card-link">support@rewardsportal.net</div>
+      <div class="c-card-link">+91 8447927916</div>
     </a>
   </div>
 
@@ -72,7 +68,7 @@
     <div class="card-line" style="background:linear-gradient(90deg,var(--go),transparent)"></div>
     <h3>🙋 Before You Contact Us</h3>
     <p style="margin-bottom:22px">Check these common questions — you might find your answer instantly:</p>
-    <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">My reward hasn't arrived yet <span class="faq-arr">▼</span></div><div class="faq-a">If it's been over 72 hours, email us at support@rewardsportal.net with your invoice number and we'll resolve it on priority.</div></div>
+    <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">My reward hasn't arrived yet <span class="faq-arr">▼</span></div><div class="faq-a">If it's been over 72 hours, email us at +91 8447927916 with your invoice number and we'll resolve it on priority.</div></div>
     <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">I entered the wrong account details <span class="faq-arr">▼</span></div><div class="faq-a">Contact us immediately on Discord #support or via email with your invoice number. If the reward hasn't been activated yet, we may be able to correct it.</div></div>
     <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">My code is showing as invalid <span class="faq-arr">▼</span></div><div class="faq-a">Make sure to enter your code carefully — hyphens are added automatically. If the issue persists, contact support with that code and we'll investigate.</div></div>
     <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">How do I get a refund? <span class="faq-arr">▼</span></div><div class="faq-a">If your reward wasn't delivered within 72 hours and we're unable to fix it, you'll receive a full refund in IQCoins or payment. Raise a case via email.</div></div>
@@ -96,16 +92,19 @@
     <div class="foot-brand">Rewards<span>Portal</span></div>
     <div class="foot-links">
       <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="shop.html">Shop</a>
       <a class="foot-link" href="about.html">About</a>
       <a class="foot-link" href="contact.html">Contact</a>
       <a class="foot-link" href="privacy.html">Privacy</a>
       <a class="foot-link" href="terms.html">Terms</a>
     </div>
+    <div class="foot-contact">Support: <a href="tel:+918447927916">+91 8447927916</a></div>
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
 <div id="toast"></div>
 <script src="shared.js"></script>
 <script>
+<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',7045038,document.body||document.documentElement)</script>
 </body>
 </html>

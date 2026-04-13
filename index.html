@@ -84,7 +84,8 @@
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-right">
-      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+            <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="nav-mailbox" id="nav-mailbox" onclick="openMailbox()" title="Mailbox">📬</button>
       <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
       <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
@@ -92,20 +93,15 @@
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
-  <div class="mob-nav-section">Main</div>
-  <button class="ntab active" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn Coins</button>
-  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
-  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
-  <div class="mob-nav-section">More</div>
+  <div class="mob-nav-section">More Pages</div>
   <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='shop.html'">🛒 Shop</button>
   <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
   <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
   <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
   <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
   <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
 </div>
-
 <!-- MAIN -->
 <div class="wrap page-body">
 
@@ -123,6 +119,16 @@
 
   <!-- AD SLOT -->
 
+
+  <!-- HOW TO REDEEM COMMAND BAR -->
+  <div style="max-width:480px;margin:0 auto 48px;position:relative">
+    <div style="display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border2);border-radius:100px;padding:10px 16px 10px 20px;box-shadow:var(--s2);gap:10px">
+      <span style="font-size:14px;color:var(--t3)">💬</span>
+      <input id="cmd-input" type="text" placeholder='Try typing "how to redeem"...' style="flex:1;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none" oninput="checkCmd(this.value)" onkeydown="if(event.key==='Enter')checkCmd(this.value,true)"/>
+      <button onclick="checkCmd(document.getElementById('cmd-input').value,true)" style="background:linear-gradient(135deg,var(--p),#5b35e8);border:none;border-radius:100px;padding:8px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Go →</button>
+    </div>
+    <div style="text-align:center;font-size:11px;color:var(--t4);margin-top:8px">Type a command or question above</div>
+  </div>
   <!-- STATS -->
   <div class="home-stats">
     <div class="stat"><div class="stn">12K+</div><div class="stl">Members</div></div>
@@ -223,11 +229,13 @@
     <div class="foot-brand">Rewards<span>Portal</span></div>
     <div class="foot-links">
       <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="shop.html">Shop</a>
       <a class="foot-link" href="about.html">About</a>
       <a class="foot-link" href="contact.html">Contact</a>
       <a class="foot-link" href="privacy.html">Privacy</a>
       <a class="foot-link" href="terms.html">Terms</a>
     </div>
+    <div class="foot-contact">Support: <a href="tel:+918447927916">+91 8447927916</a></div>
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
@@ -236,7 +244,14 @@
 <script src="shared.js"></script>
 <script>
 
+function checkCmd(val, force) {
+  if (!val) return;
+  if (handleHowToRedeem(val)) {
+    document.getElementById('cmd-input').value = '';
+  }
+}
 
 </script>
+<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',7045038,document.body||document.documentElement)</script>
 </body>
 </html>

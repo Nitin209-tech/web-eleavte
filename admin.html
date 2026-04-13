@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Panel — Rewards Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+.admin-gate{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.admin-gate-inner{background:var(--surface);border:1px solid var(--border2);border-radius:28px;padding:44px 40px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(124,92,252,0.15)}
+.admin-tabs{display:flex;gap:8px;margin-bottom:28px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:4px}
+.atab{flex:1;padding:10px 14px;border:none;border-radius:10px;background:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all 0.2s}
+.atab.active{background:var(--surface);color:var(--t);font-weight:600;box-shadow:var(--s1)}
+.admin-section{display:none}.admin-section.show{display:block}
+.redemption-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.redemption-row .rr-info{flex:1;min-width:160px}
+.redemption-row .rr-user{font-size:14px;font-weight:600;color:var(--t)}
+.redemption-row .rr-game{font-size:12px;color:var(--t3);margin-top:3px}
+.redemption-row .rr-code{font-family:monospace;font-size:12px;color:var(--p);background:var(--pd);padding:3px 8px;border-radius:6px;margin-top:4px;display:inline-block}
+.redemption-row .rr-actions{display:flex;gap:6px;flex-wrap:wrap}
+.rr-btn{padding:7px 14px;border-radius:100px;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.rr-approve{background:var(--grg);border:1px solid rgba(16,185,129,0.25);color:var(--gr)}
+.rr-reject{background:var(--reg);border:1px solid rgba(239,68,68,0.2);color:var(--re)}
+.rr-custom-rej{background:var(--gog);border:1px solid rgba(245,158,11,0.2);color:#b45309}
+.rr-btn:hover{transform:translateY(-1px);box-shadow:var(--s1)}
+.status-badge{display:inline-flex;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
+.sb-pending{background:var(--gog);color:#b45309}
+.sb-approved{background:var(--grg);color:var(--gr)}
+.sb-rejected{background:var(--reg);color:var(--re)}
+.code-output{font-family:monospace;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;font-size:13px;white-space:pre-wrap;word-break:break-all;max-height:360px;overflow-y:auto;color:var(--t);line-height:1.8;letter-spacing:0.05em}
+.server-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.server-name{font-size:14px;font-weight:600;color:var(--t)}
+.server-meta{font-size:12px;color:var(--t3);margin-top:2px}
+.gw-form label{display:block;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.07em;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
+
+<!-- ADMIN GATE -->
+<div class="admin-gate" id="admin-gate">
+  <div class="admin-gate-inner">
+    <div style="font-size:48px;margin-bottom:16px">🔐</div>
+    <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--t);margin-bottom:8px">Admin Access</div>
+    <div style="font-size:14px;color:var(--t2);margin-bottom:28px">Enter admin password to continue</div>
+    <input class="inp" id="admin-pw" type="password" placeholder="Admin password" style="margin-bottom:14px;text-align:center;letter-spacing:0.1em"/>
+    <button class="btn btn-primary btn-full" onclick="checkAdminPW()">Enter Panel</button>
+    <div style="font-size:12px;color:var(--t4);margin-top:12px">Rewards Portal © 2026</div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">IQ</div>
+      <span class="brand-name">Rewards<span>Portal — Admin</span></span>
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-right">
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+      <a href="index.html" class="btn btn-ghost" style="font-size:12px;padding:8px 16px;text-decoration:none">← Site</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap page-body" id="admin-body" style="display:none;padding-top:28px">
+
+  <div style="margin-bottom:24px">
+    <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:600;color:var(--t)">Admin Panel</div>
+    <div style="font-size:14px;color:var(--t2);margin-top:4px">Manage redemptions, generate codes, control servers & giveaways</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="admin-tabs">
+    <button class="atab active" onclick="showTab('redemptions')">📋 Redemptions</button>
+    <button class="atab" onclick="showTab('codegen')">⚙️ Code Generator</button>
+    <button class="atab" onclick="showTab('servers')">🖥️ Server Pull</button>
+    <button class="atab" onclick="showTab('giveaway')">🎉 Giveaway</button>
+  </div>
+
+  <!-- REDEMPTIONS TAB -->
+  <div class="admin-section show" id="tab-redemptions">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--t)">Pending Redemptions</div>
+      <button class="btn btn-ghost" onclick="loadRedemptions()" style="font-size:12px;padding:8px 16px">🔄 Refresh</button>
+    </div>
+    <div id="redemptions-list">
+      <div style="text-align:center;padding:40px;color:var(--t3)">Loading redemptions...</div>
+    </div>
+  </div>
+
+  <!-- CODE GENERATOR TAB -->
+  <div class="admin-section" id="tab-codegen">
+    <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--t);margin-bottom:20px">Bulk Code Generator</div>
+    <div class="card">
+      <div class="card-line" style="background:linear-gradient(90deg,var(--p),transparent)"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div class="field">
+          <label>Number of Codes</label>
+          <input class="inp" id="gen-count" type="number" min="1" max="500" value="10" placeholder="10"/>
+        </div>
+        <div class="field">
+          <label>Code Format</label>
+          <select class="inp" id="gen-format">
+            <option value="25char">25 Char (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)</option>
+            <option value="16char">16 Char (XXXX-XXXX-XXXX-XXXX)</option>
+            <option value="custom">Custom Length</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="custom-len-field" style="display:none">
+        <label>Custom Length (chars, no dashes)</label>
+        <input class="inp" id="gen-custom-len" type="number" min="8" max="64" value="20" placeholder="20"/>
+      </div>
+      <div class="field">
+        <label>Prefix (optional)</label>
+        <input class="inp" id="gen-prefix" type="text" placeholder="e.g. MC- or XBOX-" maxlength="10"/>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="generateCodes()">⚙️ Generate Codes</button>
+        <button class="btn btn-ghost" onclick="copyCodes()">📋 Copy All</button>
+        <button class="btn btn-ghost" onclick="downloadCodes()">⬇️ Download .txt</button>
+        <button class="btn btn-ghost" style="color:var(--re)" onclick="clearCodes()">🗑️ Clear</button>
+      </div>
+      <div style="margin-top:16px;font-size:12px;color:var(--t3)" id="gen-count-label"></div>
+      <div class="code-output" id="gen-output" style="margin-top:12px;display:none"></div>
+    </div>
+  </div>
+
+  <!-- SERVER PULL TAB -->
+  <div class="admin-section" id="tab-servers">
+    <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--t);margin-bottom:20px">Server Pull Control</div>
+    <div class="notice ni2" style="margin-bottom:20px">
+      <div class="nt">ℹ️ Server Pull</div>
+      <p>Users logged in via Discord can be pulled to or removed from servers. This uses the bot's guild join permission granted at login.</p>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-line" style="background:linear-gradient(90deg,var(--dc),transparent)"></div>
+      <h3>Pull User to Server</h3>
+      <p>Force-join a specific user or all users to a Discord server.</p>
+      <div class="field"><label>Discord User ID (leave blank for all)</label>
+        <input class="inp" id="pull-uid" type="text" placeholder="123456789012345678 (or blank for all)"/>
+      </div>
+      <div class="field"><label>Target Server (Guild ID)</label>
+        <input class="inp" id="pull-gid" type="text" placeholder="1411327756968661125" value="1411327756968661125"/>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="pullUser()">🔗 Pull to Server</button>
+        <button class="btn btn-ghost" style="color:var(--re)" onclick="kickUser()">🚪 Remove from Server</button>
+      </div>
+      <div id="pull-result" style="margin-top:14px;font-size:13px;color:var(--t2)"></div>
+    </div>
+    <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--t);margin-bottom:12px">Connected Users</div>
+    <div id="users-list">
+      <div style="text-align:center;padding:30px;color:var(--t3)">Loading users...</div>
+    </div>
+  </div>
+
+  <!-- GIVEAWAY TAB -->
+  <div class="admin-section" id="tab-giveaway">
+    <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--t);margin-bottom:20px">Live Giveaway Manager</div>
+    <div class="card">
+      <div class="card-line" style="background:linear-gradient(90deg,var(--go),transparent)"></div>
+      <h3>Create Custom Giveaway</h3>
+      <p>Launch a new giveaway that appears live on the website giveaway page.</p>
+      <div class="gw-form">
+        <label>Prize Name</label>
+        <input class="inp" id="gw-prize" type="text" placeholder="e.g. Discord Nitro Boost Yearly"/>
+        <label>Prize Icon (emoji)</label>
+        <input class="inp" id="gw-ico" type="text" placeholder="💎" maxlength="2" value="🎁"/>
+        <label>Prize Description</label>
+        <input class="inp" id="gw-desc" type="text" placeholder="e.g. 1-year Nitro Boost gifted to your account"/>
+        <label>Number of Winners</label>
+        <input class="inp" id="gw-winners" type="number" min="1" max="20" value="1"/>
+        <label>Duration</label>
+        <select class="inp" id="gw-duration">
+          <option value="3600">1 Hour</option>
+          <option value="7200">2 Hours</option>
+          <option value="21600">6 Hours</option>
+          <option value="43200" selected>12 Hours</option>
+          <option value="86400">24 Hours</option>
+          <option value="172800">2 Days</option>
+          <option value="604800">7 Days</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <button class="btn btn-primary" onclick="launchGiveaway()">🎉 Launch Giveaway</button>
+        <button class="btn btn-ghost" onclick="loadGiveaways()">🔄 Refresh List</button>
+      </div>
+    </div>
+    <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--t);margin:24px 0 12px">Active Giveaways</div>
+    <div id="admin-gw-list">
+      <div style="text-align:center;padding:30px;color:var(--t3)">Loading...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CUSTOM REJECT MODAL -->
+<div id="rej-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:32px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--t);margin-bottom:8px">Custom Rejection Reason</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:16px">This message will be shown to the user on the website.</div>
+    <textarea class="inp" id="rej-reason" rows="3" placeholder="e.g. Account verification failed. Please re-enter your correct Roblox username." style="resize:vertical;margin-bottom:14px"></textarea>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary btn-full" onclick="submitCustomReject()">Send Rejection</button>
+      <button class="btn btn-ghost" onclick="closeRejModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="shared.js"></script>
+<script>
+const ADMIN_PW = localStorage.getItem('eiq_admin_pw') || '';
+let currentRejectId = null;
+
+function checkAdminPW(){
+  const pw = document.getElementById('admin-pw').value;
+  // Simple local check — in production this should be server-side
+  if (pw === 'admin2026' || pw === localStorage.getItem('eiq_admin_key')) {
+    localStorage.setItem('eiq_admin_key', pw);
+    document.getElementById('admin-gate').style.display = 'none';
+    document.getElementById('admin-body').style.display = 'block';
+    loadRedemptions();
+    loadUsers();
+    loadGiveaways();
+  } else {
+    toast('✕', 'Wrong password');
+  }
+}
+
+document.getElementById('admin-pw').addEventListener('keydown', e => { if(e.key==='Enter') checkAdminPW(); });
+
+function showTab(id){
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('show'));
+  document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('show');
+  event.target.classList.add('active');
+}
+
+// ── REDEMPTIONS ──
+function loadRedemptions(){
+  const list = document.getElementById('redemptions-list');
+  list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--t3)">Loading...</div>';
+  fetch(`${CFG.API}/api/admin/redemptions`, {
+    headers: {'x-admin-key': localStorage.getItem('eiq_admin_key')||''}
+  }).then(r => r.json()).then(d => {
+    if (!d.success || !d.redemptions || d.redemptions.length === 0){
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--t3)">No pending redemptions found.</div>';
+      return;
+    }
+    list.innerHTML = d.redemptions.map(r => buildRedemptionRow(r)).join('');
+  }).catch(() => {
+    // Fallback: show from localStorage orders
+    const ords = getOrds();
+    if (ords.length === 0){
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--t3)">No redemptions found.</div>';
+      return;
+    }
+    list.innerHTML = ords.map(r => buildRedemptionRow(r)).join('');
+  });
+}
+
+function buildRedemptionRow(r){
+  const status = r.status || 'pending';
+  const badgeClass = status === 'approved' ? 'sb-approved' : status === 'rejected' ? 'sb-rejected' : 'sb-pending';
+  const badgeLabel = status === 'approved' ? '✓ Approved' : status === 'rejected' ? '✕ Rejected' : '⏱ Pending';
+  return `<div class="redemption-row" id="rrow-${r.invoiceNo}">
+    <div class="rr-info">
+      <div class="rr-user">👤 ${r.userName || r.account || 'Unknown'}</div>
+      <div class="rr-game">${r.game || ''} ${r.plan ? '· '+r.plan : ''} — ${r.inrPrice || ''}</div>
+      ${r.code ? `<div class="rr-code">${r.code}</div>` : ''}
+      ${r.coinsSpent ? `<div style="font-size:11px;color:var(--t3);margin-top:3px">🪙 ${r.coinsSpent.toLocaleString()} coins</div>` : ''}
+      <div style="font-size:11px;color:var(--t4);margin-top:4px">${r.date || ''} · ${r.invoiceNo}</div>
+    </div>
+    <span class="status-badge ${badgeClass}">${badgeLabel}</span>
+    <div class="rr-actions">
+      <button class="rr-btn rr-approve" onclick="approveRedemption('${r.invoiceNo}','${r.userId||''}')">✓ Active</button>
+      <button class="rr-btn rr-reject" onclick="rejectRedemption('${r.invoiceNo}','${r.userId||''}')">✕ Reject</button>
+      <button class="rr-btn rr-custom-rej" onclick="openCustomReject('${r.invoiceNo}','${r.userId||''}')">⚠ Custom Reject</button>
+    </div>
+  </div>`;
+}
+
+function approveRedemption(invNo, userId){
+  fetch(`${CFG.API}/api/admin/approve`, {
+    method:'POST', headers:{'Content-Type':'application/json','x-admin-key':localStorage.getItem('eiq_admin_key')||''},
+    body: JSON.stringify({ invoiceNo: invNo, userId })
+  }).then(r => r.json()).then(d => {
+    if (d.success){ toast('✅','Approved & user notified'); updateRowStatus(invNo,'approved'); }
+    else toast('✕', d.error || 'Failed');
+  }).catch(() => { toast('✅','Marked approved locally'); updateRowStatus(invNo,'approved'); });
+}
+
+function rejectRedemption(invNo, userId){
+  fetch(`${CFG.API}/api/admin/reject`, {
+    method:'POST', headers:{'Content-Type':'application/json','x-admin-key':localStorage.getItem('eiq_admin_key')||''},
+    body: JSON.stringify({ invoiceNo: invNo, userId, reason: 'Your redemption was rejected. Please contact support.' })
+  }).then(r => r.json()).then(d => {
+    if (d.success){ toast('✅','Rejected & user notified'); updateRowStatus(invNo,'rejected'); }
+    else toast('✕', d.error || 'Failed');
+  }).catch(() => { toast('✅','Marked rejected'); updateRowStatus(invNo,'rejected'); });
+}
+
+function openCustomReject(invNo, userId){
+  currentRejectId = { invNo, userId };
+  const m = document.getElementById('rej-modal');
+  m.style.display = 'flex';
+  document.getElementById('rej-reason').value = '';
+  document.getElementById('rej-reason').focus();
+}
+function closeRejModal(){ document.getElementById('rej-modal').style.display = 'none'; currentRejectId = null; }
+function submitCustomReject(){
+  if (!currentRejectId) return;
+  const reason = document.getElementById('rej-reason').value.trim();
+  if (!reason){ toast('!','Enter a reason'); return; }
+  const { invNo, userId } = currentRejectId;
+  fetch(`${CFG.API}/api/admin/reject`, {
+    method:'POST', headers:{'Content-Type':'application/json','x-admin-key':localStorage.getItem('eiq_admin_key')||''},
+    body: JSON.stringify({ invoiceNo: invNo, userId, reason })
+  }).then(r => r.json()).then(d => {
+    if (d.success){ toast('✅','Custom rejection sent'); updateRowStatus(invNo,'rejected'); }
+    else toast('✕', d.error || 'Error sending');
+  }).catch(() => { toast('✅','Marked rejected locally'); updateRowStatus(invNo,'rejected'); });
+  // Save rejection msg locally so user sees it on track page
+  const rejectMsgs = JSON.parse(localStorage.getItem('eiq_rejects')||'{}');
+  rejectMsgs[invNo] = { reason, ts: Date.now() };
+  localStorage.setItem('eiq_rejects', JSON.stringify(rejectMsgs));
+  closeRejModal();
+}
+
+function updateRowStatus(invNo, status){
+  const row = document.getElementById('rrow-'+invNo);
+  if (!row) return;
+  const badge = row.querySelector('.status-badge');
+  if (!badge) return;
+  badge.className = 'status-badge ' + (status==='approved'?'sb-approved':'sb-rejected');
+  badge.textContent = status==='approved'?'✓ Approved':'✕ Rejected';
+}
+
+// ── CODE GENERATOR ──
+document.getElementById('gen-format').addEventListener('change', function(){
+  document.getElementById('custom-len-field').style.display = this.value === 'custom' ? 'block' : 'none';
+});
+
+function generateCodes(){
+  const count = parseInt(document.getElementById('gen-count').value) || 10;
+  const format = document.getElementById('gen-format').value;
+  const prefix = document.getElementById('gen-prefix').value.trim().toUpperCase();
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let segLen = 5, segments = 5;
+  if (format === '16char'){ segLen = 4; segments = 4; }
+  if (format === 'custom'){
+    const cl = parseInt(document.getElementById('gen-custom-len').value) || 20;
+    segLen = Math.max(4, Math.floor(cl / 4)); segments = 4;
+  }
+  const codes = [];
+  for (let i = 0; i < count; i++){
+    let segs = [];
+    for (let s = 0; s < segments; s++){
+      let seg = '';
+      for (let c = 0; c < segLen; c++) seg += chars[Math.floor(Math.random()*chars.length)];
+      segs.push(seg);
+    }
+    codes.push(prefix + segs.join('-'));
+  }
+  const output = document.getElementById('gen-output');
+  output.textContent = codes.join('\n');
+  output.style.display = 'block';
+  document.getElementById('gen-count-label').textContent = `Generated ${codes.length} codes`;
+  toast('⚙️', `${codes.length} codes generated`);
+}
+
+function copyCodes(){
+  const text = document.getElementById('gen-output').textContent;
+  if (!text){ toast('!','Generate codes first'); return; }
+  navigator.clipboard.writeText(text).then(() => toast('📋','Copied to clipboard')).catch(() => toast('!','Copy failed'));
+}
+
+function downloadCodes(){
+  const text = document.getElementById('gen-output').textContent;
+  if (!text){ toast('!','Generate codes first'); return; }
+  const blob = new Blob([text], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `codes-${Date.now()}.txt`; a.click();
+  URL.revokeObjectURL(url);
+  toast('⬇️','Downloaded');
+}
+
+function clearCodes(){
+  document.getElementById('gen-output').textContent = '';
+  document.getElementById('gen-output').style.display = 'none';
+  document.getElementById('gen-count-label').textContent = '';
+}
+
+// ── SERVER PULL ──
+function loadUsers(){
+  fetch(`${CFG.API}/api/admin/users`, {
+    headers:{'x-admin-key':localStorage.getItem('eiq_admin_key')||''}
+  }).then(r => r.json()).then(d => {
+    const ul = document.getElementById('users-list');
+    if (!d.success || !d.users || d.users.length === 0){
+      ul.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3)">No users found.</div>';
+      return;
+    }
+    ul.innerHTML = d.users.map(u => `
+      <div class="server-row">
+        <div>
+          <div class="server-name">${u.username || u.id}</div>
+          <div class="server-meta">ID: ${u.id} ${u.coins ? '· 🪙 '+u.coins.toLocaleString() : ''}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="rr-btn rr-approve" onclick="pullSpecific('${u.id}')">🔗 Pull</button>
+          <button class="rr-btn rr-reject" onclick="kickSpecific('${u.id}')">🚪 Kick</button>
+        </div>
+      </div>
+    `).join('');
+  }).catch(() => {
+    document.getElementById('users-list').innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3)">Could not load users. Check backend connection.</div>';
+  });
+}
+
+function pullUser(){
+  const uid = document.getElementById('pull-uid').value.trim();
+  const gid = document.getElementById('pull-gid').value.trim() || CFG.GUILD;
+  const resultEl = document.getElementById('pull-result');
+  resultEl.textContent = 'Processing...';
+  fetch(`${CFG.API}/api/admin/pull`, {
+    method:'POST', headers:{'Content-Type':'application/json','x-admin-key':localStorage.getItem('eiq_admin_key')||''},
+    body: JSON.stringify({ userId: uid || null, guildId: gid, action: 'join' })
+  }).then(r => r.json()).then(d => {
+    if (d.success){ resultEl.textContent = `✅ ${d.message || 'User(s) pulled successfully'}`; toast('✅','Pulled!'); }
+    else { resultEl.textContent = `✕ ${d.error || 'Failed'}`; toast('✕','Failed'); }
+  }).catch(() => { resultEl.textContent = '✕ Backend connection error'; toast('✕','Error'); });
+}
+
+function kickUser(){
+  const uid = document.getElementById('pull-uid').value.trim();
+  const gid = document.getElementById('pull-gid').value.trim() || CFG.GUILD;
+  if (!uid){ toast('!','Enter a user ID to kick'); return; }
+  const resultEl = document.getElementById('pull-result');
+  resultEl.textContent = 'Processing...';
+  fetch(`${CFG.API}/api/admin/pull`, {
+    method:'POST', headers:{'Content-Type':'application/json','x-admin-key':localStorage.getItem('eiq_admin_key')||''},
+    body: JSON.stringify({ userId: uid, guildId: gid, action: 'kick' })
+  }).then(r => r.json()).then(d => {
+    if (d.success){ resultEl.textContent = `✅ ${d.message || 'User removed'}`; toast('✅','Removed'); }
+    else { resultEl.textContent = `✕ ${d.error || 'Failed'}`; toast('✕','Failed'); }
+  }).catch(() => { resultEl.textContent = '✕ Backend error'; toast('✕','Error'); });
+}
+
+function pullSpecific(uid){ document.getElementById('pull-uid').value = uid; showTab('servers'); pullUser(); }
+function kickSpecific(uid){ document.getElementById('pull-uid').value = uid; showTab('servers'); kickUser(); }
+
+// ── GIVEAWAY ──
+function launchGiveaway(){
+  const prize = document.getElementById('gw-prize').value.trim();
+  const ico = document.getElementById('gw-ico').value.trim() || '🎁';
+  const desc = document.getElementById('gw-desc').value.trim();
+  const winners = parseInt(document.getElementById('gw-winners').value) || 1;
+  const duration = parseInt(document.getElementById('gw-duration').value);
+  if (!prize){ toast('!','Enter prize name'); return; }
+  const endsAt = Date.now() + duration * 1000;
+  const giveaway = { id: 'gw-'+Date.now(), prize, ico, desc, winners, endsAt, entries: 0, active: true };
+  fetch(`${CFG.API}/api/admin/giveaway/create`, {
+    method:'POST', headers:{'Content-Type':'application/json','x-admin-key':localStorage.getItem('eiq_admin_key')||''},
+    body: JSON.stringify(giveaway)
+  }).then(r => r.json()).then(d => {
+    if (d.success){ toast('🎉','Giveaway launched!'); loadGiveaways(); }
+    else toast('✕', d.error || 'Failed to create giveaway');
+  }).catch(() => {
+    // Save locally as fallback
+    const gws = JSON.parse(localStorage.getItem('eiq_giveaways')||'[]');
+    gws.unshift(giveaway);
+    localStorage.setItem('eiq_giveaways', JSON.stringify(gws));
+    toast('🎉','Giveaway saved locally!'); loadGiveaways();
+  });
+}
+
+function loadGiveaways(){
+  const list = document.getElementById('admin-gw-list');
+  fetch(`${CFG.API}/api/giveaways`).then(r => r.json()).then(d => {
+    const gws = d.giveaways || [];
+    if (gws.length === 0){ list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3)">No active giveaways.</div>'; return; }
+    list.innerHTML = gws.map(g => `
+      <div class="server-row">
+        <div>
+          <div class="server-name">${g.ico||'🎁'} ${g.prize}</div>
+          <div class="server-meta">${g.winners} winner(s) · Ends: ${new Date(g.endsAt).toLocaleString()}</div>
+        </div>
+        <button class="rr-btn rr-reject" onclick="endGiveaway('${g.id}')">End Early</button>
+      </div>
+    `).join('');
+  }).catch(() => {
+    const gws = JSON.parse(localStorage.getItem('eiq_giveaways')||'[]');
+    if (gws.length === 0){ list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3)">No giveaways.</div>'; return; }
+    list.innerHTML = gws.map(g => `
+      <div class="server-row">
+        <div>
+          <div class="server-name">${g.ico||'🎁'} ${g.prize}</div>
+          <div class="server-meta">${g.winners} winner(s) · Ends: ${new Date(g.endsAt).toLocaleString()}</div>
+        </div>
+      </div>
+    `).join('');
+  });
+}
+
+function endGiveaway(id){
+  fetch(`${CFG.API}/api/admin/giveaway/end`, {
+    method:'POST', headers:{'Content-Type':'application/json','x-admin-key':localStorage.getItem('eiq_admin_key')||''},
+    body: JSON.stringify({ id })
+  }).then(r => r.json()).then(d => {
+    toast('✅', d.message || 'Giveaway ended'); loadGiveaways();
+  }).catch(() => toast('✕','Error ending giveaway'));
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  // Check if already logged in as admin
+  if (localStorage.getItem('eiq_admin_key')) {
+    document.getElementById('admin-gate').style.display = 'none';
+    document.getElementById('admin-body').style.display = 'block';
+    loadRedemptions(); loadUsers(); loadGiveaways();
+  }
+});
+</script>
+</body>
+</html>

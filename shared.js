@@ -3,11 +3,7 @@ const CFG = {
   API: 'https://bot-production-2eb8.up.railway.app',
   GUILD: '1411327756968661125',
   CLIENT: '1485034551108702268',
-
-  // ✅ FIXED: Clean URL — Discord Developer Portal mein bhi yahi daalni hai
   REDIR: 'https://www.elevateiq.shop/',
-
-  // ✅ Azure Client ID — portal.azure.com se copy karo (App Registrations → Overview)
   AZURE_CLIENT: '45cafe0a-6832-4192-a100-bf47cde26f28'
 };
 
@@ -50,6 +46,7 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW error', err));
   });
 }
+
 // ── AUTH ──
 function logout(){
   localStorage.removeItem('eiq_user');
@@ -67,12 +64,11 @@ function dcLogin(){
   window.location.href = url;
 }
 
-// OAuth callback — fires only when ?code= is in URL
 function handleOAuthCallback(){
   const p    = new URLSearchParams(window.location.search);
   const code = p.get('code');
   if (!code) return;
-  history.replaceState({}, '', '/'); // clean URL immediately
+  history.replaceState({}, '', '/');
   fetch(`${CFG.API}/api/discord/callback?code=${encodeURIComponent(code)}&redirect_uri=${encodeURIComponent(CFG.REDIR)}`)
     .then(r => r.json())
     .then(d => {
@@ -82,11 +78,19 @@ function handleOAuthCallback(){
         syncCoins(d.user.id);
         renderNavAuth();
         toast('👋', `Welcome, ${d.user.global_name || d.user.username}!`);
+        // Dismiss new member report modal on login
+        dismissNewMemberReport();
       } else {
         toast('✕', d.error || 'Login failed — try again');
       }
     })
     .catch(() => toast('✕', 'Login failed. Please try again.'));
+}
+
+// ── NEW MEMBER REPORT — dismiss on join ──
+function dismissNewMemberReport(){
+  const modal = document.getElementById('new-member-modal');
+  if (modal) modal.remove();
 }
 
 // ── NAV RENDER ──
@@ -103,10 +107,15 @@ function renderNavAuth(){
     </div>`;
     const pill = document.getElementById('cpill');
     if (pill) pill.style.display = 'flex';
+    // Show mailbox icon in nav
+    const mb = document.getElementById('nav-mailbox');
+    if (mb) mb.style.display = 'flex';
   } else {
     el.innerHTML = `<button class="btn-discord" onclick="dcLogin()">Login with Discord</button>`;
     const pill = document.getElementById('cpill');
     if (pill) pill.style.display = 'none';
+    const mb = document.getElementById('nav-mailbox');
+    if (mb) mb.style.display = 'none';
   }
 }
 
@@ -115,6 +124,31 @@ function updateNavUI(){
   if (nc) nc.textContent = getCoins().toLocaleString();
   const pill = document.getElementById('cpill');
   if (pill) pill.style.display = getUser() ? 'flex' : 'none';
+}
+
+// ── MAILBOX ──
+function openMailbox(){
+  const u = getUser();
+  if (!u){ toast('!','Login required'); return; }
+  const msgs = JSON.parse(localStorage.getItem('eiq_msgs') || '[]');
+  const modal = document.createElement('div');
+  modal.id = 'mailbox-modal';
+  modal.innerHTML = `
+    <div style="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:28px;padding:32px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+          <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--t)">📬 Mailbox</div>
+          <button onclick="document.getElementById('mailbox-modal').remove()" style="background:var(--bg2);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--t2)">×</button>
+        </div>
+        ${msgs.length === 0 ? `<div style="text-align:center;padding:40px 0;color:var(--t3);font-size:14px">No messages yet.<br/>Important updates will appear here.</div>` :
+          msgs.map(m => `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:10px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--t3);margin-bottom:6px">${m.date || ''}</div>
+            <div style="font-size:14px;color:var(--t);line-height:1.65">${m.body}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
 }
 
 // ── TOAST ──
@@ -171,7 +205,7 @@ function buildInv(d){
       <div class="inv-row"><span class="inv-k">Invoice No.</span><span class="inv-v" style="font-size:11px">${d.invoiceNo}</span></div>
     </div>
     <div class="inv-ft">
-      <div class="inv-ft-t">support@rewardsportal.net</div>
+      <div class="inv-ft-t">+91 8447927916</div>
       <div class="inv-ft-t">© 2026 Rewards Portal</div>
     </div>
   </div>`;
@@ -219,7 +253,7 @@ function dlPDF(data){
   });
   y+=10; doc.setDrawColor(237,233,255); doc.line(M,y,W-M,y); y+=10;
   doc.setFontSize(8); doc.setTextColor(155,147,196);
-  doc.text('support@rewardsportal.net', M, y);
+  doc.text('+91 8447927916', M, y);
   doc.text('© 2026 Rewards Portal. All rights reserved.', W-M, y, {align:'right'});
   doc.save(`invoice-${data.invoiceNo}.pdf`);
 }
@@ -240,6 +274,59 @@ function toggleTheme() {
   if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
 }
 
+// ── HOW TO REDEEM COMMAND ──
+function handleHowToRedeem(input){
+  const lower = (input||'').toLowerCase().trim();
+  if (lower === 'how to redeem' || lower === 'how to claim' || lower === 'how do i redeem'){
+    showHowToRedeemModal();
+    return true;
+  }
+  return false;
+}
+
+function showHowToRedeemModal(){
+  const existing = document.getElementById('htr-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'htr-modal';
+  modal.innerHTML = `
+    <div style="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:28px;padding:36px 32px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.4)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--p);margin-bottom:6px">Guide</div>
+            <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--t)">How to Redeem</div>
+          </div>
+          <button onclick="document.getElementById('htr-modal').remove()" style="background:var(--bg2);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--t2)">×</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          ${[
+            ['1','Login with Discord','Click "Login with Discord" on the homepage. Authorize the app — it only reads your username.'],
+            ['2','Earn IQCoins','Visit the Earn Coins page. Complete daily claims, watch ads, send Discord messages, and invite friends.'],
+            ['3','Choose your Reward','Go to Redeem Code (if you have a code) or Coin Rewards (to spend IQCoins).'],
+            ['4','Select your Game','Pick Minecraft, Roblox, Xbox Game Pass, or Discord Nitro. Choose your plan if applicable.'],
+            ['5','Verify your Account','For Roblox/Nitro: enter your username & email. For others: sign in with Microsoft to verify.'],
+            ['6','Enter Code & Submit','Paste your 25-character code (XXXXX-XXXXX-...) and click Redeem Now.'],
+            ['7','Wait for Activation','Your reward is queued and activates within 72 hours. Average is 12–24 hours. Download your invoice.']
+          ].map(([n,t,d]) => `
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="min-width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--p),#5b35e8);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0">${n}</div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--t);margin-bottom:3px">${t}</div>
+                <div style="font-size:13px;color:var(--t2);line-height:1.65">${d}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:28px;padding:16px;background:var(--pd);border:1px solid var(--border2);border-radius:16px;text-align:center;font-size:13px;color:var(--t2)">
+          Need help? Contact us at <strong style="color:var(--t)">+91 8447927916</strong>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -250,17 +337,13 @@ document.addEventListener('DOMContentLoaded', () => {
   enforceLogin();
 });
 
-// ✅ LOGIN GATE — koi bhi page bina login nahi dekh sakta
+// ✅ LOGIN GATE
 function enforceLogin() {
-  // Index page pe login gate nahi (wahan login button hai)
-  const isIndex = window.location.pathname.endsWith('index.html') || 
+  const isIndex = window.location.pathname.endsWith('index.html') ||
                   window.location.pathname.endsWith('/') ||
                   window.location.pathname === '';
   if (isIndex) return;
-
-  // Agar user logged in nahi hai
   if (!getUser()) {
-    // Overlay show karo
     const overlay = document.createElement('div');
     overlay.id = 'login-gate';
     overlay.innerHTML = `
@@ -282,8 +365,7 @@ function enforceLogin() {
             Login Required
           </div>
           <div style="font-size:15px;color:#5b5480;margin-bottom:32px;line-height:1.7">
-            Yeh page dekhne ke liye pehle Discord se login karo. 
-            IQCoins earn karne ke liye account zaroori hai.
+            Please login with Discord to access this page and start earning IQCoins.
           </div>
           <button onclick="dcLogin()" style="
             background:linear-gradient(135deg,#7c5cfc,#5b35e8);
@@ -302,9 +384,7 @@ function enforceLogin() {
       </div>
     `;
     document.body.appendChild(overlay);
-    
-    // Page content blur karo
-    document.querySelector('.wrap, .wrap-md, .wrap-sm, .page-body')?.setAttribute('style', 
+    document.querySelector('.wrap, .wrap-md, .wrap-sm, .page-body')?.setAttribute('style',
       'filter:blur(8px);pointer-events:none;user-select:none'
     );
   }

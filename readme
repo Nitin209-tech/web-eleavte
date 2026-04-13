@@ -1,0 +1,110 @@
+# ✅ REWARDS PORTAL — SETUP GUIDE
+# Yeh sab steps ek baar karo — phir sab kaam karega
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🔵 STEP 1 — DISCORD OAUTH FIX
+
+1. Jao: https://discord.com/developers/applications
+2. Apni app select karo (Client ID: 1352652069359587430)
+3. Left sidebar → "OAuth2" click karo
+4. "Redirects" section mein:
+   - PURANA hatao:  https://www.elevateiq.shop/index.html   ❌
+   - NAYA daalo:    https://www.elevateiq.shop/              ✅
+5. "Save Changes" karo
+
+Bas! Discord ab theek kaam karega.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🟦 STEP 2 — AZURE / MICROSOFT AUTH FIX
+
+Error tha: "unauthorized_client — not enabled for consumers"
+Matlab app sirf Work/School accounts ke liye thi. Personal accounts ke liye yeh karo:
+
+1. Jao: https://portal.azure.com
+2. Left menu → "Azure Active Directory" (ya "Microsoft Entra ID")
+3. "App registrations" → Apni app select karo
+4. Left sidebar → "Authentication" click karo
+
+5. "Supported account types" mein SELECT KARO:
+   ✅ "Accounts in any organizational directory (Any Microsoft Entra ID tenant – Multitenant)
+       AND personal Microsoft accounts (e.g. Skype, Xbox)"
+   (Teen options mein se TEESRA wala)
+
+6. "Redirect URIs" mein check karo:
+   - Type: "Single-page application (SPA)"   ← ZAROOR SPA select karo
+   - URI:  https://www.elevateiq.shop/        ✅
+
+7. "Save" karo
+
+8. Left sidebar → "Overview" → "Application (client) ID" copy karo
+   Yeh ID shared.js mein daalni hai (Step 4 dekho)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🟩 STEP 3 — VERCEL CLEAN URLs
+
+vercel.json file already folder mein hai.
+Bas deploy karo — URLs automatically clean ho jayenge:
+  ❌ elevateiq.shop/redeem.html
+  ✅ elevateiq.shop/redeem
+
+Agar subfolder mein deploy kar rahe ho (e.g. /eiq/):
+  vercel.json ke rewrites mein /eiq/ prefix add karo.
+  Recommend hai ROOT mein deploy karo.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🟪 STEP 4 — shared.js mein CLIENT ID DAALO
+
+shared.js file kholo, line 12 find karo:
+
+  AZURE_CLIENT: 'YOUR_AZURE_CLIENT_ID_HERE'
+
+Isko apni actual Azure Client ID se replace karo:
+
+  AZURE_CLIENT: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚀 STEP 5 — VERCEL DEPLOY
+
+Option A — Drag & Drop:
+  1. vercel.com/new
+  2. Saari files drag karo (index.html, shared.js, shared.css, etc.)
+  3. Deploy karo
+
+Option B — GitHub se:
+  1. GitHub pe repo banao
+  2. Saari files push karo
+  3. vercel.com → "Import Git Repository"
+  4. Root directory: / (jahan index.html hai)
+  5. Deploy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ✅ CHECKLIST — Deploy se pehle
+
+[ ] Discord OAuth2 redirect URL updated to https://www.elevateiq.shop/
+[ ] Azure app → Supported accounts → "Personal + Organizational" selected
+[ ] Azure app → Authentication → Redirect URI type = SPA
+[ ] Azure Client ID shared.js mein daala
+[ ] vercel.json folder mein hai
+[ ] Sabhi .html files ek hi folder mein hain
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ❓ COMMON ERRORS
+
+Q: Discord login ke baad blank page
+A: Discord Developer Portal mein redirect URL check karo — exactly https://www.elevateiq.shop/ honi chahiye (trailing slash ke saath)
+
+Q: Microsoft login mein "unauthorized_client" error
+A: Azure app mein "Supported account types" galat hai — Step 2 dobara karo
+
+Q: Microsoft login mein "redirect_uri_mismatch"
+A: Azure app → Authentication → SPA redirect URI = https://www.elevateiq.shop/ (exactly same)
+
+Q: Coins page change pe reset ho jaate hain
+A: Sab localStorage mein hain — agar incognito mode mein ho toh yahi hoga. Normal mode mein persist rahega.

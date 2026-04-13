@@ -40,7 +40,8 @@
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-right">
-      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+            <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="nav-mailbox" id="nav-mailbox" onclick="openMailbox()" title="Mailbox">📬</button>
       <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
       <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
@@ -48,20 +49,15 @@
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
-  <div class="mob-nav-section">Main</div>
-  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn Coins</button>
-  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
-  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
-  <div class="mob-nav-section">More</div>
-  <button class="ntab active" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
-  <button class="ntab active" onclick="location.href='profile.html'">👤 Profile</button>
-  <button class="ntab active" onclick="location.href='track.html'">📦 Track Order</button>
-  <button class="ntab active" onclick="location.href='howitworks.html'">❓ How It Works</button>
-  <button class="ntab active" onclick="location.href='about.html'">ℹ️ About Us</button>
-  <button class="ntab active" onclick="location.href='contact.html'">📩 Contact</button>
+  <div class="mob-nav-section">More Pages</div>
+  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab" onclick="location.href='shop.html'">🛒 Shop</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
 </div>
-
 <div class="wrap-md page-body">
   <div class="page-hero">
     <div class="chip">👤 Profile</div>
@@ -125,11 +121,13 @@
     <div class="foot-brand">Rewards<span>Portal</span></div>
     <div class="foot-links">
       <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="shop.html">Shop</a>
       <a class="foot-link" href="about.html">About</a>
       <a class="foot-link" href="contact.html">Contact</a>
       <a class="foot-link" href="privacy.html">Privacy</a>
       <a class="foot-link" href="terms.html">Terms</a>
     </div>
+    <div class="foot-contact">Support: <a href="tel:+918447927916">+91 8447927916</a></div>
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
@@ -200,5 +198,6 @@ function renderLB(lb) {
   }).join('');
 }
 </script>
+<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',7045038,document.body||document.documentElement)</script>
 </body>
 </html>

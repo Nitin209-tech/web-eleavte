@@ -7,8 +7,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="shared.css"/>
 <style>
-.ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}
-.gw-skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:400% 100%;animation:shimmer 1.4s ease-in-out infinite;border-radius:var(--r3);height:180px}
+.gw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:28px}
+.gw-skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:400% 100%;animation:shimmer 1.4s ease-in-out infinite;border-radius:var(--r3);height:220px}
 </style>
 </head>
 <body>
@@ -28,6 +28,7 @@
     <div class="nav-spacer"></div>
     <div class="nav-right">
       <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="nav-mailbox" id="nav-mailbox" onclick="openMailbox()" title="Mailbox">📬</button>
       <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
       <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
@@ -35,44 +36,46 @@
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
-  <div class="mob-nav-section">Main</div>
-  <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn Coins</button>
-  <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
-  <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
-  <div class="mob-nav-section">More</div>
+  <div class="mob-nav-section">More Pages</div>
   <button class="ntab active" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
-  <button class="ntab active" onclick="location.href='profile.html'">👤 Profile</button>
-  <button class="ntab active" onclick="location.href='track.html'">📦 Track Order</button>
-  <button class="ntab active" onclick="location.href='howitworks.html'">❓ How It Works</button>
-  <button class="ntab active" onclick="location.href='about.html'">ℹ️ About Us</button>
-  <button class="ntab active" onclick="location.href='contact.html'">📩 Contact</button>
+  <button class="ntab" onclick="location.href='shop.html'">🛒 Shop</button>
+  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
 </div>
 
 <div class="wrap-md page-body">
   <div class="page-hero">
     <div class="chip">🎉 Giveaways</div>
     <h1>Live <span>Giveaways</span></h1>
-    <p>Join giveaways on our Discord server for a chance to win free rewards and bonus IQCoins.</p>
+    <p>Custom giveaways launched from Discord — enter for a chance to win free rewards.</p>
   </div>
 
-  <div id="gw-load" class="gw-grid" style="display:none">
-    <div class="gw-skeleton"></div>
-    <div class="gw-skeleton"></div>
+  <!-- LIVE GIVEAWAYS -->
+  <div id="gw-loading" class="gw-grid">
     <div class="gw-skeleton"></div>
     <div class="gw-skeleton"></div>
   </div>
 
   <div id="gw-list" class="gw-grid" style="display:none"></div>
+  <div id="gw-empty" style="display:none;text-align:center;padding:60px 20px">
+    <div style="font-size:56px;margin-bottom:16px;animation:floatY 3s ease-in-out infinite">🎉</div>
+    <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--t);margin-bottom:10px">No Active Giveaways</div>
+    <p style="font-size:14px;color:var(--t2);max-width:360px;margin:0 auto 28px;line-height:1.75">No giveaways are running right now. Join our Discord to get notified when new ones launch — they go live frequently!</p>
+    <a class="btn btn-discord-full" href="https://discord.com/channels/1411327756968661125" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex">Join Discord →</a>
+  </div>
 
-  <div class="card" style="margin-top:8px">
+  <!-- HOW TO ENTER -->
+  <div class="card" style="margin-top:16px">
     <div class="card-line" style="background:linear-gradient(90deg,var(--p),transparent)"></div>
     <h3>🎙️ How to Enter</h3>
-    <p>All giveaways are hosted live on our Discord server. Here's how to participate:</p>
+    <p>All giveaways are launched from our Discord server and appear live here. Here's how to participate:</p>
     <div class="how-steps" style="margin:24px 0 0">
-      <div class="hstep"><div class="hline"></div><div class="hnum">1</div><div class="hbody"><h3>Join our Discord</h3><p>Make sure you're a member of our official Discord server to be eligible for all giveaways.</p></div></div>
-      <div class="hstep"><div class="hline"></div><div class="hnum">2</div><div class="hbody"><h3>React with 🎉</h3><p>When a giveaway goes live, react with the 🎉 emoji on the giveaway message to enter.</p></div></div>
-      <div class="hstep"><div class="hnum">3</div><div class="hbody"><h3>Wait for the draw</h3><p>Our bot randomly selects winners when the timer ends. Winners are announced in the server!</p></div></div>
+      <div class="hstep"><div class="hline"></div><div class="hnum">1</div><div class="hbody"><h3>Join our Discord</h3><p>Be a member of our official Discord server to be eligible for all giveaways.</p></div></div>
+      <div class="hstep"><div class="hline"></div><div class="hnum">2</div><div class="hbody"><h3>Click Enter below</h3><p>When a giveaway is live here, click the Enter button. Winners are picked randomly.</p></div></div>
+      <div class="hstep"><div class="hnum">3</div><div class="hbody"><h3>Wait for the draw</h3><p>When the timer ends, winners are announced in the Discord server and notified directly.</p></div></div>
     </div>
     <div style="margin-top:28px">
       <a class="btn btn-discord-full" href="https://discord.com/channels/1411327756968661125" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex">Join Discord Server →</a>
@@ -85,49 +88,109 @@
     <div class="foot-brand">Rewards<span>Portal</span></div>
     <div class="foot-links">
       <a class="foot-link" href="howitworks.html">How It Works</a>
+      <a class="foot-link" href="shop.html">Shop</a>
       <a class="foot-link" href="about.html">About</a>
       <a class="foot-link" href="contact.html">Contact</a>
       <a class="foot-link" href="privacy.html">Privacy</a>
       <a class="foot-link" href="terms.html">Terms</a>
     </div>
+    <div class="foot-contact">Support: <a href="tel:+918447927916">+91 8447927916</a></div>
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
 <div id="toast"></div>
 <script src="shared.js"></script>
 <script>
-
-
-document.addEventListener('DOMContentLoaded', loadGiveaways);
-
-function loadGiveaways() {
-  document.getElementById('gw-load').style.display = 'grid';
-  document.getElementById('gw-list').style.display = 'none';
-  setTimeout(() => {
-    document.getElementById('gw-load').style.display = 'none';
-    const list = document.getElementById('gw-list');
-    list.style.display = 'grid';
-    const demo = [
-      {prize:'Roblox $50 Plan',host:'Rewards Bot',entries:47,winners:1,live:true,timeLeft:'2h 34m'},
-      {prize:'Xbox Game Pass',host:'Rewards Bot',entries:128,winners:1,live:true,timeLeft:'5h 12m'},
-      {prize:'50,000 IQCoins',host:'Rewards Bot',entries:89,winners:3,live:false,winner:'lucky_user'},
-      {prize:'Minecraft Reward',host:'Rewards Bot',entries:203,winners:1,live:false,winner:'gamer_pro'}
-    ];
-    list.innerHTML = demo.map((g, i) => `
-      <div class="gw-card" style="animation:fadeUp 0.4s ease ${i*0.08}s both">
-        ${g.live
-          ? `<div class="gw-live-badge"><div class="gw-dot"></div>LIVE</div>`
-          : `<div class="gw-ended-badge">ENDED</div>`}
-        <div class="gw-prize">${g.prize}</div>
-        <div class="gw-host">Hosted by ${g.host}</div>
-        <div class="gw-info"><strong>${g.entries}</strong> entries &nbsp;·&nbsp; <strong>${g.winners}</strong> winner${g.winners>1?'s':''}</div>
-        ${g.live ? `
-          <div style="font-size:13px;color:#b45309;font-weight:700;margin-bottom:16px">⏱ Ends in ${g.timeLeft}</div>
-          <a class="btn btn-discord-full btn-full" href="https://discord.com/channels/1411327756968661125" target="_blank" rel="noopener" style="text-decoration:none">Join in Discord →</a>
-        ` : `<div class="gw-win">🏆 ${g.winner}</div>`}
-      </div>`).join('');
-  }, 900);
+function loadGiveaways(){
+  fetch(`${CFG.API}/api/giveaways`)
+    .then(r => r.json())
+    .then(d => renderGiveaways(d.giveaways || []))
+    .catch(() => {
+      // Fallback to localStorage (admin-created giveaways)
+      const gws = JSON.parse(localStorage.getItem('eiq_giveaways') || '[]');
+      renderGiveaways(gws.filter(g => g.active && g.endsAt > Date.now()));
+    });
 }
+
+function renderGiveaways(gws){
+  document.getElementById('gw-loading').style.display = 'none';
+  const list = document.getElementById('gw-list');
+  const empty = document.getElementById('gw-empty');
+  if (!gws || gws.length === 0){ empty.style.display = 'block'; list.style.display = 'none'; return; }
+  list.style.display = 'grid';
+  list.innerHTML = gws.map(g => buildGwCard(g)).join('');
+  // Start timers
+  gws.forEach(g => startTimer(g));
+}
+
+function buildGwCard(g){
+  const entered = JSON.parse(localStorage.getItem('eiq_gw_entries') || '{}');
+  const hasEntered = !!entered[g.id];
+  return `<div class="gw-card" id="gwcard-${g.id}">
+    <div class="gw-live-badge"><span class="gw-live-dot"></span>LIVE</div>
+    <div class="gw-card-head">
+      <div class="gw-card-ico">${g.ico || '🎁'}</div>
+      <div>
+        <div class="gw-card-prize">${g.prize}</div>
+        <div class="gw-card-meta">${g.winners || 1} winner${(g.winners||1) > 1 ? 's' : ''} · ${g.entries || 0} entered</div>
+        ${g.desc ? `<div style="font-size:12px;color:var(--t2);margin-top:4px">${g.desc}</div>` : ''}
+      </div>
+    </div>
+    <div class="gw-card-timer">
+      <span style="font-size:12px;color:var(--t3)">⏱ Ends in</span>
+      <span class="gw-timer-val" id="timer-${g.id}">—</span>
+    </div>
+    <button class="gw-enter-btn" id="enterbtn-${g.id}" onclick="enterGiveaway('${g.id}')" ${hasEntered ? 'disabled' : ''}>
+      ${hasEntered ? '✓ Entered' : '🎉 Enter Giveaway'}
+    </button>
+  </div>`;
+}
+
+function startTimer(g){
+  const el = document.getElementById('timer-'+g.id);
+  if (!el) return;
+  function update(){
+    const left = g.endsAt - Date.now();
+    if (left <= 0){ el.textContent = 'Ended'; return; }
+    const d = Math.floor(left/86400000), h = Math.floor((left%86400000)/3600000),
+          m = Math.floor((left%3600000)/60000), s = Math.floor((left%60000)/1000);
+    el.textContent = d > 0 ? `${d}d ${h}h ${m}m` : h > 0 ? `${h}h ${m}m ${s}s` : `${m}m ${s}s`;
+    setTimeout(update, 1000);
+  }
+  update();
+}
+
+function enterGiveaway(id){
+  const u = getUser();
+  if (!u){ toast('!','Login with Discord to enter'); dcLogin(); return; }
+  const entries = JSON.parse(localStorage.getItem('eiq_gw_entries') || '{}');
+  if (entries[id]){ toast('!','Already entered!'); return; }
+  const btn = document.getElementById('enterbtn-'+id);
+  if (btn){ btn.disabled = true; btn.textContent = 'Entering...'; }
+  fetch(`${CFG.API}/api/giveaway/enter`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ giveawayId: id, userId: u.id, userName: u.global_name || u.username, userAvatar: avURL(u) })
+  }).then(r => r.json()).then(d => {
+    if (d.success){
+      entries[id] = { ts: Date.now(), userId: u.id };
+      localStorage.setItem('eiq_gw_entries', JSON.stringify(entries));
+      if (btn){ btn.textContent = '✓ Entered — Good Luck!'; btn.disabled = true; }
+      toast('🎉', 'Entered! Good luck!');
+    } else {
+      if (btn){ btn.disabled = false; btn.textContent = '🎉 Enter Giveaway'; }
+      toast('✕', d.error || 'Failed to enter');
+    }
+  }).catch(() => {
+    // Offline fallback
+    entries[id] = { ts: Date.now(), userId: u.id };
+    localStorage.setItem('eiq_gw_entries', JSON.stringify(entries));
+    if (btn){ btn.textContent = '✓ Entered — Good Luck!'; btn.disabled = true; }
+    toast('🎉', 'Entered! Good luck!');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => { loadGiveaways(); });
 </script>
+<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',7045038,document.body||document.documentElement)</script>
 </body>
 </html>
