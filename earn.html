@@ -4,8 +4,6 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Earn IQCoins — Rewards Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7987227753889488" crossorigin="anonymous"></script>
-<meta name="google-adsense-account" content="ca-pub-7987227753889488"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="shared.css"/>
 <style>
@@ -25,31 +23,32 @@
 <div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
 <nav>
   <div class="nav-inner">
-    <a class="brand" href="index.html"><div class="brand-mark">IQ</div><span class="brand-name">Rewards<span>Portal</span></span></a>
+    <a class="brand" href="index.html">
+      <div class="brand-mark">IQ</div>
+      <span class="brand-name">Rewards<span>Portal</span></span>
+    </a>
     <div class="nav-tabs">
-      <button class="ntab" data-page="home" onclick="location.href='index.html'">Home</button>
-      <button class="ntab active" data-page="earn" onclick="location.href='earn.html'">Earn Coins</button>
-      <button class="ntab" data-page="redeem" onclick="location.href='redeem.html'">Redeem Code</button>
-      <button class="ntab" data-page="coins" onclick="location.href='coins.html'">Coin Rewards</button>
-      <button class="ntab" data-page="giveaway" onclick="location.href='giveaway.html'">Giveaways</button>
-      <button class="ntab" data-page="profile" onclick="location.href='profile.html'">Profile</button>
-      <button class="ntab" data-page="track" onclick="location.href='track.html'">Track Order</button>
-      <button class="ntab" data-page="howitworks" onclick="location.href='howitworks.html'">How It Works</button>
-      <button class="ntab" data-page="about" onclick="location.href='about.html'">About</button>
-      <button class="ntab" data-page="contact" onclick="location.href='contact.html'">Contact</button>
+      <button class="ntab" onclick="location.href='index.html'">Home</button>
+      <button class="ntab active" onclick="location.href='earn.html'">Earn Coins</button>
+      <button class="ntab" onclick="location.href='redeem.html'">Redeem Code</button>
+      <button class="ntab" onclick="location.href='coins.html'">Coin Rewards</button>
     </div>
+    <div class="nav-spacer"></div>
     <div class="nav-right">
       <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
-      <button class="hamburger" id="hbgBtn"><span></span><span></span><span></span></button>
+      <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
+  <div class="mob-nav-section">Main</div>
   <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn IQCoins</button>
+  <button class="ntab active" onclick="location.href='earn.html'">🪙 Earn Coins</button>
   <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
   <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
+  <div class="mob-nav-section">More</div>
   <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
   <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
   <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
@@ -75,7 +74,6 @@
   </div>
 
   <!-- AD -->
-  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
 
   <!-- EARN CARDS -->
   <div class="earn-grid">
@@ -139,7 +137,6 @@
   </div>
 
   <!-- AD -->
-  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
 
   <!-- HOW MUCH DO I NEED -->
   <div class="card" style="margin-top:16px">
@@ -150,22 +147,22 @@
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
         <div style="font-size:18px;margin-bottom:8px">⛏</div>
         <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Minecraft</div>
-        <div style="font-size:13px;color:var(--t2)">899,000 IQCoins ≈ ₹899</div>
+        <div style="font-size:13px;color:var(--t2)">5,00,00,000 IQCoins ≈ ₹899</div>
       </div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
         <div style="font-size:18px;margin-bottom:8px">🎮</div>
         <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Roblox $50</div>
-        <div style="font-size:13px;color:var(--t2)">799,000 IQCoins ≈ ₹1,499</div>
+        <div style="font-size:13px;color:var(--t2)">8,00,00,000 IQCoins ≈ ₹1,499</div>
       </div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
         <div style="font-size:18px;margin-bottom:8px">🎯</div>
         <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Xbox Game Pass</div>
-        <div style="font-size:13px;color:var(--t2)">699,000 IQCoins ≈ ₹1,999</div>
+        <div style="font-size:13px;color:var(--t2)">7,00,00,000 IQCoins ≈ ₹1,999</div>
       </div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px">
         <div style="font-size:18px;margin-bottom:8px">💎</div>
         <div style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:4px">Discord Nitro Basic</div>
-        <div style="font-size:13px;color:var(--t2)">599,000 IQCoins ≈ ₹1,199</div>
+        <div style="font-size:13px;color:var(--t2)">6,00,00,000 IQCoins ≈ ₹1,199</div>
       </div>
     </div>
   </div>
@@ -187,8 +184,7 @@
 <div id="toast"></div>
 <script src="shared.js"></script>
 <script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-(adsbygoogle = window.adsbygoogle || []).push({});
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const eb = document.getElementById('earn-bal');

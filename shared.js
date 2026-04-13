@@ -1,8 +1,8 @@
 // ── SHARED CONFIG ──
 const CFG = {
-  API: 'https://bot-production-2eb8.up.railway.app',
+  API: 'https://bot-production-168c.up.railway.app',
   GUILD: '1411327756968661125',
-  CLIENT: '1485034551108702268',
+  CLIENT: '1352652069359587430',
 
   // ✅ FIXED: Clean URL — Discord Developer Portal mein bhi yahi daalni hai
   REDIR: 'https://www.elevateiq.shop/',
@@ -56,7 +56,7 @@ function dcLogin(){
     + `?client_id=${CFG.CLIENT}`
     + `&redirect_uri=${encodeURIComponent(CFG.REDIR)}`
     + `&response_type=code`
-    + `&scope=identify%20guilds.join`;
+    + `&scope=identify`;
   window.location.href = url;
 }
 
@@ -217,10 +217,88 @@ function dlPDF(data){
   doc.save(`invoice-${data.invoiceNo}.pdf`);
 }
 
+// ── DARK MODE ──
+function initTheme() {
+  const saved = localStorage.getItem('eiq_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('theme-btn');
+  if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+}
+function toggleTheme() {
+  const cur  = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('eiq_theme', next);
+  const btn = document.getElementById('theme-btn');
+  if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   renderNavAuth();
   updateNavUI();
   initHamburger();
   handleOAuthCallback();
+  enforceLogin();
 });
+
+// ✅ LOGIN GATE — koi bhi page bina login nahi dekh sakta
+function enforceLogin() {
+  // Index page pe login gate nahi (wahan login button hai)
+  const isIndex = window.location.pathname.endsWith('index.html') || 
+                  window.location.pathname.endsWith('/') ||
+                  window.location.pathname === '';
+  if (isIndex) return;
+
+  // Agar user logged in nahi hai
+  if (!getUser()) {
+    // Overlay show karo
+    const overlay = document.createElement('div');
+    overlay.id = 'login-gate';
+    overlay.innerHTML = `
+      <div style="
+        position:fixed;inset:0;z-index:99999;
+        background:rgba(248,247,255,0.97);
+        backdrop-filter:blur(20px);
+        display:flex;align-items:center;justify-content:center;
+        font-family:'DM Sans',sans-serif;
+      ">
+        <div style="
+          background:#fff;border:1px solid rgba(124,92,252,0.2);
+          border-radius:28px;padding:52px 44px;text-align:center;
+          max-width:420px;width:90%;
+          box-shadow:0 20px 60px rgba(124,92,252,0.15);
+        ">
+          <div style="font-size:52px;margin-bottom:20px">🔐</div>
+          <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#1a1535;margin-bottom:12px">
+            Login Required
+          </div>
+          <div style="font-size:15px;color:#5b5480;margin-bottom:32px;line-height:1.7">
+            Yeh page dekhne ke liye pehle Discord se login karo. 
+            IQCoins earn karne ke liye account zaroori hai.
+          </div>
+          <button onclick="dcLogin()" style="
+            background:linear-gradient(135deg,#7c5cfc,#5b35e8);
+            color:#fff;border:none;border-radius:100px;
+            padding:16px 36px;font-size:15px;font-weight:600;
+            cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;
+            box-shadow:0 4px 18px rgba(124,92,252,0.38);
+            transition:all 0.2s;
+          " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+            Login with Discord
+          </button>
+          <div style="font-size:12px;color:#9b93c4;margin-top:16px">
+            Free • Secure • Takes 10 seconds
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    
+    // Page content blur karo
+    document.querySelector('.wrap, .wrap-md, .wrap-sm, .page-body')?.setAttribute('style', 
+      'filter:blur(8px);pointer-events:none;user-select:none'
+    );
+  }
+}

@@ -4,8 +4,6 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>About — Rewards Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7987227753889488" crossorigin="anonymous"></script>
-<meta name="google-adsense-account" content="ca-pub-7987227753889488"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="shared.css"/>
 <style>.ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}</style>
@@ -14,37 +12,38 @@
 <div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
 <nav>
   <div class="nav-inner">
-    <a class="brand" href="index.html"><div class="brand-mark">IQ</div><span class="brand-name">Rewards<span>Portal</span></span></a>
+    <a class="brand" href="index.html">
+      <div class="brand-mark">IQ</div>
+      <span class="brand-name">Rewards<span>Portal</span></span>
+    </a>
     <div class="nav-tabs">
       <button class="ntab" onclick="location.href='index.html'">Home</button>
       <button class="ntab" onclick="location.href='earn.html'">Earn Coins</button>
       <button class="ntab" onclick="location.href='redeem.html'">Redeem Code</button>
       <button class="ntab" onclick="location.href='coins.html'">Coin Rewards</button>
-      <button class="ntab" onclick="location.href='giveaway.html'">Giveaways</button>
-      <button class="ntab" onclick="location.href='profile.html'">Profile</button>
-      <button class="ntab" onclick="location.href='track.html'">Track Order</button>
-      <button class="ntab" onclick="location.href='howitworks.html'">How It Works</button>
-      <button class="ntab active" onclick="location.href='about.html'">About</button>
-      <button class="ntab" onclick="location.href='contact.html'">Contact</button>
     </div>
+    <div class="nav-spacer"></div>
     <div class="nav-right">
       <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
-      <button class="hamburger" id="hbgBtn"><span></span><span></span><span></span></button>
+      <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
+  <div class="mob-nav-section">Main</div>
   <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn IQCoins</button>
+  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn Coins</button>
   <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
   <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
-  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
-  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
-  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
-  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
-  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
-  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
+  <div class="mob-nav-section">More</div>
+  <button class="ntab active" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab active" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab active" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab active" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab active" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab active" onclick="location.href='contact.html'">📩 Contact</button>
 </div>
 
 <div class="wrap-md page-body">
@@ -53,8 +52,6 @@
     <h1>About <span>Rewards Portal</span></h1>
     <p>A community-driven gaming rewards platform built to make premium gaming rewards accessible to everyone.</p>
   </div>
-
-  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
 
   <div class="stat-row" style="margin-bottom:36px">
     <div class="stat-box"><div class="stat-box-n">12K+</div><div class="stat-box-l">Discord Members</div></div>
@@ -102,8 +99,6 @@
       <div class="tm-desc">Keeps the website, Discord bots, and backend running smoothly around the clock.</div>
     </div>
   </div>
-
-  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
 </div>
 
 <footer>
@@ -121,6 +116,6 @@
 </footer>
 <div id="toast"></div>
 <script src="shared.js"></script>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<script>
 </body>
 </html>

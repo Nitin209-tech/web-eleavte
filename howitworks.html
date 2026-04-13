@@ -4,8 +4,6 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>How It Works — Rewards Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7987227753889488" crossorigin="anonymous"></script>
-<meta name="google-adsense-account" content="ca-pub-7987227753889488"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="shared.css"/>
 <style>.ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}</style>
@@ -14,37 +12,38 @@
 <div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
 <nav>
   <div class="nav-inner">
-    <a class="brand" href="index.html"><div class="brand-mark">IQ</div><span class="brand-name">Rewards<span>Portal</span></span></a>
+    <a class="brand" href="index.html">
+      <div class="brand-mark">IQ</div>
+      <span class="brand-name">Rewards<span>Portal</span></span>
+    </a>
     <div class="nav-tabs">
       <button class="ntab" onclick="location.href='index.html'">Home</button>
       <button class="ntab" onclick="location.href='earn.html'">Earn Coins</button>
       <button class="ntab" onclick="location.href='redeem.html'">Redeem Code</button>
       <button class="ntab" onclick="location.href='coins.html'">Coin Rewards</button>
-      <button class="ntab" onclick="location.href='giveaway.html'">Giveaways</button>
-      <button class="ntab" onclick="location.href='profile.html'">Profile</button>
-      <button class="ntab" onclick="location.href='track.html'">Track Order</button>
-      <button class="ntab active" onclick="location.href='howitworks.html'">How It Works</button>
-      <button class="ntab" onclick="location.href='about.html'">About</button>
-      <button class="ntab" onclick="location.href='contact.html'">Contact</button>
     </div>
+    <div class="nav-spacer"></div>
     <div class="nav-right">
       <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
       <div id="nav-auth"></div>
-      <button class="hamburger" id="hbgBtn"><span></span><span></span><span></span></button>
+      <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 <div class="mob-nav" id="mobNav">
+  <div class="mob-nav-section">Main</div>
   <button class="ntab" onclick="location.href='index.html'">🏠 Home</button>
-  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn IQCoins</button>
+  <button class="ntab" onclick="location.href='earn.html'">🪙 Earn Coins</button>
   <button class="ntab" onclick="location.href='redeem.html'">🎫 Redeem Code</button>
   <button class="ntab" onclick="location.href='coins.html'">💰 Coin Rewards</button>
-  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
-  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
-  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
-  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
-  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
-  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
+  <div class="mob-nav-section">More</div>
+  <button class="ntab active" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
+  <button class="ntab active" onclick="location.href='profile.html'">👤 Profile</button>
+  <button class="ntab active" onclick="location.href='track.html'">📦 Track Order</button>
+  <button class="ntab active" onclick="location.href='howitworks.html'">❓ How It Works</button>
+  <button class="ntab active" onclick="location.href='about.html'">ℹ️ About Us</button>
+  <button class="ntab active" onclick="location.href='contact.html'">📩 Contact</button>
 </div>
 
 <div class="wrap-md page-body">
@@ -53,8 +52,6 @@
     <h1>How It <span>Works</span></h1>
     <p>Getting your gaming reward is simple — just 4 easy steps to claim what you deserve.</p>
   </div>
-
-  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
 
   <div class="how-steps">
     <div class="hstep"><div class="hline"></div><div class="hnum">1</div><div class="hbody">
@@ -96,7 +93,7 @@
     <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">Do IQCoins expire? <span class="faq-arr">▼</span></div><div class="faq-a">No! Your IQCoins never expire. Earn them at your own pace and redeem whenever you're ready.</div></div>
     <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">My reward hasn't arrived within 72 hours — what do I do? <span class="faq-arr">▼</span></div><div class="faq-a">If your reward hasn't been activated after 72 hours, email us at support@rewardsportal.net with your invoice number. We'll resolve it on priority.</div></div>
     <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">Is this site safe and legitimate? <span class="faq-arr">▼</span></div><div class="faq-a">Yes! We use Discord OAuth for secure login. Your passwords are never seen or stored by us. Every transaction is logged and invoiced for full transparency.</div></div>
-    <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">How many IQCoins do I need for each reward? <span class="faq-arr">▼</span></div><div class="faq-a">Minecraft requires 899,000 coins, Roblox $50 starts at 799,000 coins, Xbox Game Pass needs 699,000 coins, and Discord Nitro starts from 599,000 coins.</div></div>
+    <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">How many IQCoins do I need for each reward? <span class="faq-arr">▼</span></div><div class="faq-a">Minecraft requires 5 Crore IQCoins, Roblox $50 requires 8 Crore IQCoins, Xbox Game Pass needs 7 Crore IQCoins, and Discord Nitro starts from 6 Crore IQCoins.</div></div>
     <div class="faq" onclick="toggleFaq(this)"><div class="faq-q">Can I transfer my IQCoins to another user? <span class="faq-arr">▼</span></div><div class="faq-a">IQCoins are tied to your Discord account and cannot be transferred to other users. They can only be redeemed for rewards on the portal.</div></div>
   </div>
 
@@ -104,8 +101,6 @@
     <a class="btn btn-primary" href="earn.html" style="text-decoration:none;margin-right:12px">Start Earning →</a>
     <a class="btn btn-ghost" href="redeem.html" style="text-decoration:none">I Have a Code</a>
   </div>
-
-  <ins class="adsbygoogle ad-slot" style="display:block" data-ad-client="ca-pub-7987227753889488" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
 </div>
 
 <footer>
@@ -123,6 +118,6 @@
 </footer>
 <div id="toast"></div>
 <script src="shared.js"></script>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<script>
 </body>
 </html>
