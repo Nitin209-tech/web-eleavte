@@ -205,7 +205,7 @@ function buildInv(d){
       <div class="inv-row"><span class="inv-k">Invoice No.</span><span class="inv-v" style="font-size:11px">${d.invoiceNo}</span></div>
     </div>
     <div class="inv-ft">
-      <div class="inv-ft-t">+91 8447927916</div>
+      <div class="inv-ft-t"></div>
       <div class="inv-ft-t">© 2026 Rewards Portal</div>
     </div>
   </div>`;
@@ -253,7 +253,7 @@ function dlPDF(data){
   });
   y+=10; doc.setDrawColor(237,233,255); doc.line(M,y,W-M,y); y+=10;
   doc.setFontSize(8); doc.setTextColor(155,147,196);
-  doc.text('+91 8447927916', M, y);
+  doc.text('', M, y);
   doc.text('© 2026 Rewards Portal. All rights reserved.', W-M, y, {align:'right'});
   doc.save(`invoice-${data.invoiceNo}.pdf`);
 }
@@ -319,7 +319,7 @@ function showHowToRedeemModal(){
           `).join('')}
         </div>
         <div style="margin-top:28px;padding:16px;background:var(--pd);border:1px solid var(--border2);border-radius:16px;text-align:center;font-size:13px;color:var(--t2)">
-          Need help? Contact us at <strong style="color:var(--t)">+91 8447927916</strong>
+          Need help? Contact us at <strong style="color:var(--t)"></strong>
         </div>
       </div>
     </div>
