@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="shared.css"/>
 <style>
 .ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--r2);padding:20px;text-align:center;margin:28px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:12px}
+.srej{background:rgba(239,68,68,0.1);color:var(--re);border:1px solid rgba(239,68,68,0.25)}
 </style>
 </head>
 <body>
@@ -88,10 +89,6 @@
 <div id="toast"></div>
 <script src="shared.js"></script>
 <script>
-
-
-document.addEventListener('DOMContentLoaded', renderOrds);
-
 const meta = {
   mc:   {i:'⛏', c:'var(--gr)', b:'rgba(16,185,129,0.08)'},
   rb:   {i:'🎮', c:'var(--re)', b:'rgba(239,68,68,0.08)'},
@@ -99,7 +96,117 @@ const meta = {
   nitro:{i:'💎', c:'var(--dc)', b:'rgba(88,101,242,0.08)'}
 };
 
-function renderOrds() {
+// Cache for live statuses fetched from bot API
+const liveStatuses = {};
+
+// Fetch live status from bot API for a given invoice
+async function fetchLiveStatus(invoiceNo) {
+  try {
+    const res = await fetch(`${CFG.API}/api/order-status/${invoiceNo}`);
+    const data = await res.json();
+    if (data.success) {
+      liveStatuses[invoiceNo] = data;
+      return data;
+    }
+  } catch (_) {}
+  return null;
+}
+
+// Get status display info based on live status from bot
+function getStatusDisplay(o, live) {
+  if (!live) {
+    // Fallback: time-based
+    const hrs = (Date.now() - (o.ts || Date.now())) / 3600000;
+    const done = hrs >= 72;
+    return {
+      badge: done ? 'std' : 'stp',
+      label: done ? '✓ Activated' : '⏳ Pending',
+      color: done ? 'var(--gr)' : 'var(--go)',
+      prog:  Math.min(100, Math.round((hrs / 72) * 100)),
+      rem:   Math.max(0, 72 - hrs),
+      msg:   null,
+      isRejected: false,
+    };
+  }
+
+  const s = live.websiteStatus || live.status || 'pending';
+
+  if (s === 'activated') {
+    return {
+      badge: 'std', label: '✅ Activated', color: 'var(--gr)',
+      prog: 100, rem: 0,
+      msg: live.websiteMessage || '✅ Your reward has been activated and is ready!',
+      isRejected: false,
+    };
+  }
+  if (s === 'rejected' || s === 'custom_rejected') {
+    return {
+      badge: 'srej', label: '❌ Rejected', color: 'var(--re)',
+      prog: 0, rem: 0,
+      msg: live.websiteMessage || '❌ Your reward was rejected. Contact support.',
+      reason: live.websiteReason || null,
+      isRejected: true,
+    };
+  }
+  // pending
+  const hrs = (Date.now() - (o.ts || Date.now())) / 3600000;
+  return {
+    badge: 'stp', label: '⏳ Pending', color: 'var(--go)',
+    prog: Math.min(100, Math.round((hrs / 72) * 100)),
+    rem:  Math.max(0, 72 - hrs),
+    msg:  live.websiteMessage || null,
+    isRejected: false,
+  };
+}
+
+function buildOrderCard(o, i, live) {
+  const m  = meta[o.type] || {i:'📦', c:'var(--go)', b:'var(--gog)'};
+  const sd = getStatusDisplay(o, live);
+
+  const rejectedBox = sd.isRejected ? `
+    <div style="background:var(--reg);border:1px solid rgba(239,68,68,0.22);border-radius:14px;padding:14px 16px;margin:12px 0">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--re);margin-bottom:6px">❌ Rejection Reason</div>
+      <div style="font-size:13px;color:var(--t);line-height:1.65">${sd.reason || 'Your reward request was rejected due to an account issue detected by our security team.'}</div>
+      <div style="font-size:11px;color:var(--t3);margin-top:10px">For help contact: <strong>+91 8447927916</strong></div>
+    </div>` : '';
+
+  const activatedBox = (!sd.isRejected && sd.badge === 'std') ? `
+    <div style="background:var(--grg);border:1px solid rgba(16,185,129,0.22);border-radius:14px;padding:12px 16px;margin:12px 0;font-size:13px;color:var(--t)">
+      🎉 <strong>Reward Activated!</strong> Your reward has been processed and delivered.
+    </div>` : '';
+
+  const pendingMsg = (!sd.isRejected && sd.badge === 'stp' && sd.msg) ? `
+    <div style="background:var(--gog);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:12px 16px;margin:12px 0;font-size:13px;color:var(--t)">
+      ${sd.msg}
+    </div>` : '';
+
+  return `<div class="ocard" style="animation-delay:${i*0.05}s${sd.isRejected ? ';border-color:rgba(239,68,68,0.3)' : ''}">
+    <div class="ohdr">
+      <div class="oico" style="background:${m.b}">${m.i}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ogn" style="color:${m.c}">${o.game}</div>
+        <div class="oinv">${o.invoiceNo}</div>
+      </div>
+      <div class="ost ${sd.badge}">${sd.label}</div>
+    </div>
+    ${rejectedBox}${activatedBox}${pendingMsg}
+    <div class="ometa">
+      <div class="mc2"><div class="mk">Account</div><div class="mv" style="font-size:12px">${o.account||'—'}</div></div>
+      <div class="mc2"><div class="mk">Price</div><div class="mv" style="color:var(--p)">${o.inrPrice||'—'}</div></div>
+      <div class="mc2"><div class="mk">Date</div><div class="mv" style="font-size:11px">${new Date(o.ts||Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div></div>
+    </div>
+    ${!sd.isRejected && sd.badge !== 'std' ? `
+    <div class="pbl"><span>Processing Progress</span><span>${sd.prog}% · ${sd.rem.toFixed(0)}h remaining</span></div>
+    <div class="pbt"><div class="pbf" style="width:${sd.prog}%;background:var(--go)"></div></div>` : ''}
+    <div class="oacts">
+      <button class="obtn" onclick='dlPDF(${JSON.stringify(o).replace(/'/g,"&#39;")})'>📄 Invoice</button>
+      <button class="obtn" onclick="refreshOrder('${o.invoiceNo}')">🔄 Refresh</button>
+      <button class="obtn obtn-del" onclick="delOrd('${o.invoiceNo}')">✕ Remove</button>
+    </div>
+  </div>`;
+}
+
+async function renderOrds() {
   const ords = getOrds();
   const el = document.getElementById('ords-el');
   if (!el) return;
@@ -115,34 +222,20 @@ function renderOrds() {
     </div>`;
     return;
   }
-  el.innerHTML = ords.map((o, i) => {
-    const m = meta[o.type] || {i:'📦', c:'var(--go)', b:'var(--gog)'};
-    const hrs = (Date.now() - (o.ts || Date.now())) / 3600000;
-    const done = hrs >= 72;
-    const prog = Math.min(100, Math.round((hrs / 72) * 100));
-    const rem = Math.max(0, 72 - hrs);
-    return `<div class="ocard" style="animation-delay:${i*0.05}s">
-      <div class="ohdr">
-        <div class="oico" style="background:${m.b}">${m.i}</div>
-        <div>
-          <div class="ogn" style="color:${m.c}">${o.game}</div>
-          <div class="oinv">${o.invoiceNo}</div>
-        </div>
-        <div class="ost ${done?'std':'stp'}">${done?'✓ Activated':'⏳ Pending'}</div>
-      </div>
-      <div class="ometa">
-        <div class="mc2"><div class="mk">Account</div><div class="mv" style="font-size:12px">${o.account||'—'}</div></div>
-        <div class="mc2"><div class="mk">Price</div><div class="mv" style="color:var(--p)">${o.inrPrice||'—'}</div></div>
-        <div class="mc2"><div class="mk">Date</div><div class="mv" style="font-size:11px">${new Date(o.ts||Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div></div>
-      </div>
-      <div class="pbl"><span>Activation Progress</span><span>${done?'✅ Complete':prog+'% · '+rem.toFixed(0)+'h left'}</span></div>
-      <div class="pbt"><div class="pbf" style="width:${prog}%;background:${done?'var(--gr)':'var(--go)'}"></div></div>
-      <div class="oacts">
-        <button class="obtn" onclick='dlPDF(${JSON.stringify(o).replace(/'/g,"&#39;")})'>📄 Invoice</button>
-        <button class="obtn obtn-del" onclick="delOrd('${o.invoiceNo}')">✕ Remove</button>
-      </div>
-    </div>`;
-  }).join('');
+
+  // First render with cached/local data
+  el.innerHTML = ords.map((o, i) => buildOrderCard(o, i, liveStatuses[o.invoiceNo] || null)).join('');
+
+  // Then fetch live statuses from bot API and re-render
+  const fetches = ords.map(o => fetchLiveStatus(o.invoiceNo));
+  await Promise.allSettled(fetches);
+  el.innerHTML = ords.map((o, i) => buildOrderCard(o, i, liveStatuses[o.invoiceNo] || null)).join('');
+}
+
+async function refreshOrder(invoiceNo) {
+  toast('🔄', 'Refreshing status...');
+  await fetchLiveStatus(invoiceNo);
+  renderOrds();
 }
 
 function doSearch() {
@@ -165,6 +258,8 @@ function clearAll() {
   if (!confirm('Clear all order history?')) return;
   localStorage.removeItem('eiq_ords'); renderOrds(); toast('✓', 'Cleared');
 }
+
+document.addEventListener('DOMContentLoaded', renderOrds);
 </script>
 <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',7045038,document.body||document.documentElement)
 // Check for custom rejection messages and show popup
