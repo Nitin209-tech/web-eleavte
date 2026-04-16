@@ -1,6 +1,6 @@
 // ── SHARED CONFIG ──
 const CFG = {
-  API: 'https://bot-production-2eb8.up.railway.app',
+  API: 'https://bot-production-eb2b.up.railway.app',
   GUILD: '1411327756968661125',
   CLIENT: '1485034551108702268',
   REDIR: 'https://www.elevateiq.shop/',
