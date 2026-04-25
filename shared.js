@@ -319,7 +319,7 @@ function showHowToRedeemModal(){
           `).join('')}
         </div>
         <div style="margin-top:28px;padding:16px;background:var(--pd);border:1px solid var(--border2);border-radius:16px;text-align:center;font-size:13px;color:var(--t2)">
-          Need help? Contact us at <strong style="color:var(--t)"></strong>
+          Need help? Email us at <strong style="color:var(--t)"><a href="mailto:mojangstudio908@gmail.com" style="color:var(--p);text-decoration:none">mojangstudio908@gmail.com</a></strong>
         </div>
       </div>
     </div>

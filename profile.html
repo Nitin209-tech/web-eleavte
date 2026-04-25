@@ -127,7 +127,7 @@
       <a class="foot-link" href="privacy.html">Privacy</a>
       <a class="foot-link" href="terms.html">Terms</a>
     </div>
-    <div class="foot-contact">Support: </div>
+    <div class="foot-contact">Support: <a href="mailto:mojangstudio908@gmail.com" style="color:var(--p);text-decoration:none">mojangstudio908@gmail.com</a></div>
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
@@ -177,7 +177,7 @@ function loadProfile() {
   fetch(`${CFG.API}/api/leaderboard`)
     .then(r => r.json())
     .then(d => renderLB(d.leaderboard || []))
-    .catch(() => renderLB([{name:'Nitin',coins:2450000},{name:'gamer_pro',coins:1800000},{name:'lucky_user',coins:1200000}]));
+    .catch(() => renderLB([{name:'gamer_pro',coins:1800000},{name:'lucky_user',coins:1200000},{name:'discord_ace',coins:980000}]));
 }
 
 function refreshProfile() { loadProfile(); toast('↻', 'Profile refreshed!'); }

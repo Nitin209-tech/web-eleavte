@@ -235,7 +235,7 @@
       <a class="foot-link" href="privacy.html">Privacy</a>
       <a class="foot-link" href="terms.html">Terms</a>
     </div>
-    <div class="foot-contact">Support: </div>
+    <div class="foot-contact">Support: <a href="mailto:mojangstudio908@gmail.com" style="color:var(--p);text-decoration:none">mojangstudio908@gmail.com</a></div>
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
@@ -243,14 +243,174 @@
 <div id="toast"></div>
 <script src="shared.js"></script>
 <script>
+// ── AI CHAT ──────────────────────────────────────────────────────
+const SITE_KNOWLEDGE = `
+You are the Rewards AI assistant for ElevateIQ Rewards Portal (elevateiq.shop).
 
-function checkCmd(val, force) {
-  if (!val) return;
-  if (handleHowToRedeem(val)) {
-    document.getElementById('cmd-input').value = '';
+ABOUT THE PLATFORM:
+- Name: Rewards Portal / ElevateIQ
+- Purpose: Earn IQCoins through Discord activity and redeem for gaming rewards
+- Members: 12,000+ Discord members
+- Founded: 2026
+- No subscriptions or hidden fees — completely free to join
+
+EARNING IQCOINS:
+- Daily login bonus
+- Sending messages on Discord server
+- Inviting friends to Discord (invite rewards)
+- Watching short ads on the Earn Coins page
+- Participating in giveaways
+
+AVAILABLE REWARDS:
+- Minecraft Java/Bedrock — from ₹899
+- Roblox Robux (50R$ / 100R$) — from ₹1,499
+- Xbox Game Pass — from ₹1,999
+- Discord Nitro Basic / Boost — from ₹1,199 / ₹5,999
+
+HOW TO REDEEM:
+1. Login with Discord on the homepage
+2. Earn IQCoins on the Earn Coins page
+3. Go to Redeem Code (if you have a code) OR Coin Rewards (to spend IQCoins)
+4. Select your game and plan
+5. Verify your account (username/email for Roblox/Nitro; Microsoft login for Xbox/Minecraft)
+6. Enter your 25-character code (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX) and submit
+7. Reward activates within 72 hours (average 12–24 hours)
+8. Download your PDF invoice for records
+
+DELIVERY & ACTIVATION:
+- Maximum: 72 hours from redemption
+- Average: 12–24 hours
+- All rewards are legitimate and real
+- PDF invoices generated for every order
+- Track orders on the Track Order page
+
+SECURITY:
+- Discord OAuth login only — we never see your gaming passwords
+- Every transaction is logged and invoiced
+- No personal data stored beyond Discord profile
+
+SUPPORT:
+- Support email: mojangstudio908@gmail.com
+- Available 24/7
+- For urgent issues, email directly
+
+PAGES ON THE WEBSITE:
+- Home (index.html) — Overview and getting started
+- Earn Coins (earn.html) — All earning methods
+- Redeem Code (redeem.html) — Redeem with code
+- Coin Rewards (coins.html) — Spend IQCoins directly
+- Giveaways (giveaway.html) — Active giveaways
+- Shop (shop.html) — Browse rewards
+- Profile (profile.html) — Your stats and coins
+- Track Order (track.html) — Order status
+- How It Works (howitworks.html) — Full guide
+- About (about.html) — About the platform
+
+IMPORTANT RULES FOR YOUR RESPONSES:
+- Always be friendly, warm, and helpful
+- Keep answers concise — under 100 words unless a step-by-step is needed
+- If someone has a problem with their order or account, tell them to email mojangstudio908@gmail.com
+- Do NOT make up rewards or prices not listed above
+- Do NOT promise things the platform does not offer
+- If unsure, say "Please contact support at mojangstudio908@gmail.com for this"
+`;
+
+let aiHistory = [];
+let aiOpen = false;
+
+function openAiChat() {
+  document.getElementById('ai-bar').style.display = 'none';
+  document.getElementById('ai-panel').style.display = 'block';
+  aiOpen = true;
+  setTimeout(() => document.getElementById('ai-input').focus(), 100);
+}
+
+function closeAiChat() {
+  document.getElementById('ai-panel').style.display = 'none';
+  document.getElementById('ai-bar').style.display = 'flex';
+  aiOpen = false;
+}
+
+function appendMsg(text, role) {
+  const box = document.getElementById('ai-msgs');
+  const wrap = document.createElement('div');
+  wrap.className = 'ai-msg';
+  wrap.style.alignSelf = role === 'user' ? 'flex-end' : 'flex-start';
+  wrap.style.maxWidth = '85%';
+  const bubble = document.createElement('div');
+  if (role === 'user') {
+    bubble.style.cssText = 'background:linear-gradient(135deg,var(--p),#5b35e8);border-radius:16px 16px 4px 16px;padding:11px 14px;font-size:13px;color:#fff;line-height:1.65';
+  } else {
+    bubble.style.cssText = 'background:var(--pd);border:1px solid var(--border2);border-radius:16px 16px 16px 4px;padding:11px 14px;font-size:13px;color:var(--t);line-height:1.65';
+  }
+  bubble.textContent = text;
+  wrap.appendChild(bubble);
+  box.appendChild(wrap);
+  box.scrollTop = box.scrollHeight;
+  return bubble;
+}
+
+function setTyping(on) {
+  const existing = document.getElementById('ai-typing');
+  if (on && !existing) {
+    const box = document.getElementById('ai-msgs');
+    const wrap = document.createElement('div');
+    wrap.id = 'ai-typing';
+    wrap.style.cssText = 'align-self:flex-start;background:var(--pd);border:1px solid var(--border2);border-radius:16px;padding:11px 16px;font-size:13px;color:var(--t2)';
+    wrap.textContent = 'Thinking...';
+    box.appendChild(wrap);
+    box.scrollTop = box.scrollHeight;
+  } else if (!on && existing) {
+    existing.remove();
   }
 }
 
+async function sendAiMsg(prefill) {
+  const input = document.getElementById('ai-input');
+  const text = (prefill || input.value).trim();
+  if (!text) return;
+
+  if (!aiOpen) openAiChat();
+
+  // Hide chips after first message
+  document.getElementById('ai-chips').style.display = 'none';
+
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('ai-send-btn').style.opacity = '0.5';
+
+  appendMsg(text, 'user');
+  aiHistory.push({ role: 'user', content: text });
+
+  setTyping(true);
+
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: SITE_KNOWLEDGE,
+        messages: aiHistory
+      })
+    });
+
+    const data = await res.json();
+    setTyping(false);
+
+    // api/ai.js returns { reply, source } — works with Groq & Gemini
+    const reply = data?.reply || "I'm having trouble right now. Please email mojangstudio908@gmail.com for help.";
+    appendMsg(reply, 'bot');
+    aiHistory.push({ role: 'assistant', content: reply });
+
+  } catch (e) {
+    setTyping(false);
+    appendMsg("Sorry, I'm offline right now. Please email mojangstudio908@gmail.com for support.", 'bot');
+  }
+
+  input.disabled = false;
+  document.getElementById('ai-send-btn').style.opacity = '1';
+  input.focus();
+}
 </script>
 <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',7045038,document.body||document.documentElement)</script>
 </body>
