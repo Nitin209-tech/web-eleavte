@@ -357,46 +357,326 @@ async function sendAiMsg(prefill) {
   const input = document.getElementById('ai-input');
   const text = (prefill || input.value).trim();
   if (!text) return;
-
   if (!aiOpen) openAiChat();
-
-  // Hide chips after first message
   document.getElementById('ai-chips').style.display = 'none';
-
   input.value = '';
   input.disabled = true;
   document.getElementById('ai-send-btn').style.opacity = '0.5';
-
   appendMsg(text, 'user');
   aiHistory.push({ role: 'user', content: text });
-
   setTyping(true);
-
   try {
     const res = await fetch('/api/ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system: SITE_KNOWLEDGE,
-        messages: aiHistory
-      })
+      body: JSON.stringify({ system: SITE_KNOWLEDGE, messages: aiHistory })
     });
-
     const data = await res.json();
     setTyping(false);
-
-    // api/ai.js returns { reply, source } — works with Groq & Gemini
     const reply = data?.reply || "I'm having trouble right now. Please email mojangstudio908@gmail.com for help.";
     appendMsg(reply, 'bot');
     aiHistory.push({ role: 'assistant', content: reply });
-
   } catch (e) {
     setTyping(false);
     appendMsg("Sorry, I'm offline right now. Please email mojangstudio908@gmail.com for support.", 'bot');
   }
-
   input.disabled = false;
   document.getElementById('ai-send-btn').style.opacity = '1';
+  input.focus();
+}
+</script>
+
+<!-- ══════════════════════════════════════════════════════
+     FLOATING AI CHAT WIDGET
+══════════════════════════════════════════════════════ -->
+<style>
+/* FAB Button */
+#fab-btn{
+  position:fixed;bottom:28px;right:28px;z-index:9998;
+  width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#7c5cfc,#5b35e8);
+  box-shadow:0 8px 30px rgba(124,92,252,0.5);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.25s cubic-bezier(0.22,1,0.36,1),box-shadow 0.25s;
+  animation:fabIn 0.5s 1.2s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes fabIn{from{transform:scale(0) rotate(-180deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+#fab-btn:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(124,92,252,0.6)}
+#fab-btn svg{transition:transform 0.3s}
+#fab-btn.chat-open svg.ico-chat{display:none}
+#fab-btn.chat-open svg.ico-close{display:block!important}
+.fab-pulse{
+  position:absolute;width:100%;height:100%;border-radius:50%;
+  background:rgba(124,92,252,0.4);
+  animation:fabPulse 2.5s ease-out 2s infinite;
+}
+@keyframes fabPulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.7);opacity:0}}
+
+/* Chat Panel */
+#fab-chat{
+  position:fixed;bottom:100px;right:28px;z-index:9997;
+  width:360px;max-width:calc(100vw - 32px);
+  background:var(--surface,#fff);
+  border:1px solid rgba(124,92,252,0.2);
+  border-radius:20px;
+  box-shadow:0 24px 80px rgba(0,0,0,0.18),0 0 0 1px rgba(124,92,252,0.08);
+  display:none;flex-direction:column;overflow:hidden;
+  transform:translateY(16px) scale(0.96);opacity:0;
+  transition:transform 0.3s cubic-bezier(0.22,1,0.36,1),opacity 0.3s;
+  transform-origin:bottom right;
+}
+#fab-chat.visible{display:flex}
+#fab-chat.shown{transform:translateY(0) scale(1);opacity:1}
+
+/* Header */
+.fc-head{
+  padding:16px 18px;
+  background:linear-gradient(135deg,#7c5cfc,#5b35e8);
+  display:flex;align-items:center;gap:12px;
+}
+.fc-av{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.fc-info{flex:1}
+.fc-name{font-size:14px;font-weight:700;color:#fff}
+.fc-status{font-size:11px;color:rgba(255,255,255,0.75);display:flex;align-items:center;gap:5px}
+.fc-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;flex-shrink:0}
+.fc-close{background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:background 0.2s}
+.fc-close:hover{background:rgba(255,255,255,0.28)}
+
+/* Messages */
+.fc-msgs{
+  flex:1;overflow-y:auto;padding:16px;
+  display:flex;flex-direction:column;gap:10px;
+  min-height:260px;max-height:340px;scroll-behavior:smooth;
+  background:var(--bg,#f8f7ff);
+}
+.fc-msgs::-webkit-scrollbar{width:3px}
+.fc-msgs::-webkit-scrollbar-thumb{background:rgba(124,92,252,0.2);border-radius:3px}
+
+/* Bubbles */
+.fc-bubble{max-width:82%;padding:10px 14px;font-size:13px;line-height:1.6;word-break:break-word;animation:bubbleIn 0.2s ease}
+@keyframes bubbleIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fc-bubble.bot{
+  align-self:flex-start;
+  background:var(--surface,#fff);border:1px solid rgba(124,92,252,0.15);
+  border-radius:16px 16px 16px 4px;
+  color:var(--t,#1a1a2e);box-shadow:0 1px 4px rgba(0,0,0,0.06);
+}
+.fc-bubble.user{
+  align-self:flex-end;
+  background:linear-gradient(135deg,#7c5cfc,#5b35e8);
+  border-radius:16px 16px 4px 16px;color:#fff;
+}
+.fc-typing{
+  align-self:flex-start;
+  background:var(--surface,#fff);border:1px solid rgba(124,92,252,0.15);
+  border-radius:16px 16px 16px 4px;padding:12px 16px;
+  display:flex;gap:5px;align-items:center;
+}
+.fc-typing span{
+  width:6px;height:6px;border-radius:50%;background:#7c5cfc;
+  animation:typingDot 1.2s ease-in-out infinite;
+}
+.fc-typing span:nth-child(2){animation-delay:0.2s}
+.fc-typing span:nth-child(3){animation-delay:0.4s}
+@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+/* Quick chips */
+.fc-chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px 0;background:var(--bg,#f8f7ff)}
+.fc-chip{
+  background:var(--surface,#fff);border:1px solid rgba(124,92,252,0.25);
+  border-radius:100px;padding:5px 12px;font-size:11px;font-weight:600;
+  color:#7c5cfc;cursor:pointer;transition:all 0.18s;white-space:nowrap;
+}
+.fc-chip:hover{background:#7c5cfc;color:#fff;border-color:#7c5cfc}
+
+/* Input row */
+.fc-input-row{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 14px;border-top:1px solid rgba(124,92,252,0.1);
+  background:var(--surface,#fff);
+}
+#fc-input{
+  flex:1;border:1.5px solid rgba(124,92,252,0.2);border-radius:100px;
+  padding:9px 14px;font-family:'DM Sans',sans-serif;font-size:13px;
+  color:var(--t,#1a1a2e);background:var(--bg,#f8f7ff);
+  outline:none;transition:border-color 0.2s;
+}
+#fc-input:focus{border-color:#7c5cfc}
+#fc-send{
+  width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+  background:linear-gradient(135deg,#7c5cfc,#5b35e8);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+#fc-send:hover{transform:scale(1.1);box-shadow:0 4px 14px rgba(124,92,252,0.4)}
+#fc-send svg{width:15px;height:15px}
+
+/* Powered by */
+.fc-powered{text-align:center;padding:6px;font-size:10px;color:var(--t4,#aaa);background:var(--surface,#fff)}
+
+@media(max-width:420px){
+  #fab-chat{right:12px;bottom:88px;width:calc(100vw - 24px)}
+  #fab-btn{right:16px;bottom:20px}
+}
+</style>
+
+<!-- FAB Button -->
+<button id="fab-btn" onclick="toggleFabChat()" title="Chat with AI Assistant" aria-label="Open AI Chat">
+  <div class="fab-pulse"></div>
+  <svg class="ico-chat" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C6.477 2 2 6.15 2 11.25c0 2.278.92 4.355 2.438 5.94L3 21l4.188-1.383A10.38 10.38 0 0012 20.5c5.523 0 10-4.15 10-9.25S17.523 2 12 2z" fill="white" opacity="0.9"/>
+    <circle cx="8.5" cy="11.5" r="1.2" fill="#7c5cfc"/>
+    <circle cx="12" cy="11.5" r="1.2" fill="#7c5cfc"/>
+    <circle cx="15.5" cy="11.5" r="1.2" fill="#7c5cfc"/>
+  </svg>
+  <svg class="ico-close" width="20" height="20" viewBox="0 0 20 20" fill="none" style="display:none">
+    <path d="M5 5l10 10M15 5L5 15" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+  </svg>
+</button>
+
+<!-- Chat Panel -->
+<div id="fab-chat">
+  <div class="fc-head">
+    <div class="fc-av">✦</div>
+    <div class="fc-info">
+      <div class="fc-name">Rewards AI</div>
+      <div class="fc-status"><span class="fc-dot"></span>Online — Ask me anything</div>
+    </div>
+    <button class="fc-close" onclick="toggleFabChat()">✕</button>
+  </div>
+  <div class="fc-msgs" id="fc-msgs">
+    <div class="fc-bubble bot">👋 Hi! I'm the Rewards AI. Ask me anything — how to earn IQCoins, redeem rewards, or get help with your order!</div>
+  </div>
+  <div class="fc-chips" id="fc-chips">
+    <div class="fc-chip" onclick="fcSend('How do I earn IQCoins?')">🪙 Earn coins</div>
+    <div class="fc-chip" onclick="fcSend('How do I redeem a reward?')">🎮 Redeem</div>
+    <div class="fc-chip" onclick="fcSend('What rewards are available?')">🎁 Rewards</div>
+    <div class="fc-chip" onclick="fcSend('How long does activation take?')">⏱️ Delivery</div>
+  </div>
+  <div class="fc-input-row">
+    <input id="fc-input" type="text" placeholder="Ask something..." onkeydown="if(event.key==='Enter')fcSend()"/>
+    <button id="fc-send" onclick="fcSend()" aria-label="Send">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M22 2L15 22L11 13L2 9L22 2z" stroke="white" stroke-width="2.2" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="fc-powered">Powered by Gemini AI ✦</div>
+</div>
+
+<script>
+// ── FLOATING CHAT WIDGET ──────────────────────────────────
+const GROQ_API_KEY = "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";
+const GEMINI_API_KEY = "AIzaSyAWhld44dFXt4dhG2O_tvz23t0dAwba0Do";
+const FC_SYSTEM = `You are the Rewards AI assistant for ElevateIQ Rewards Portal. Help users with:
+- Earning IQCoins: daily login, Discord messages, invites, ads
+- Available rewards: Minecraft (₹899), Roblox ₹1499-₹2499, Xbox Game Pass (₹1999), Discord Nitro ₹1199-₹5999
+- Redemption process: Login Discord → Earn coins → Redeem
+- Delivery: within 72h (avg 12-24h)
+- Support: mojangstudio908@gmail.com
+Be friendly, concise (under 80 words), and helpful.`;
+
+let fcHistory = [];
+let fcOpen = false;
+let fcChipsHidden = false;
+
+function toggleFabChat() {
+  const panel = document.getElementById('fab-chat');
+  const btn   = document.getElementById('fab-btn');
+  fcOpen = !fcOpen;
+  if (fcOpen) {
+    panel.classList.add('visible');
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ panel.classList.add('shown'); }); });
+    btn.classList.add('chat-open');
+    setTimeout(()=>document.getElementById('fc-input').focus(), 350);
+    const pulse = document.querySelector('.fab-pulse');
+    if (pulse) pulse.style.animation = 'none';
+  } else {
+    panel.classList.remove('shown');
+    btn.classList.remove('chat-open');
+    setTimeout(()=>panel.classList.remove('visible'), 300);
+  }
+}
+
+function fcAppend(text, role) {
+  const msgs = document.getElementById('fc-msgs');
+  const d = document.createElement('div');
+  d.className = 'fc-bubble ' + role;
+  d.textContent = text;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
+
+function fcShowTyping() {
+  const msgs = document.getElementById('fc-msgs');
+  const d = document.createElement('div');
+  d.className = 'fc-typing'; d.id = 'fc-typing';
+  d.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function fcHideTyping() {
+  const el = document.getElementById('fc-typing');
+  if (el) el.remove();
+}
+
+async function fcCallGemini(userMsg) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  const history = fcHistory.slice(-8); // last 8 messages for context
+  const contents = [
+    { role:"user",  parts:[{text: FC_SYSTEM}] },
+    { role:"model", parts:[{text: "Understood! I'm ready to help."}] },
+    ...history.map(m=>({
+      role: m.role === "assistant" ? "model" : "user",
+      parts:[{text: m.content}]
+    }))
+  ];
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ contents })
+  });
+  if (!res.ok) throw new Error("Gemini error " + res.status);
+  const data = await res.json();
+  return data?.candidates?.[0]?.content?.parts?.[0]?.text || null;
+}
+
+async function fcSend(prefill) {
+  const input = document.getElementById('fc-input');
+  const text  = (prefill || input.value).trim();
+  if (!text) return;
+  if (!fcOpen) toggleFabChat();
+
+  if (!fcChipsHidden) {
+    document.getElementById('fc-chips').style.display = 'none';
+    fcChipsHidden = true;
+  }
+
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('fc-send').style.opacity = '0.5';
+
+  fcAppend(text, 'user');
+  fcHistory.push({ role: 'user', content: text });
+  fcShowTyping();
+
+  try {
+    const reply = await fcCallGemini(text);
+    fcHideTyping();
+    if (!reply) throw new Error("empty");
+    fcAppend(reply, 'bot');
+    fcHistory.push({ role: 'assistant', content: reply });
+  } catch (e) {
+    fcHideTyping();
+    fcAppend("Mujhe abhi connect nahi ho pa raha. Please email karo: mojangstudio908@gmail.com 😊", 'bot');
+  }
+
+  input.disabled = false;
+  document.getElementById('fc-send').style.opacity = '1';
   input.focus();
 }
 </script>
