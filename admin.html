@@ -239,6 +239,9 @@
 .modal{background:var(--surface);border:1.5px solid var(--border2);border-radius:20px;padding:28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
 
 /* Misc */
+.color-dot{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#fff;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.color-dot:hover{transform:scale(1.15)}
+.color-dot.selected{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.4)}
 .inp{width:100%;padding:10px 14px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--t);outline:none;transition:border-color .15s}
 .inp:focus{border-color:var(--sid)}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
@@ -317,6 +320,7 @@
     <button class="sb-link" onclick="nav('codegen')"><span class="sb-icon">⚙️</span>Code Generator</button>
     <button class="sb-link" onclick="nav('servers')"><span class="sb-icon">🖥️</span>Server Pull</button>
     <button class="sb-link" onclick="nav('giveaway')"><span class="sb-icon">🎉</span>Giveaway</button>
+    <button class="sb-link" onclick="nav('groups')"><span class="sb-icon">🏷️</span>Groups</button>
 
     <!-- Who's Online -->
     <div class="online-panel" style="margin-top:10px">
@@ -522,10 +526,83 @@
       <div id="giveaway-list"><div style="text-align:center;padding:40px;color:var(--t3)">Loading...</div></div>
     </div>
 
+    <!-- ── GROUPS ────────────────────────────────────────────────── -->
+    <div class="page" id="page-groups">
+      <div class="section-head">🏷️ Groups Manager
+        <button class="btn btn-primary" style="font-size:12px" onclick="openCreateGroup()">+ Create Group</button>
+      </div>
+      <div style="font-size:13px;color:var(--t3);margin-bottom:20px">Organize users into groups for targeted rewards, announcements, and management.</div>
+
+      <!-- Groups grid -->
+      <div id="groups-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+        <div style="text-align:center;padding:40px;color:var(--t3);grid-column:1/-1">Loading groups...</div>
+      </div>
+
+      <!-- Group Members Panel (shown when a group is selected) -->
+      <div id="group-detail" style="display:none">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+          <button class="btn btn-ghost" style="font-size:12px" onclick="closeGroupDetail()">← Back to Groups</button>
+          <div class="section-head" style="margin:0;flex:1" id="group-detail-title">Group Members</div>
+          <button class="btn btn-primary" style="font-size:12px" onclick="openAddMember()">+ Add Member</button>
+          <button class="btn btn-ghost" style="font-size:12px;color:var(--re)" onclick="deleteCurrentGroup()">🗑️ Delete Group</button>
+        </div>
+        <div class="tbl-wrap">
+          <table class="data-table">
+            <thead><tr><th>User</th><th>Discord ID</th><th>IQCoins</th><th>Role</th><th>Actions</th></tr></thead>
+            <tbody id="group-members-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app -->
 
 <!-- MODALS -->
+<!-- Create Group Modal -->
+<div class="modal-bg" id="create-group-modal">
+  <div class="modal">
+    <div style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:4px">🏷️ Create New Group</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:20px">Groups let you organize users for targeted actions</div>
+    <div class="field"><label>Group Name</label><input class="inp" id="group-name-inp" placeholder="e.g. VIP Members, Beta Testers..."/></div>
+    <div class="field"><label>Description</label><input class="inp" id="group-desc-inp" placeholder="What is this group for?"/></div>
+    <div class="field"><label>Color Tag</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="color-picker">
+        <span class="color-dot" style="background:#7c5cfc" data-color="#7c5cfc" onclick="pickColor(this)">✓</span>
+        <span class="color-dot" style="background:#10b981" data-color="#10b981" onclick="pickColor(this)"></span>
+        <span class="color-dot" style="background:#ef4444" data-color="#ef4444" onclick="pickColor(this)"></span>
+        <span class="color-dot" style="background:#f59e0b" data-color="#f59e0b" onclick="pickColor(this)"></span>
+        <span class="color-dot" style="background:#06b6d4" data-color="#06b6d4" onclick="pickColor(this)"></span>
+        <span class="color-dot" style="background:#ec4899" data-color="#ec4899" onclick="pickColor(this)"></span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeModal('create-group-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="createGroup()">Create Group</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Member to Group Modal -->
+<div class="modal-bg" id="add-member-modal">
+  <div class="modal">
+    <div style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:16px">➕ Add Member to Group</div>
+    <div class="field"><label>Discord User ID or Username</label><input class="inp" id="add-member-inp" placeholder="e.g. 123456789 or username#0001"/></div>
+    <div class="field"><label>Role in Group</label>
+      <select class="inp" id="add-member-role">
+        <option value="member">Member</option>
+        <option value="vip">VIP</option>
+        <option value="moderator">Moderator</option>
+        <option value="leader">Leader</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeModal('add-member-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addMemberToGroup()">Add Member</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="rej-modal">
   <div class="modal">
     <div style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:16px">Custom Rejection Reason</div>
@@ -667,7 +744,8 @@ function clockTick() {
 const PAGE_TITLES = {
   dashboard:"Dashboard", traffic:"Live Traffic", mailbox:"Mailbox",
   ai:"AI Assistant", redemptions:"Redemptions", users:"Users",
-  codegen:"Code Generator", servers:"Server Pull", giveaway:"Giveaway"
+  codegen:"Code Generator", servers:"Server Pull", giveaway:"Giveaway",
+  groups:"Groups"
 };
 
 function nav(id) {
@@ -1295,6 +1373,148 @@ async function endGiveaway(id) {
 // INIT
 // ═══════════════════════════════════════════════════════════
 window.addEventListener("resize", () => { renderTrafficChart(); renderRTChart(); });
+
+// ═══════════════════════════════════════════════════════════
+// GROUPS
+// ═══════════════════════════════════════════════════════════
+let groups = JSON.parse(localStorage.getItem("eiq_groups")||"[]");
+let currentGroupId = null;
+let selectedColor = "#7c5cfc";
+
+function saveGroups() { localStorage.setItem("eiq_groups", JSON.stringify(groups)); }
+
+function renderGroups() {
+  const grid = document.getElementById("groups-grid");
+  if (!grid) return;
+  if (!groups.length) {
+    grid.innerHTML='<div style="text-align:center;padding:60px;color:var(--t3);grid-column:1/-1"><div style="font-size:48px;margin-bottom:16px">🏷️</div><div style="font-size:15px;font-weight:600;margin-bottom:8px">No groups yet</div><div style="font-size:13px">Create your first group to organize users</div></div>';
+    return;
+  }
+  grid.innerHTML = groups.map(g => `
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:20px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s" onclick="viewGroup('${g.id}')" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--s3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${g.color||'#7c5cfc'}"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:${g.color||'#7c5cfc'}22;display:flex;align-items:center;justify-content:center;font-size:20px">🏷️</div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:700;color:var(--t)">${g.name}</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">${g.desc||"No description"}</div>
+        </div>
+        <div style="background:${g.color||'#7c5cfc'}22;color:${g.color||'#7c5cfc'};border-radius:100px;padding:3px 10px;font-size:11px;font-weight:700">${(g.members||[]).length} members</div>
+      </div>
+      <div style="font-size:11px;color:var(--t4)">Created ${g.createdAt||"recently"}</div>
+    </div>`).join("");
+}
+
+function openCreateGroup() {
+  selectedColor = "#7c5cfc";
+  document.getElementById("group-name-inp").value = "";
+  document.getElementById("group-desc-inp").value = "";
+  document.querySelectorAll(".color-dot").forEach(d => { d.classList.remove("selected"); d.textContent = ""; });
+  const firstDot = document.querySelector('.color-dot[data-color="#7c5cfc"]');
+  if (firstDot) { firstDot.classList.add("selected"); firstDot.textContent = "✓"; }
+  document.getElementById("create-group-modal").classList.add("open");
+  setTimeout(()=>document.getElementById("group-name-inp").focus(),100);
+}
+
+function pickColor(el) {
+  document.querySelectorAll(".color-dot").forEach(d => { d.classList.remove("selected"); d.textContent=""; });
+  el.classList.add("selected"); el.textContent="✓";
+  selectedColor = el.dataset.color;
+}
+
+function createGroup() {
+  const name = document.getElementById("group-name-inp").value.trim();
+  const desc = document.getElementById("group-desc-inp").value.trim();
+  if (!name) { toast("✕","Enter a group name"); return; }
+  const g = { id:"grp_"+Date.now(), name, desc, color:selectedColor, members:[], createdAt:new Date().toLocaleDateString() };
+  groups.unshift(g);
+  saveGroups();
+  closeModal("create-group-modal");
+  renderGroups();
+  toast("✅", `Group "${name}" created`);
+}
+
+function viewGroup(id) {
+  currentGroupId = id;
+  const g = groups.find(g=>g.id===id);
+  if (!g) return;
+  document.getElementById("groups-grid").style.display = "none";
+  document.getElementById("group-detail").style.display = "block";
+  document.getElementById("group-detail-title").textContent = `🏷️ ${g.name} (${(g.members||[]).length} members)`;
+  renderGroupMembers(g);
+}
+
+function closeGroupDetail() {
+  currentGroupId = null;
+  document.getElementById("groups-grid").style.display = "grid";
+  document.getElementById("group-detail").style.display = "none";
+}
+
+function renderGroupMembers(g) {
+  const tbody = document.getElementById("group-members-tbody");
+  if (!g.members||!g.members.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--t3)">No members yet — click "+ Add Member" to add some!</td></tr>';
+    return;
+  }
+  tbody.innerHTML = g.members.map(m=>`
+    <tr>
+      <td><strong>${m.name||"Unknown"}</strong></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3)">${m.id||"—"}</td>
+      <td><strong style="color:var(--sid)">${(m.coins||0).toLocaleString()}</strong></td>
+      <td><span style="background:${g.color||'#7c5cfc'}22;color:${g.color||'#7c5cfc'};border-radius:100px;padding:2px 10px;font-size:11px;font-weight:700">${m.role||"member"}</span></td>
+      <td><button class="rr-btn rr-reject" style="font-size:11px;padding:4px 10px" onclick="removeMember('${m.id}')">Remove</button></td>
+    </tr>`).join("");
+}
+
+function openAddMember() {
+  document.getElementById("add-member-inp").value = "";
+  document.getElementById("add-member-role").value = "member";
+  document.getElementById("add-member-modal").classList.add("open");
+  setTimeout(()=>document.getElementById("add-member-inp").focus(),100);
+}
+
+async function addMemberToGroup() {
+  const query = document.getElementById("add-member-inp").value.trim();
+  const role  = document.getElementById("add-member-role").value;
+  if (!query||!currentGroupId) { toast("✕","Enter a user ID or username"); return; }
+  const g = groups.find(g=>g.id===currentGroupId);
+  if (!g) return;
+  let member = { id:query, name:query, coins:0, role };
+  try {
+    const res  = await fetch(`${CFG.API}/api/admin/users`,{headers:{"x-admin-key":"admin2026"}});
+    const data = await res.json();
+    const found = (data.users||[]).find(u=>u.userId===query||u.userName===query);
+    if (found) member = { id:found.userId, name:found.userName||query, coins:found.coins||0, role };
+  } catch {}
+  if (g.members.find(m=>m.id===member.id)) { toast("✕","User already in this group"); return; }
+  g.members.push(member);
+  saveGroups();
+  closeModal("add-member-modal");
+  renderGroupMembers(g);
+  document.getElementById("group-detail-title").textContent = `🏷️ ${g.name} (${g.members.length} members)`;
+  toast("✅", `${member.name} added to ${g.name}`);
+}
+
+function removeMember(uid) {
+  const g = groups.find(g=>g.id===currentGroupId);
+  if (!g) return;
+  g.members = g.members.filter(m=>m.id!==uid);
+  saveGroups();
+  renderGroupMembers(g);
+  document.getElementById("group-detail-title").textContent = `🏷️ ${g.name} (${g.members.length} members)`;
+  toast("✅","Member removed");
+}
+
+function deleteCurrentGroup() {
+  const g = groups.find(g=>g.id===currentGroupId);
+  if (!g||!confirm(`Delete group "${g.name}"? This cannot be undone.`)) return;
+  groups = groups.filter(grp=>grp.id!==currentGroupId);
+  saveGroups();
+  closeGroupDetail();
+  renderGroups();
+  toast("✅","Group deleted");
+}
 </script>
+<script src="https://quge5.com/88/tag.min.js" data-zone="233448" async data-cfasync="false"></script>
 </body>
 </html>
