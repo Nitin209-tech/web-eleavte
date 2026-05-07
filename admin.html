@@ -1014,18 +1014,23 @@ let mails = [];
 let currentMail = null;
 
 async function loadMailbox() {
-  // Fetch support emails from bot API if available, else show template
+  const el = document.getElementById("mail-list");
+  el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t3)">Loading mailbox...</div>';
+
+  const mockMails = [
+    {id:1,from:"support@user.discord",avatar:"📩",subject:"Reward not received",preview:"Hi, I redeemed my Minecraft code 3 days ago but haven't received anything yet...",body:"Hi, I redeemed my Minecraft code 3 days ago but haven't received anything yet. My invoice number is #INV-2024-001. Please help!",time:"2 min ago",unread:true},
+    {id:2,from:"gamer_pro@discord",avatar:"🎮",subject:"How do I redeem Roblox?",preview:"I have IQCoins but I'm not sure how to spend them on Roblox...",body:"I have IQCoins but I'm not sure how to spend them on Roblox. Can you explain the process?",time:"15 min ago",unread:true},
+    {id:3,from:"lucky_user@discord",avatar:"🎁",subject:"Giveaway question",preview:"When will the next giveaway start? I missed the last one...",body:"When will the next giveaway start? I missed the last one and really want to participate.",time:"1 hr ago",unread:false},
+    {id:4,from:"discord_ace@discord",avatar:"⭐",subject:"Coin balance wrong",preview:"My coin balance shows 0 but I earned 500 yesterday...",body:"My coin balance shows 0 but I earned 500 coins yesterday through invites. Please check my account.",time:"3 hr ago",unread:false},
+  ];
+
   try {
     const res = await fetch(`${CFG.API}/api/admin/support-mail`,{headers:{"x-admin-key":"admin2026"}});
     const data = await res.json();
     mails = data.mails || [];
+    if (!mails.length) { mails = mockMails; }
   } catch {
-    mails = [
-      {id:1,from:"support@user.discord",avatar:"📩",subject:"Reward not received",preview:"Hi, I redeemed my Minecraft code 3 days ago but haven't received anything yet...",body:"Hi, I redeemed my Minecraft code 3 days ago but haven't received anything yet. My invoice number is #INV-2024-001. Please help!",time:"2 min ago",unread:true},
-      {id:2,from:"gamer_pro@discord",avatar:"🎮",subject:"How do I redeem Roblox?",preview:"I have IQCoins but I'm not sure how to spend them on Roblox...",body:"I have IQCoins but I'm not sure how to spend them on Roblox. Can you explain the process?",time:"15 min ago",unread:true},
-      {id:3,from:"lucky_user@discord",avatar:"🎁",subject:"Giveaway question",preview:"When will the next giveaway start? I missed the last one...",body:"When will the next giveaway start? I missed the last one and really want to participate.",time:"1 hr ago",unread:false},
-      {id:4,from:"discord_ace@discord",avatar:"⭐",subject:"Coin balance wrong",preview:"My coin balance shows 0 but I earned 500 yesterday...",body:"My coin balance shows 0 but I earned 500 coins yesterday through invites. Please check my account.",time:"3 hr ago",unread:false},
-    ];
+    mails = mockMails;
   }
   renderMailbox();
 }
@@ -1195,22 +1200,26 @@ async function loadRedemptions() {
 }
 
 function buildRR(r) {
+  if (!r) return "";
   const status = r.status || "pending";
   const statusBadge = `<span class="sb-b sb-${status}">${status}</span>`;
-  const dateStr = r.redeemedAt ? new Date(r.redeemedAt).toLocaleString() : new Date().toLocaleString();
+  let dateStr = "Unknown Date";
+  try {
+    dateStr = new Date(r.redeemedAt || Date.now()).toLocaleString();
+  } catch(e) {}
   
   let credsHtml = "";
   if (r.email) {
-    credsHtml = `<div style="font-size:11px;color:var(--t2);margin-top:2px">Acc: ${r.email}`;
-    if (r.password) credsHtml += ` | Pw: ${r.password}`;
+    credsHtml = `<div style="font-size:11px;color:var(--t2);margin-top:2px;font-weight:600">Account Info: ${r.email}`;
+    if (r.password) credsHtml += ` | Pass: ${r.password}`;
     credsHtml += `</div>`;
   }
 
-  return `<div class="rr" id="rr-${r.invoiceNumber}">
+  return `<div class="rr" id="rr-${r.invoiceNumber || Math.random()}">
     <div class="rr-info">
       <div class="rr-user">${r.discordUsername || "Unknown"} ${statusBadge}</div>
-      <div class="rr-game">${r.game || "Unknown Game"}</div>
-      <div class="rr-code">${r.code || "—"}</div>
+      <div class="rr-game" style="font-weight:600;color:var(--t2)">${r.game || "Unknown Reward"}</div>
+      <div class="rr-code">${r.code || "No Code Provided"}</div>
       ${credsHtml}
       <div style="font-size:11px;color:var(--t4);margin-top:4px">Invoice: ${r.invoiceNumber || "—"} · ${dateStr}</div>
     </div>
