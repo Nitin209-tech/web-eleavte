@@ -2,57 +2,42 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/",              "destination": "/index.html" },
+    { "source": "/auth/callback", "destination": "/auth-callback.html" },
+    { "source": "/earn",          "destination": "/earn.html" },
+    { "source": "/redeem",        "destination": "/redeem.html" },
+    { "source": "/coins",         "destination": "/coins.html" },
+    { "source": "/giveaway",      "destination": "/giveaway.html" },
+    { "source": "/profile",       "destination": "/profile.html" },
+    { "source": "/track",         "destination": "/track.html" },
+    { "source": "/howitworks",    "destination": "/howitworks.html" },
+    { "source": "/about",         "destination": "/about.html" },
+    { "source": "/contact",       "destination": "/contact.html" },
+    { "source": "/privacy",       "destination": "/privacy.html" },
+    { "source": "/terms",         "destination": "/terms.html" },
+    { "source": "/admin",         "destination": "/admin.html" }
+  ],
+  "headers": [
     {
-      "source": "/",
-      "destination": "/index.html"
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options",        "value": "DENY" },
+        { "key": "X-XSS-Protection",       "value": "1; mode=block" },
+        { "key": "Referrer-Policy",        "value": "strict-origin-when-cross-origin" }
+      ]
     },
     {
-      "source": "/earn",
-      "destination": "/earn.html"
+      "source": "/shared.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+      ]
     },
     {
-      "source": "/redeem",
-      "destination": "/redeem.html"
-    },
-    {
-      "source": "/coins",
-      "destination": "/coins.html"
-    },
-    {
-      "source": "/giveaway",
-      "destination": "/giveaway.html"
-    },
-    {
-      "source": "/profile",
-      "destination": "/profile.html"
-    },
-    {
-      "source": "/track",
-      "destination": "/track.html"
-    },
-    {
-      "source": "/howitworks",
-      "destination": "/howitworks.html"
-    },
-    {
-      "source": "/about",
-      "destination": "/about.html"
-    },
-    {
-      "source": "/contact",
-      "destination": "/contact.html"
-    },
-    {
-      "source": "/privacy",
-      "destination": "/privacy.html"
-    },
-    {
-      "source": "/terms",
-      "destination": "/terms.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin.html"
+      "source": "/shared.css",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+      ]
     }
   ]
 }

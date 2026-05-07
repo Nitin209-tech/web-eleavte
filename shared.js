@@ -1,10 +1,10 @@
 // ── SHARED CONFIG ──
+// ⚠️  Set REACT_APP_API_URL or update CFG.API to your current Railway URL before deploying
 const CFG = {
-  API: 'https://bot-production-8e9c.up.railway.app',
+  API: 'https://bot-production-387b.up.railway.app',   // ✅ Updated to current Railway URL
   GUILD: '1411327756968661125',
   CLIENT: '1485034551108702268',
-  REDIR: 'https://www.elevateiq.shop/',
-  AZURE_CLIENT: '45cafe0a-6832-4192-a100-bf47cde26f28'
+  REDIR: 'https://www.elevateiq.shop/auth/callback',   // ✅ Fixed: dedicated callback path
 };
 
 const PRICES = {
@@ -33,58 +33,134 @@ function saveOrd(o){ const a = getOrds(); a.unshift(o); localStorage.setItem('ei
 
 // ── SERVER SYNC ──
 function syncCoins(uid){
-  fetch(`${CFG.API}/api/user/${uid}`)
+  fetch(`${CFG.API}/api/user/${uid}`, {
+    headers: { 'Authorization': `Bearer ${localStorage.getItem('eiq_token') || ''}` }
+  })
     .then(r => r.json())
     .then(d => { if (d.success && d.coins != null) setCoins(d.coins); })
     .catch(() => {});
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW registered', reg))
-      .catch(err => console.log('SW error', err));
-  });
-}
+// ── SERVICE WORKER: REMOVED ──
+// sw.js does not exist → registration was throwing 404 errors on every page load.
+// Uncomment and create /sw.js only when you have an actual service worker file.
+// if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', () => {
+//     navigator.serviceWorker.register('/sw.js')
+//       .then(reg => console.log('SW registered', reg))
+//       .catch(err => console.error('SW error', err));
+//   });
+// }
 
 // ── AUTH ──
 function logout(){
   localStorage.removeItem('eiq_user');
   localStorage.removeItem('eiq_coins');
   localStorage.removeItem('eiq_token');
+  localStorage.removeItem('eiq_oauth_state');
   window.location.href = '/';
 }
 
+// ✅ Secure OAuth login — generates & stores a random state parameter to prevent CSRF
 function dcLogin(){
+  // Generate cryptographically random state
+  const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+    .map(b => b.toString(16).padStart(2,'0')).join('');
+  localStorage.setItem('eiq_oauth_state', state);
+
   const url = `https://discord.com/api/oauth2/authorize`
     + `?client_id=${CFG.CLIENT}`
     + `&redirect_uri=${encodeURIComponent(CFG.REDIR)}`
     + `&response_type=code`
-    + `&scope=identify%20guilds.join`;
+    + `&scope=identify%20guilds.join`
+    + `&state=${state}`;
   window.location.href = url;
 }
 
+// ── OAUTH CALLBACK HANDLER ──
+// Called on /auth/callback page only. Validates state, exchanges code with backend.
 function handleOAuthCallback(){
-  const p    = new URLSearchParams(window.location.search);
-  const code = p.get('code');
+  // Only run on the dedicated callback path
+  const isCallback = window.location.pathname === '/auth/callback';
+  if (!isCallback) return;
+
+  const p     = new URLSearchParams(window.location.search);
+  const code  = p.get('code');
+  const state = p.get('state');
+  const error = p.get('error');
+
+  // Clear URL immediately to prevent code reuse / leakage in browser history
+  history.replaceState({}, '', '/auth/callback');
+
+  if (error) {
+    console.warn('[OAuth] Discord returned error:', error);
+    toast('✕', 'Discord login was cancelled.');
+    setTimeout(() => window.location.href = '/', 2000);
+    return;
+  }
+
   if (!code) return;
-  history.replaceState({}, '', '/');
-  fetch(`${CFG.API}/api/discord/callback?code=${encodeURIComponent(code)}&redirect_uri=${encodeURIComponent(CFG.REDIR)}`)
-    .then(r => r.json())
+
+  // ✅ Validate state to prevent CSRF
+  const savedState = localStorage.getItem('eiq_oauth_state');
+  localStorage.removeItem('eiq_oauth_state');
+  if (!savedState || state !== savedState) {
+    console.error('[OAuth] State mismatch — possible CSRF attack');
+    toast('✕', 'Security check failed. Please try logging in again.');
+    setTimeout(() => window.location.href = '/', 2000);
+    return;
+  }
+
+  // Show loading UI
+  showAuthLoading('Logging you in…');
+
+  // Prevent duplicate requests if page is restored from cache
+  if (window._oauthInFlight) return;
+  window._oauthInFlight = true;
+
+  fetch(`${CFG.API}/auth/callback?code=${encodeURIComponent(code)}&redirect_uri=${encodeURIComponent(CFG.REDIR)}`)
+    .then(r => {
+      if (!r.ok) throw new Error(`Server error: ${r.status}`);
+      return r.json();
+    })
     .then(d => {
+      window._oauthInFlight = false;
       if (d.user){
         setUser(d.user);
         if (d.token) localStorage.setItem('eiq_token', d.token);
         syncCoins(d.user.id);
         renderNavAuth();
         toast('👋', `Welcome, ${d.user.global_name || d.user.username}!`);
-        // Dismiss new member report modal on login
-        dismissNewMemberReport();
+        setTimeout(() => window.location.href = '/', 1200);
       } else {
-        toast('✕', d.error || 'Login failed — try again');
+        hideAuthLoading();
+        toast('✕', d.error || 'Login failed — please try again');
+        setTimeout(() => window.location.href = '/', 2500);
       }
     })
-    .catch(() => toast('✕', 'Login failed. Please try again.'));
+    .catch(err => {
+      window._oauthInFlight = false;
+      hideAuthLoading();
+      console.error('[OAuth] Callback fetch failed:', err);
+      toast('✕', 'Login error — please try again.');
+      setTimeout(() => window.location.href = '/', 2500);
+    });
+}
+
+function showAuthLoading(msg) {
+  let el = document.getElementById('auth-loading-overlay');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'auth-loading-overlay';
+    el.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(248,247,255,0.97);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;font-family:DM Sans,sans-serif';
+    el.innerHTML = `<div style="text-align:center"><div style="width:48px;height:48px;border:3px solid #ede9fe;border-top-color:#7c5cfc;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div><div style="font-size:16px;color:#1a1535;font-weight:600" id="auth-loading-msg"></div></div>`;
+    document.head.insertAdjacentHTML('beforeend','<style>@keyframes spin{to{transform:rotate(360deg)}}</style>');
+    document.body.appendChild(el);
+  }
+  document.getElementById('auth-loading-msg').textContent = msg || 'Loading…';
+}
+function hideAuthLoading() {
+  document.getElementById('auth-loading-overlay')?.remove();
 }
 
 // ── NEW MEMBER REPORT — dismiss on join ──
@@ -107,7 +183,6 @@ function renderNavAuth(){
     </div>`;
     const pill = document.getElementById('cpill');
     if (pill) pill.style.display = 'flex';
-    // Show mailbox icon in nav
     const mb = document.getElementById('nav-mailbox');
     if (mb) mb.style.display = 'flex';
   } else {
@@ -120,7 +195,7 @@ function renderNavAuth(){
 }
 
 function updateNavUI(){
-  const nc   = document.getElementById('nav-coins');
+  const nc = document.getElementById('nav-coins');
   if (nc) nc.textContent = getCoins().toLocaleString();
   const pill = document.getElementById('cpill');
   if (pill) pill.style.display = getUser() ? 'flex' : 'none';
@@ -274,7 +349,7 @@ function toggleTheme() {
   if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
 }
 
-// ── HOW TO REDEEM COMMAND ──
+// ── HOW TO REDEEM ──
 function handleHowToRedeem(input){
   const lower = (input||'').toLowerCase().trim();
   if (lower === 'how to redeem' || lower === 'how to claim' || lower === 'how do i redeem'){
@@ -302,12 +377,12 @@ function showHowToRedeemModal(){
         <div style="display:flex;flex-direction:column;gap:16px">
           ${[
             ['1','Login with Discord','Click "Login with Discord" on the homepage. Authorize the app — it only reads your username.'],
-            ['2','Earn IQCoins','Visit the Earn Coins page. Complete daily claims, watch ads, send Discord messages, and invite friends.'],
+            ['2','Earn IQCoins','Visit the Earn Coins page. Complete daily claims, send Discord messages, and invite friends.'],
             ['3','Choose your Reward','Go to Redeem Code (if you have a code) or Coin Rewards (to spend IQCoins).'],
             ['4','Select your Game','Pick Minecraft, Roblox, Xbox Game Pass, or Discord Nitro. Choose your plan if applicable.'],
             ['5','Verify your Account','For Roblox/Nitro: enter your username & email. For others: sign in with Microsoft to verify.'],
-            ['6','Enter Code & Submit','Paste your 25-character code (XXXXX-XXXXX-...) and click Redeem Now.'],
-            ['7','Wait for Activation','Your reward is queued and activates within 72 hours. Average is 12–24 hours. Download your invoice.']
+            ['6','Enter Code & Submit','Paste your 25-character code and click Redeem Now.'],
+            ['7','Wait for Activation','Your reward activates within 72 hours. Download your invoice.']
           ].map(([n,t,d]) => `
             <div style="display:flex;gap:14px;align-items:flex-start">
               <div style="min-width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--p),#5b35e8);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0">${n}</div>
@@ -319,7 +394,7 @@ function showHowToRedeemModal(){
           `).join('')}
         </div>
         <div style="margin-top:28px;padding:16px;background:var(--pd);border:1px solid var(--border2);border-radius:16px;text-align:center;font-size:13px;color:var(--t2)">
-          Need help? Email us at <strong style="color:var(--t)"><a href="mailto:mojangstudio908@gmail.com" style="color:var(--p);text-decoration:none">mojangstudio908@gmail.com</a></strong>
+          Need help? Email <a href="mailto:mojangstudio908@gmail.com" style="color:var(--p);text-decoration:none">mojangstudio908@gmail.com</a>
         </div>
       </div>
     </div>
@@ -333,53 +408,30 @@ document.addEventListener('DOMContentLoaded', () => {
   renderNavAuth();
   updateNavUI();
   initHamburger();
-  handleOAuthCallback();
+  handleOAuthCallback();   // Only fires on /auth/callback path
   enforceLogin();
 });
 
-// ✅ LOGIN GATE
+// ── LOGIN GATE ──
 function enforceLogin() {
-  const isIndex = window.location.pathname.endsWith('index.html') ||
-                  window.location.pathname.endsWith('/') ||
-                  window.location.pathname === '';
-  if (isIndex) return;
+  const path = window.location.pathname;
+  const publicPaths = ['/', '/index', '/index.html', '/about', '/howitworks',
+                       '/privacy', '/terms', '/auth/callback'];
+  const isPublic = publicPaths.some(p => path === p || path === p + '.html');
+  if (isPublic) return;
   if (!getUser()) {
     const overlay = document.createElement('div');
     overlay.id = 'login-gate';
     overlay.innerHTML = `
-      <div style="
-        position:fixed;inset:0;z-index:99999;
-        background:rgba(248,247,255,0.97);
-        backdrop-filter:blur(20px);
-        display:flex;align-items:center;justify-content:center;
-        font-family:'DM Sans',sans-serif;
-      ">
-        <div style="
-          background:#fff;border:1px solid rgba(124,92,252,0.2);
-          border-radius:28px;padding:52px 44px;text-align:center;
-          max-width:420px;width:90%;
-          box-shadow:0 20px 60px rgba(124,92,252,0.15);
-        ">
+      <div style="position:fixed;inset:0;z-index:99999;background:rgba(248,247,255,0.97);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif">
+        <div style="background:#fff;border:1px solid rgba(124,92,252,0.2);border-radius:28px;padding:52px 44px;text-align:center;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(124,92,252,0.15)">
           <div style="font-size:52px;margin-bottom:20px">🔐</div>
-          <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#1a1535;margin-bottom:12px">
-            Login Required
-          </div>
-          <div style="font-size:15px;color:#5b5480;margin-bottom:32px;line-height:1.7">
-            Please login with Discord to access this page and start earning IQCoins.
-          </div>
-          <button onclick="dcLogin()" style="
-            background:linear-gradient(135deg,#7c5cfc,#5b35e8);
-            color:#fff;border:none;border-radius:100px;
-            padding:16px 36px;font-size:15px;font-weight:600;
-            cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;
-            box-shadow:0 4px 18px rgba(124,92,252,0.38);
-            transition:all 0.2s;
-          " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+          <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#1a1535;margin-bottom:12px">Login Required</div>
+          <div style="font-size:15px;color:#5b5480;margin-bottom:32px;line-height:1.7">Login with Discord to access this page and start earning IQCoins.</div>
+          <button onclick="dcLogin()" style="background:linear-gradient(135deg,#7c5cfc,#5b35e8);color:#fff;border:none;border-radius:100px;padding:16px 36px;font-size:15px;font-weight:600;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;box-shadow:0 4px 18px rgba(124,92,252,0.38);transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
             Login with Discord
           </button>
-          <div style="font-size:12px;color:#9b93c4;margin-top:16px">
-            Free • Secure • Takes 10 seconds
-          </div>
+          <div style="font-size:12px;color:#9b93c4;margin-top:16px">Free • Secure • Takes 10 seconds</div>
         </div>
       </div>
     `;
