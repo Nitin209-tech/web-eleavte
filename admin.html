@@ -1195,20 +1195,31 @@ async function loadRedemptions() {
 }
 
 function buildRR(r) {
-  const statusBadge = `<span class="sb-b sb-${r.status||"pending"}">${r.status||"pending"}</span>`;
+  const status = r.status || "pending";
+  const statusBadge = `<span class="sb-b sb-${status}">${status}</span>`;
+  const dateStr = r.redeemedAt ? new Date(r.redeemedAt).toLocaleString() : new Date().toLocaleString();
+  
+  let credsHtml = "";
+  if (r.email) {
+    credsHtml = `<div style="font-size:11px;color:var(--t2);margin-top:2px">Acc: ${r.email}`;
+    if (r.password) credsHtml += ` | Pw: ${r.password}`;
+    credsHtml += `</div>`;
+  }
+
   return `<div class="rr" id="rr-${r.invoiceNumber}">
     <div class="rr-info">
-      <div class="rr-user">${r.discordUsername||"Unknown"} ${statusBadge}</div>
-      <div class="rr-game">${r.game} · ${r.plan} · ${r.price}</div>
-      <div class="rr-code">${r.code||"—"}</div>
-      <div style="font-size:11px;color:var(--t4);margin-top:4px">Invoice: ${r.invoiceNumber} · ${new Date(r.redeemedAt||Date.now()).toLocaleString()}</div>
+      <div class="rr-user">${r.discordUsername || "Unknown"} ${statusBadge}</div>
+      <div class="rr-game">${r.game || "Unknown Game"}</div>
+      <div class="rr-code">${r.code || "—"}</div>
+      ${credsHtml}
+      <div style="font-size:11px;color:var(--t4);margin-top:4px">Invoice: ${r.invoiceNumber || "—"} · ${dateStr}</div>
     </div>
     <div class="rr-actions">
-      ${r.status==="pending"?`
+      ${status === "pending" ? `
         <button class="rr-btn rr-approve" onclick="approveR('${r.invoiceNumber}','${r.userId}')">✅ Approve</button>
         <button class="rr-btn rr-reject"  onclick="rejectR('${r.invoiceNumber}','${r.userId}')">❌ Reject</button>
         <button class="rr-btn rr-custom"  onclick="customRejectR('${r.invoiceNumber}','${r.userId}')">✏️ Custom</button>
-      `:`<span style="font-size:12px;color:var(--t3)">Processed</span>`}
+      ` : `<span style="font-size:12px;color:var(--t3)">Processed</span>`}
     </div>
   </div>`;
 }
