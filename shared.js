@@ -1,7 +1,7 @@
 // ── SHARED CONFIG ──
 // ⚠️  Set REACT_APP_API_URL or update CFG.API to your current Railway URL before deploying
 const CFG = {
-  API: 'https://bot-production-387b.up.railway.app',   // ✅ Updated to current Railway URL
+  API: 'https://bot-production-8e9c.up.railway.app',   // ✅ Updated to current Railway URL
   GUILD: '1411327756968661125',
   CLIENT: '1485034551108702268',
   REDIR: 'https://www.elevateiq.shop/auth/callback',   // ✅ Fixed: dedicated callback path
