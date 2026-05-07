@@ -4,7 +4,7 @@ const CFG = {
   API: 'https://bot-production-8e9c.up.railway.app',   // ✅ Updated to current Railway URL
   GUILD: '1411327756968661125',
   CLIENT: '1485034551108702268',
-  REDIR: 'https://www.elevateiq.shop/auth/callback',   // ✅ Fixed: dedicated callback path
+  REDIR: window.location.origin + '/auth/callback',   // ✅ Fixed: dynamic origin to prevent domain-mismatch security errors
 };
 
 const PRICES = {
@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function enforceLogin() {
   const path = window.location.pathname;
   const publicPaths = ['/', '/index', '/index.html', '/about', '/howitworks',
-                       '/privacy', '/terms', '/auth/callback', '/auth/callback/'];
+                       '/privacy', '/terms', '/auth/callback', '/auth/callback/', '/admin', '/admin.html'];
   const isPublic = publicPaths.some(p => path === p || path === p + '.html');
   if (isPublic) return;
   if (!getUser()) {
