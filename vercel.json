@@ -3,7 +3,6 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
-    { "source": "/auth/callback", "destination": "/auth-callback.html" },
     { "source": "/earn", "destination": "/earn.html" },
     { "source": "/redeem", "destination": "/redeem.html" },
     { "source": "/coins", "destination": "/coins.html" },

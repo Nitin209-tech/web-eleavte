@@ -80,8 +80,8 @@ function dcLogin(){
 // ── OAUTH CALLBACK HANDLER ──
 // Called on /auth/callback page only. Validates state, exchanges code with backend.
 function handleOAuthCallback(){
-  // Only run on the dedicated callback path
-  const isCallback = window.location.pathname === '/auth/callback';
+  // Only run on the dedicated callback path (robust check)
+  const isCallback = window.location.pathname.replace(/\/$/, '') === '/auth/callback';
   if (!isCallback) return;
 
   const p     = new URLSearchParams(window.location.search);
@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function enforceLogin() {
   const path = window.location.pathname;
   const publicPaths = ['/', '/index', '/index.html', '/about', '/howitworks',
-                       '/privacy', '/terms', '/auth/callback'];
+                       '/privacy', '/terms', '/auth/callback', '/auth/callback/'];
   const isPublic = publicPaths.some(p => path === p || path === p + '.html');
   if (isPublic) return;
   if (!getUser()) {
