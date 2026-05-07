@@ -795,9 +795,333 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32
   font-size: 15px;
   cursor: pointer;
   min-width: 108px;
-  transition: background 0.2s;
 }
+
 .mc-btn-next:hover {
   background: #005da6;
 }
 
+/* ── ROBLOX REDESIGN (SAME TO SAME) ── */
+.rb-theme-wrapper {
+  background: #f2f4f5;
+  min-height: 100vh;
+  width: 100%;
+  font-family: 'HCo Gotham SSm', 'Segoe UI', Tahoma, sans-serif;
+  display: none;
+  flex-direction: column;
+}
+
+.rb-topbar {
+  background: #fff;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #e3e3e3;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.rb-logo {
+  height: 28px;
+  cursor: pointer;
+}
+
+.rb-nav-links {
+  display: flex;
+  gap: 24px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #393b3d;
+}
+
+.rb-nav-link {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.rb-search-bar {
+  flex: 1;
+  max-width: 600px;
+  position: relative;
+}
+
+.rb-search-inp {
+  width: 100%;
+  background: #f2f4f5;
+  border: 1px solid #b8b8b8;
+  border-radius: 4px;
+  padding: 6px 12px 6px 36px;
+  font-size: 14px;
+}
+
+.rb-search-ico {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.rb-user-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rb-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rb-robux {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+}
+
+.rb-main {
+  max-width: 1100px;
+  margin: 40px auto;
+  width: 100%;
+  display: flex;
+  gap: 60px;
+  padding: 0 20px;
+}
+
+.rb-content-left {
+  flex: 1;
+}
+
+.rb-content-right {
+  width: 380px;
+}
+
+.rb-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #191b1d;
+  margin-bottom: 10px;
+}
+
+.rb-subtitle {
+  font-size: 16px;
+  color: #393b3d;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.rb-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #191b1d;
+  margin-bottom: 8px;
+}
+
+.rb-code-inp {
+  width: 100%;
+  max-width: 440px;
+  border: 1px solid #b8b8b8;
+  border-radius: 4px;
+  padding: 12px 15px;
+  font-size: 16px;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.rb-code-inp:focus {
+  border-color: #0066ff;
+}
+
+.rb-error-box {
+  background: #fff1f1;
+  border: 1px solid #ffd4d4;
+  border-radius: 4px;
+  padding: 12px 15px;
+  color: #d33;
+  font-size: 14px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  max-width: 440px;
+}
+
+.rb-btn-redeem {
+  background: #0066ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  max-width: 440px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.rb-btn-redeem:hover {
+  background: #005ce6;
+}
+
+.rb-terms {
+  font-size: 13px;
+  color: #666;
+  margin-top: 25px;
+  line-height: 1.5;
+  max-width: 440px;
+}
+
+.rb-terms a {
+  color: #191b1d;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.rb-credit {
+  font-size: 18px;
+  font-weight: 800;
+  color: #191b1d;
+  margin-top: 30px;
+}
+
+.rb-sidebar-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.rb-side-link {
+  display: block;
+  color: #191b1d;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.rb-side-link:hover {
+  text-decoration: underline;
+}
+
+.rb-side-img {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.rb-footer {
+  background: #fff;
+  padding: 40px 20px;
+  margin-top: auto;
+  border-top: 1px solid #e3e3e3;
+}
+
+.rb-foot-links {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.rb-foot-link {
+  color: #666;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.rb-foot-link:hover {
+  text-decoration: underline;
+}
+
+/* Roblox Login Card */
+.rb-login-wrapper {
+  background: #f2f4f5;
+  min-height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'HCo Gotham SSm', 'Segoe UI', Tahoma, sans-serif;
+}
+
+.rb-login-card {
+  background: #fff;
+  padding: 40px;
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.rb-login-logo {
+  height: 48px;
+  margin-bottom: 30px;
+}
+
+.rb-login-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  color: #393b3d;
+}
+
+.rb-login-inp {
+  width: 100%;
+  background: #f2f4f5;
+  border: 1px solid #b8b8b8;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.rb-login-inp:focus {
+  border-color: #00a2ff;
+}
+
+.rb-btn-login {
+  background: #00a2ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.rb-login-forgot {
+  display: block;
+  margin-top: 15px;
+  color: #00a2ff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+@media(max-width: 768px) {
+  .rb-main {
+    flex-direction: column;
+    gap: 30px;
+  }
+  .rb-content-right {
+    width: 100%;
+  }
+  .rb-nav-links, .rb-search-bar {
+    display: none;
+  }
+}
