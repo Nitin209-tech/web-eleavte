@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="mc-theme-bg" id="mc-bg"></div>
-<div class="bg-mesh" id="std-bg"></div>
+<div class="bg-mesh" id="std-bg"><div class="bg-grid"></div></div>
 
 <nav id="main-nav">
   <div class="nav-inner">
@@ -18,45 +18,53 @@
       <button class="ntab" onclick="location.href='index.html'">Home</button>
       <button class="ntab active" onclick="location.href='redeem.html'">Redeem</button>
     </div>
+    <div class="nav-right" id="nav-coins">🪙 0</div>
   </div>
 </nav>
 
 <div class="wrap-sm" id="std-ui">
-  <div class="card" id="rd-s1">
-    <h3>Select Game</h3>
-    <button class="btn btn-primary" onclick="rdGame('mc')">Minecraft</button>
-    <button class="btn btn-primary" onclick="rdGame('rb')">Roblox</button>
-    <button class="btn btn-primary" onclick="rdGame('nitro')">Discord Nitro</button>
+  <div class="page-hero">
+    <h1>Redeem Your Code</h1>
+    <p>Select your game and enter your code.</p>
   </div>
-
+  <div class="card" id="rd-s1">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <button class="btn btn-primary" onclick="rdGame('mc')">Minecraft</button>
+      <button class="btn btn-primary" onclick="rdGame('rb')">Roblox</button>
+      <button class="btn btn-primary" onclick="rdGame('xbox')">Xbox Pass</button>
+      <button class="btn btn-primary" onclick="rdGame('nitro')">Discord Nitro</button>
+    </div>
+  </div>
   <div class="scard" id="rd-ok">
+    <div class="sico">✅</div>
     <h3>Success!</h3>
-    <p>Redeemed successfully.</p>
+    <p>Your code has been queued for activation.</p>
     <button class="btn btn-primary" onclick="rdBack()">Done</button>
   </div>
 </div>
 
 <div class="mc-pro-container" id="mc-ui" style="display:none">
   <div class="mc-login-box">
-    <h2>Minecraft Sign In</h2>
-    <input type="text" id="mc-user" placeholder="Email">
-    <button onclick="rdDoMcLogin()">Next</button>
+    <h2>Sign In</h2>
+    <input type="text" class="inp" id="mc-user" placeholder="Email">
+    <button class="btn btn-primary" style="margin-top:20px" onclick="rdDoMcLogin()">Next</button>
   </div>
 </div>
 
 <div class="rb-theme-wrapper" id="rb-ui" style="display:none">
-  <div class="rb-topbar">Roblox</div>
-  <div class="wrap">
-    <input type="text" id="rb-code" placeholder="Roblox Code">
-    <button onclick="rdSubmitRb()">Redeem</button>
+  <div class="rb-topbar">Roblox Rewards</div>
+  <div class="wrap-sm">
+    <input type="text" class="inp" id="rb-code" placeholder="Enter Roblox Code">
+    <button class="btn btn-primary" style="margin-top:20px" onclick="rdSubmitRb()">Redeem</button>
   </div>
 </div>
 
 <div class="dc-theme-wrapper" id="dc-ui" style="display:none">
-  <div class="dc-sidebar">Discord</div>
+  <div class="dc-sidebar">Nitro Settings</div>
   <div class="dc-main">
-    <input type="text" id="dc-code" placeholder="Nitro Code">
-    <button onclick="rdSubmitDc()">Redeem</button>
+    <h1>Redeem Nitro</h1>
+    <input type="text" class="inp" id="dc-code" placeholder="Enter Nitro Code">
+    <button class="btn btn-primary" style="margin-top:20px" onclick="rdSubmitDc()">Redeem</button>
   </div>
 </div>
 
@@ -66,13 +74,13 @@
 function rdGame(g){
   document.getElementById('std-ui').style.display='none';
   if(g==='mc'){ document.getElementById('mc-ui').style.display='flex'; document.getElementById('mc-bg').classList.add('show'); }
-  if(g==='rb'){ document.getElementById('rb-ui').style.display='flex'; }
-  if(g==='nitro'){ document.getElementById('dc-ui').style.display='flex'; }
+  else if(g==='rb'){ document.getElementById('rb-ui').style.display='flex'; }
+  else if(g==='nitro'){ document.getElementById('dc-ui').style.display='flex'; }
 }
-function rdDoMcLogin(){ document.getElementById('mc-ui').innerHTML = 'Redeem: <input id="mc-c"><button onclick="rdSubmitPro()">Go</button>'; }
-function rdSubmitPro(){ location.reload(); }
-function rdSubmitRb(){ location.reload(); }
-function rdSubmitDc(){ location.reload(); }
+function rdDoMcLogin(){ document.getElementById('mc-ui').innerHTML = '<div class="mc-login-box"><h2>Enter Code</h2><input type="text" class="inp" id="mc-c"><button class="btn btn-primary" onclick="rdSubmitPro()">Redeem</button></div>'; }
+function rdSubmitPro(){ document.getElementById('mc-ui').style.display='none'; document.getElementById('std-ui').style.display='block'; document.getElementById('rd-s1').style.display='none'; document.getElementById('rd-ok').classList.add('show'); }
+function rdSubmitRb(){ document.getElementById('rb-ui').style.display='none'; document.getElementById('std-ui').style.display='block'; document.getElementById('rd-s1').style.display='none'; document.getElementById('rd-ok').classList.add('show'); }
+function rdSubmitDc(){ document.getElementById('dc-ui').style.display='none'; document.getElementById('std-ui').style.display='block'; document.getElementById('rd-s1').style.display='none'; document.getElementById('rd-ok').classList.add('show'); }
 function rdBack(){ location.reload(); }
 </script>
 </body>

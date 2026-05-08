@@ -30,49 +30,50 @@
   --nav-bg:rgba(15,13,26,0.95);
 }
 
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;overflow-x:hidden;line-height:1.6}
 
 /* ── NAV ── */
 nav{position:sticky;top:0;z-index:900;height:var(--nh);display:flex;align-items:center;padding:0 20px;background:var(--nav-bg);backdrop-filter:blur(28px);border-bottom:1px solid var(--border)}
 .nav-inner{max-width:1280px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-.nav-tabs{display:flex;gap:4px}
-.ntab{padding:8px 16px;border-radius:100px;color:var(--t2);cursor:pointer;border:none;background:none}
+.brand{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--t);text-decoration:none}
+.nav-tabs{display:flex;gap:4px;background:var(--pd);padding:4px;border-radius:100px}
+.ntab{padding:8px 20px;border-radius:100px;font-size:14px;font-weight:600;color:var(--t2);cursor:pointer;border:none;background:none}
 .ntab.active{color:#fff;background:var(--p)}
 
 /* ── LAYOUT ── */
 .wrap{max-width:1280px;margin:0 auto;padding:40px 20px}
 .wrap-sm{max-width:640px;margin:0 auto;padding:40px 20px}
-
-/* ── CARDS ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:28px;margin-bottom:20px;box-shadow:var(--s1)}
-.card h3{font-family:'Fraunces',serif;margin-bottom:12px}
-
-/* ── BUTTONS ── */
-.btn{padding:12px 24px;border-radius:100px;border:none;font-weight:600;cursor:pointer}
-.btn-primary{background:var(--p);color:#fff}
+.page-hero{text-align:center;margin-bottom:40px}
+.page-hero h1{font-family:'Fraunces',serif;font-size:36px;margin-bottom:10px}
 
 /* ── COMPONENTS ── */
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1535;color:#fff;padding:12px 24px;border-radius:100px;opacity:0;transition:0.3s}
-#toast.show{opacity:1}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:28px;margin-bottom:20px;box-shadow:var(--s1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 28px;border-radius:100px;border:none;font-weight:700;cursor:pointer;transition:0.2s}
+.btn-primary{background:var(--p);color:#fff}
+.inp{width:100%;padding:12px 16px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);outline:none}
 
-.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:40px;text-align:center;display:none}
+/* ── SUCCESS UI ── */
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:40px;text-align:center;display:none;box-shadow:var(--s2)}
 .scard.show{display:block}
+.sico{width:60px;height:60px;background:var(--grg);color:var(--gr);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 20px}
 
-/* ── MINECRAFT ── */
+/* ── GAME THEMES ── */
 .mc-theme-bg{position:fixed;inset:0;z-index:0;background:#3c8527;display:none}
 .mc-theme-bg.show{display:block}
-.mc-pro-container{position:relative;z-index:10;display:none;flex-direction:column;align-items:center}
-.mc-login-box{background:#fff;padding:40px;border-radius:4px;max-width:440px;width:100%}
+.mc-pro-container{position:relative;z-index:10;display:none;flex-direction:column;align-items:center;padding-top:100px}
+.mc-login-box{background:#fff;padding:40px;border-radius:4px;width:100%;max-width:440px;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
 
-/* ── ROBLOX ── */
 .rb-theme-wrapper{background:#f2f4f5;min-height:100vh;display:none;flex-direction:column}
 .rb-topbar{background:#fff;height:60px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #e3e3e3}
 
-/* ── DISCORD ── */
 .dc-login-wrapper{background:#313338;min-height:100vh;display:none;align-items:center;justify-content:center}
 .dc-theme-wrapper{background:#313338;min-height:100vh;display:none;color:#dbdee1}
-.dc-sidebar{width:240px;background:#2b2d31;height:100vh}
-.dc-main{flex:1;background:#313338;padding:40px}
+.dc-sidebar{width:240px;background:#2b2d31;height:100vh;flex-shrink:0}
+.dc-main{flex:1;padding:40px}
 
-/* ── FOOTER & EXTRA ── */
-footer{padding:60px 20px;text-align:center;color:var(--t3)}
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1535;color:#fff;padding:12px 24px;border-radius:100px;opacity:0;pointer-events:none;z-index:9999}
+#toast.show{opacity:1}
+
+/* ── MOBILE ── */
+@media(max-width:768px){ .nav-tabs{display:none} .dc-sidebar{display:none} }
