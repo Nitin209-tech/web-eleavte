@@ -442,40 +442,4 @@ function enforceLogin() {
   }
 }
 
-function dcLogin() {
-  window.location.href = CFG.AUTH_URL;
-}
-
-async function handleOAuthCallback() {
-  const path = window.location.pathname;
-  if (!path.includes('/auth/callback')) return;
-
-  const fragment = new URLSearchParams(window.location.hash.substring(1));
-  const access_token = fragment.get('access_token');
-
-  if (access_token) {
-    showAuthLoading('Authenticating with Discord...');
-    try {
-      const userRes = await fetch('https://discord.com/api/users/@me', {
-        headers: { Authorization: `Bearer ${access_token}` }
-      });
-      const userData = await userRes.json();
-      if (userData.id) {
-        localStorage.setItem('eiq_user', JSON.stringify(userData));
-        localStorage.setItem('eiq_at', access_token);
-        // Sync with backend
-        await fetch(`/api/sync-user`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(userData)
-        });
-        showAuthLoading('Success! Redirecting...');
-        setTimeout(() => window.location.href = '/', 1000);
-      }
-    } catch (e) {
-      console.error('OAuth Error:', e);
-      hideAuthLoading();
-      toast('?', 'Authentication failed');
-    }
-  }
-}
+// ── INIT ──
