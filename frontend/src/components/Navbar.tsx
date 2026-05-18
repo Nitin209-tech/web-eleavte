@@ -33,7 +33,7 @@ export default function Navbar() {
             </div>
             <div>
               <div className="font-extrabold text-sm tracking-wider text-black">
-                RIWAAYAT
+                HEAVEN
               </div>
               <div className="text-[8px] text-[#1d4ed8] tracking-widest font-extrabold uppercase">
                 Premium Discord Redeem Platform

@@ -98,7 +98,7 @@ function VerifyRedeemContent() {
             <div className="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center font-bold text-xs shadow-md">
               R
             </div>
-            <span className="font-extrabold text-sm tracking-wider text-black">RIWAAYAT</span>
+            <span className="font-extrabold text-sm tracking-wider text-black">HEAVEN</span>
           </Link>
           <Link href="/" className="text-xs font-bold text-[#1d4ed8] hover:underline no-underline">
             ← Back to Home
@@ -197,7 +197,7 @@ function VerifyRedeemContent() {
 
       {/* Simple Footer */}
       <footer className="border-t border-black/5 py-6 text-center text-xs text-zinc-400 relative z-10">
-        © 2026 RIWAAYAT • Premium Discord Reward Platform
+        © 2026 HEAVEN • Premium Discord Reward Platform
       </footer>
 
       {/* POPUP MODAL: LARGE SUCCESS INVOICE RECEIPT */}

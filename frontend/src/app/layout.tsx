@@ -3,7 +3,7 @@ import './globals.css';
 import { AppProvider } from '@/components/AppContext';
 
 export const metadata = {
-  title: 'Riwaayat | Cyber Gaming Community Hub',
+  title: 'Heaven | Cyber Gaming Community Hub',
   description: 'Synchronize credentials, invite advocates, and redeem secure premium code packages.',
 };
 

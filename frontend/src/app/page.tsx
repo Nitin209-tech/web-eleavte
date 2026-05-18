@@ -127,7 +127,7 @@ export default function Home() {
             </div>
             <div>
               <div className="font-extrabold text-lg tracking-[0.05em] text-black">
-                RIWAAYAT
+                HEAVEN
               </div>
               <div className="text-[9px] text-[#1d4ed8] tracking-wider font-extrabold uppercase">
                 Premium Discord Redeem Platform
@@ -292,7 +292,7 @@ export default function Home() {
                 <div>
                   <div className="text-[10px] font-extrabold tracking-widest text-[#1d4ed8] uppercase">Connected Account</div>
                   <h3 className="text-lg font-extrabold text-black">
-                    {isAuthenticated && user ? `@${user.username}` : '@riwaayatuser'}
+                    {isAuthenticated && user ? `@${user.username}` : '@heavenuser'}
                   </h3>
                   <div className="flex items-center gap-1.5 text-[11px] text-zinc-400 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#1d4ed8] animate-ping" />
@@ -448,7 +448,7 @@ export default function Home() {
             <Link href="/admin" className="hover:text-black transition no-underline">Admin</Link>
           </div>
           <p className="leading-relaxed">
-            © 2026 RIWAAYAT • Premium Discord Reward Platform
+            © 2026 HEAVEN • Premium Discord Reward Platform
           </p>
         </div>
       </footer>

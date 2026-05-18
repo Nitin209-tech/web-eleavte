@@ -45,7 +45,7 @@ export default function Community() {
           </div>
           
           <a
-            href="https://discord.gg/riwaayat"
+            href="https://discord.gg/heaven"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full md:w-auto relative group overflow-hidden px-8 py-3.5 rounded font-rajdhani text-base font-bold tracking-wider text-white bg-purple-600 hover:bg-purple-500 transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center justify-center space-x-2 shrink-0 border border-transparent"

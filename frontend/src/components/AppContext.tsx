@@ -59,7 +59,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       });
 
     // Check localStorage
-    const saved = localStorage.getItem('riwaayat_user');
+    const saved = localStorage.getItem('heaven_user');
     if (saved) {
       const u = JSON.parse(saved);
       setUser(u);
@@ -76,7 +76,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (data.success && data.user) {
         setUser(data.user);
         setCoins(data.user.coins);
-        localStorage.setItem('riwaayat_user', JSON.stringify(data.user));
+        localStorage.setItem('heaven_user', JSON.stringify(data.user));
       } else {
         throw new Error(data.error);
       }
@@ -91,14 +91,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       };
       setUser(mockUser);
       setCoins(500000000);
-      localStorage.setItem('riwaayat_user', JSON.stringify(mockUser));
+      localStorage.setItem('heaven_user', JSON.stringify(mockUser));
       console.log('🤖 Authorized under Sandbox Admin privilege.');
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('riwaayat_user');
+    localStorage.removeItem('heaven_user');
   };
 
   const claimDailyCoins = async () => {
@@ -106,7 +106,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const next = prev + 1000;
       if (user) {
         const nextUser = { ...user, coins: next };
-        localStorage.setItem('riwaayat_user', JSON.stringify(nextUser));
+        localStorage.setItem('heaven_user', JSON.stringify(nextUser));
       }
       return next;
     });
@@ -119,7 +119,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const next = prev - amount;
       if (user) {
         const nextUser = { ...user, coins: next };
-        localStorage.setItem('riwaayat_user', JSON.stringify(nextUser));
+        localStorage.setItem('heaven_user', JSON.stringify(nextUser));
       }
       return next;
     });

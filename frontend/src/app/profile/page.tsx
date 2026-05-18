@@ -58,7 +58,7 @@ export default function Profile() {
           { name: 'lucky_user', coins: 120000000 },
           { name: 'discord_ace', coins: 98000000 },
           { name: 'cyber_ninja', coins: 64000000 },
-          { name: 'riwaayat_fan', coins: 42000000 }
+          { name: 'heaven_fan', coins: 42000000 }
         ]);
         setLoadingLb(false);
       });

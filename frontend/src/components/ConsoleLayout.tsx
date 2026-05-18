@@ -73,7 +73,7 @@ export function ConsoleLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="text-[11px] text-[var(--t3)] leading-relaxed max-w-2xl">
-            Riwaayat is an independent community platform and is not affiliated with third-party brands or services referenced on the platform.
+            Heaven is an independent community platform and is not affiliated with third-party brands or services referenced on the platform.
             <span className="block mt-1 font-mono text-[10px]">© 2026 Rewards Portal — All rights reserved</span>
           </div>
 
