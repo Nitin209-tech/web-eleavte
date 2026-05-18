@@ -6,7 +6,7 @@ import { useApp } from './AppContext';
 import { Home, LayoutDashboard, Key, ShoppingBag, Trophy, Users, HelpCircle, Shield, FileText, Lock } from 'lucide-react';
 import Link from 'next/link';
 
-export default function Sidebar() {
+function Sidebar() {
   const pathname = usePathname();
   const { user } = useApp();
 
@@ -111,3 +111,5 @@ export default function Sidebar() {
     </aside>
   );
 }
+
+export default React.memo(Sidebar);

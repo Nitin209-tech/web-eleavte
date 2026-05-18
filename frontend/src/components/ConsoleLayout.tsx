@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Navbar from './Navbar';
 import Link from 'next/link';
 
-export function ConsoleLayout({ children }: { children: React.ReactNode }) {
+function ConsoleLayout({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
   useEffect(() => {
@@ -83,4 +83,6 @@ export function ConsoleLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-export default ConsoleLayout;
+
+export default React.memo(ConsoleLayout);
+export const MemoConsoleLayout = React.memo(ConsoleLayout);

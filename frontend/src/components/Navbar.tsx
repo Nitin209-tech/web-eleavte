@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useApp } from './AppContext';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function Navbar() {
+function Navbar() {
   const { user, loginWithDiscord, logout } = useApp();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,11 +15,11 @@ export default function Navbar() {
     return pathname.startsWith(path);
   };
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { label: 'Home', path: '/' },
     { label: 'Redeem Rewards', path: '/#dashboard' },
     { label: 'FAQ & Guide', path: '/howitworks' }
-  ];
+  ], []);
 
   return (
     <>
@@ -126,3 +126,5 @@ export default function Navbar() {
     </>
   );
 }
+
+export default React.memo(Navbar);

@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function Disclaimer() {
+function Disclaimer() {
   return (
     <footer className="w-full py-6 px-6 border-t border-cyber-cyan/15 bg-cyber-black/90 text-center font-mono text-[10px] text-cyber-light-gray/40">
       <div className="max-w-4xl mx-auto leading-relaxed">
@@ -12,3 +12,5 @@ export default function Disclaimer() {
     </footer>
   );
 }
+
+export default React.memo(Disclaimer);

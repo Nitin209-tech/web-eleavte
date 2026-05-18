@@ -49,22 +49,32 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // Capture Visitor IP on open
   useEffect(() => {
-    fetch('http://localhost:5000/api/visitor')
-      .then(r => r.json())
-      .then(d => {
-        if (d.success) console.log('🌐 Visitor analytics captured safely:', d.ip);
-      })
-      .catch(() => {
-        console.warn('📡 Offline mock mode. IP capturing skipped.');
-      });
-
-    // Check localStorage
+    // Restore user from localStorage immediately for faster perceived load
     const saved = localStorage.getItem('heaven_user');
     if (saved) {
       const u = JSON.parse(saved);
       setUser(u);
       setCoins(u.coins || 100);
     }
+
+    // Fire analytics request asynchronously without blocking render
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000); // 3s timeout
+    
+    fetch('http://localhost:5000/api/visitor', { signal: controller.signal })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) console.log('🌐 Visitor analytics captured safely:', d.ip);
+      })
+      .catch(() => {
+        console.warn('📡 Offline mock mode. IP capturing skipped.');
+      })
+      .finally(() => clearTimeout(timeout));
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, []);
 
   const loginWithDiscord = async (mockCode?: string) => {
